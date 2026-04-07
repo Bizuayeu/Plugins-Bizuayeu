@@ -1,0 +1,244 @@
+# BusinessCurator
+
+エンタープライズ向けビジネスメール知識管理プラグイン (Claude Code)。
+Karpathy 式パーソナル wiki (`wiki` skill) の **エンタープライズ拡張**として、
+ビジネスメールを 4 シャード wiki に編み込みます。
+
+> **writer, not filing clerk** — 事実をどこに置くかではなく、それが何を意味し、既存の理解にどう繋がるかを問い続ける。
+
+---
+
+## 主要特徴
+
+- **4 シャード固定**: projects / clients / vendors / knowledge
+- **二層構造**: マスタは人間が定義 (manager) し、AI が運用 (curator) する
+- **triage はルールベース優先**: 80% をルールで決着、20% を LLM (`claude -p` subprocess) で
+- **archive は手動発動**: 完工判断は業務判断、知見抽出は半自動化
+- **md / Python 二層分離**: 機械的処理は Python、判断と対話は md
+- **Clean Architecture × TDD**: domain → application → infrastructure → interfaces
+
+---
+
+## クイックスタート
+
+```bash
+# 1. 状態確認
+/wiki-status
+
+# 2. マスタ登録
+/wiki-project-add ○○マンション
+/wiki-client-add 株式会社□□
+
+# 3. メール取り込み → 振り分け → 吸収
+/wiki-ingest data/sample.mbox
+/wiki-triage
+/wiki-absorb projects
+
+# 4. 完工アーカイブ
+/wiki-archive ○○マンション
+```
+
+詳細は `[skills/wiki/SKILL.md](skills/wiki/SKILL.md)` を参照。
+
+---
+
+## 全 20 コマンド
+
+### Manager 層 (マスタ CRUD、12 commands)
+
+| カテゴリ | コマンド |
+|---|---|
+| Project | `/wiki-project-add` `/wiki-project-edit` `/wiki-project-close` |
+| Client | `/wiki-client-add` `/wiki-client-edit` `/wiki-client-remove` |
+| Vendor | `/wiki-vendor-add` `/wiki-vendor-edit` `/wiki-vendor-remove` |
+| Knowledge | `/wiki-knowledge-add-domain` `/wiki-knowledge-edit` `/wiki-knowledge-remove` |
+
+### Operation 層 (運用、4 commands)
+
+| コマンド | 用途 |
+|---|---|
+| `/wiki-ingest` | data/ → inbox/raw-entries/ |
+| `/wiki-triage` | raw-entries/ をシャードに振り分け |
+| `/wiki-absorb` | shards/ にエントリを吸収 |
+| `/wiki-archive` | 完工案件を archive/ へ |
+
+### Auxiliary 層 (補助、4 commands)
+
+| コマンド | 用途 |
+|---|---|
+| `/wiki-query` | wiki 横断質問応答 |
+| `/wiki-status` | シャード横断メトリクス |
+| `/wiki-rebuild-resolver` | エイリアスリゾルバ再構築 |
+| `/wiki-cleanup` | 既存記事の品質改善 |
+
+---
+
+## ディレクトリ構造
+
+```
+BusinessCurator/
+  README.md
+  pyproject.toml
+  BusinessCurator_ImplementationPlan.md       ← 業務観点
+  BusinessCurator_TDDImplementationPlan.md    ← 実装観点
+  _root.md                                    ← ルート wiki
+  _alias_resolver.md                            ← 全シャード統合エイリアス解決器
+
+  skills/wiki/                                ← 11 skill md
+  commands/                                   ← 20 command md
+
+  scripts/                                    ← Clean Architecture 実装
+    domain/                                   ← 純粋型・例外・Protocol
+    application/                              ← UseCase
+    infrastructure/                           ← 実 I/O アダプタ
+    interfaces/                               ← CLI (Composition Root)
+    test/                                     ← 589 tests
+
+  data/                                       ← 生メール (.eml/.mbox、変更不可)
+  inbox/
+    raw-entries/                              ← ingest 出力
+    unclassified/                             ← triage 保留
+  shards/
+    projects/{Name}/_project.md
+    clients/{Name}.md
+    vendors/{Name}.md
+    knowledge/{Category}/*.md
+  archive/projects/{CompletedName}/
+  triage_logs/_triage_log_YYYYMMDD.json
+```
+
+---
+
+## アーキテクチャ
+
+### Clean Architecture 4 層
+
+```
+interfaces ──→ application ──→ domain
+     │              │              ↑
+     │              └──Protocol────┘
+     │                             ↑
+     └──→ infrastructure ──────────┘
+```
+
+- **domain**: 何にも依存しない純粋型 (TypedDict / Protocol / 例外 / 純関数)
+- **application**: domain の Protocol にのみ依存。UseCase の実装
+- **infrastructure**: domain/application 双方を参照。Protocol を実装
+- **interfaces**: 全層に依存可能。Composition Root として infrastructure 実装を application に注入
+
+### md / Python 二層分離
+
+| 処理 | 配置 | 理由 |
+|---|---|---|
+| ingest / triage / status / archive 操作 | Python CLI | 機械的・冪等・テスト可能 |
+| Manager の CRUD 対話 | md (manager skill) | AskUserQuestion + 判断 |
+| Curator のキュレーション | md (curator skill) | LLM の "writer" 判断が本質 |
+| Triage LLM フォールバック | md → `claude -p` subprocess | API 直叩き禁止原則 |
+
+---
+
+## 開発
+
+### 必要環境
+
+- Python 3.10+
+- Claude Code (CLI、`claude` コマンド)
+- pip install されるテスト依存: `pytest~=8.0`, `pytest-cov~=6.0`, `mypy~=1.13`, `ruff~=0.11`, `hypothesis~=6.122`
+
+### テスト実行
+
+```bash
+cd plugins-bizuayeu/BusinessCurator
+
+# 全テスト + カバレッジ
+python -m pytest scripts/test/ --cov=scripts --cov-fail-under=80
+
+# レイヤ別
+python -m pytest scripts/test/domain_tests/ -v
+python -m pytest scripts/test/application_tests/ -v
+python -m pytest scripts/test/infrastructure_tests/ -v
+python -m pytest scripts/test/cli_integration_tests/ -v
+python -m pytest scripts/test/integration_tests/ -v       # E2E
+python -m pytest scripts/test/skill_structure_tests/ -v   # md 構造
+
+# 統計
+python -m pytest scripts/test/ -q --no-cov
+# → 589 passed
+```
+
+### 静的解析
+
+```bash
+python -m mypy scripts/ --strict
+# → Success: no issues found in 94 source files
+
+python -m ruff check scripts/
+# → All checks passed!
+```
+
+### CLI 出力スキーマ
+
+全 CLI の JSON 出力スキーマは `[scripts/interfaces/CLI_OUTPUT_SCHEMAS.md](scripts/interfaces/CLI_OUTPUT_SCHEMAS.md)` を参照。
+
+### 手動 E2E シナリオ
+
+`[docs/manual_e2e_scenarios.md](docs/manual_e2e_scenarios.md)` に4つのシナリオを記載：
+1. 案件登録から absorb まで通し
+2. 完工アーカイブの対話フロー
+3. triage ルール改善ループ
+4. LLM フォールバック動作確認
+
+---
+
+## 品質指標
+
+| 項目 | 値 |
+|---|---|
+| **テスト数** | **589 passed** |
+| **カバレッジ** | **95.08%** (fail_under=80) |
+| **mypy strict** | **0 errors** (94 source files) |
+| **ruff** | **All checks passed** |
+| **md ファイル数** | **31** (11 skill + 20 command) |
+| **TDD サイクル** | Red → Green → Refactor を全機能で遵守 |
+
+### レイヤ別カバレッジ
+
+| 層 | カバレッジ |
+|---|---|
+| domain | **100.0%** |
+| application | **99.6%** |
+| infrastructure | **89.5%** |
+| interfaces | **96.0%** |
+
+---
+
+## 設計判断の根拠
+
+業務観点の根拠は `BusinessCurator_ImplementationPlan.md`、実装観点の根拠は `BusinessCurator_TDDImplementationPlan.md` を参照。
+
+### 主要原則
+
+1. **シャードは4種固定、シャード内は自由成長**: シャード境界変更は不可逆コストが高い
+2. **manager 層と curator 層の分離**: マスタは人間が定義、AI が運用
+3. **triage はルールベース優先**: トークンコスト最小化
+4. **エイリアスリゾルバをルートに同居**: アクセスコスト最小化
+5. **archive は手動発動**: 完工判断は業務判断
+6. **業種非依存設計**: B2B 受注産業の汎用構造
+
+---
+
+## ライセンス
+
+MIT
+
+---
+
+## クレジット
+
+- 計画策定: Weave @ Claude Opus 4.6 (1M context)
+- 要件確認: 大環主
+- 実装環境: Claude Code + Plugins-Weave
+
+参照プラグイン:
+- `[wiki](.claude/skills/wiki/SKILL.md)` (Karpathy 式パーソナル wiki) — 原型
+- `[EpisodicRAG](../../plugins-weave/EpisodicRAG/)` — Clean Architecture × TDD パターン提供

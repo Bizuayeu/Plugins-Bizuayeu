@@ -1,0 +1,11 @@
+Message-ID: <abc123@example.com>
+From: "Sender Name" <sender@example.com>
+To: "Recipient" <recipient@example.com>
+Subject: Test Subject
+Date: Tue, 7 Apr 2026 14:30:22 +0900
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+
+Hello, this is a simple test email body.
+Multiple lines are supported.

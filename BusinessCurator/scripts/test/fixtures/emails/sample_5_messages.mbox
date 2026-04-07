@@ -1,0 +1,49 @@
+From sender1@example.com Mon Apr 06 10:00:00 2026
+Message-ID: <msg001@example.com>
+From: "Sender 1" <sender1@example.com>
+To: "Recipient" <recipient@example.com>
+Subject: First message
+Date: Mon, 6 Apr 2026 10:00:00 +0900
+Content-Type: text/plain; charset="UTF-8"
+
+Body of first message.
+
+From sender2@example.com Mon Apr 06 11:00:00 2026
+Message-ID: <msg002@example.com>
+From: "Sender 2" <sender2@example.com>
+To: "Recipient" <recipient@example.com>
+Subject: Second message
+Date: Mon, 6 Apr 2026 11:00:00 +0900
+Content-Type: text/plain; charset="UTF-8"
+
+Body of second message.
+
+From sender3@example.com Mon Apr 06 12:00:00 2026
+Message-ID: <msg003@example.com>
+From: "Sender 3" <sender3@example.com>
+To: "Recipient" <recipient@example.com>
+Subject: Third message
+Date: Mon, 6 Apr 2026 12:00:00 +0900
+Content-Type: text/plain; charset="UTF-8"
+
+Body of third message.
+
+From sender4@example.com Mon Apr 06 13:00:00 2026
+Message-ID: <msg004@example.com>
+From: "Sender 4" <sender4@example.com>
+To: "Recipient" <recipient@example.com>
+Subject: Fourth message
+Date: Mon, 6 Apr 2026 13:00:00 +0900
+Content-Type: text/plain; charset="UTF-8"
+
+Body of fourth message.
+
+From sender5@example.com Mon Apr 06 14:00:00 2026
+Message-ID: <msg005@example.com>
+From: "Sender 5" <sender5@example.com>
+To: "Recipient" <recipient@example.com>
+Subject: Fifth message
+Date: Mon, 6 Apr 2026 14:00:00 +0900
+Content-Type: text/plain; charset="UTF-8"
+
+Body of fifth message.

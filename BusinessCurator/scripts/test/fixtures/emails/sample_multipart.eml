@@ -1,0 +1,23 @@
+Message-ID: <multipart456@example.com>
+From: "市川" <ichikawa@meguru.example.jp>
+To: "大環主" <oowanushi@meguru.example.jp>
+Cc: "本間" <honma@meguru.example.jp>, "森" <mori@meguru.example.jp>
+Subject: =?UTF-8?B?44CC44CCfusrkOOCueOAgQ==?=
+Date: Wed, 8 Apr 2026 10:15:00 +0900
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="boundary42"
+
+--boundary42
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+
+これは本文です。
+複数行ある日本語メールです。
+
+--boundary42
+Content-Type: application/pdf; name="report.pdf"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="report.pdf"
+
+VGVzdCBQREYgY29udGVudA==
+--boundary42--

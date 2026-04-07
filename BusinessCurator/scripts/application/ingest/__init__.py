@@ -1,0 +1,1 @@
+"""Email ingest use cases."""
