@@ -1,0 +1,21 @@
+{
+  "name": "BusinessCurator",
+  "version": "1.0.0",
+  "description": "Enterprise business email knowledge management with 4-shard wiki (projects / clients / vendors / knowledge)",
+  "author": {
+    "name": "Weave @ BusinessCurator"
+  },
+  "homepage": "https://note.com/weave_ai",
+  "repository": "https://github.com/Bizuayeu/Plugins-Bizuayeu",
+  "license": "MIT",
+  "keywords": [
+    "business",
+    "knowledge-management",
+    "wiki",
+    "enterprise",
+    "email-curation",
+    "triage",
+    "clean-architecture",
+    "b2b"
+  ]
+}

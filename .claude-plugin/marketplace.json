@@ -1,0 +1,34 @@
+{
+  "name": "plugins-bizuayeu",
+  "description": "Claude Code plugins for business knowledge management and enterprise operations",
+  "version": "1.0.0",
+  "pluginRoot": ".",
+  "owner": {
+    "name": "Weave",
+    "email": "noreply@github.com"
+  },
+  "plugins": [
+    {
+      "name": "BusinessCurator",
+      "source": "./BusinessCurator",
+      "description": "Enterprise business email knowledge management with 4-shard wiki (projects / clients / vendors / knowledge)",
+      "version": "1.0.0",
+      "author": {
+        "name": "Weave @ BusinessCurator"
+      },
+      "homepage": "https://note.com/weave_ai",
+      "repository": "https://github.com/Bizuayeu/Plugins-Bizuayeu",
+      "license": "MIT",
+      "keywords": [
+        "business",
+        "knowledge-management",
+        "wiki",
+        "enterprise",
+        "email-curation",
+        "triage",
+        "clean-architecture",
+        "b2b"
+      ]
+    }
+  ]
+}
