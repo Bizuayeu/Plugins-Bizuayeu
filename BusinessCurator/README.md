@@ -197,20 +197,11 @@ python -m ruff check scripts/
 | 項目 | 値 |
 |---|---|
 | **テスト数** | **645 passed** |
-| **カバレッジ** | **95%+** (fail_under=80) |
-| **mypy strict** | **0 errors** (100+ source files) |
-| **ruff** | **All checks passed** |
+| **カバレッジ** | fail_under=80 |
+| **mypy strict** | 111 source files checked |
+| **ruff** | 有効 |
 | **md ファイル数** | **33** (11 skill + 22 command) |
 | **TDD サイクル** | Red → Green → Refactor を全機能で遵守 |
-
-### レイヤ別カバレッジ
-
-| 層 | カバレッジ |
-|---|---|
-| domain | **100.0%** |
-| application | **99.6%** |
-| infrastructure | **89.5%** |
-| interfaces | **96.0%** |
 
 ---
 

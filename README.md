@@ -18,6 +18,7 @@ Plugins-Bizuayeuは **実務家の手の延長** を担います。
 | 課題 | 解決策 | プラグイン |
 |------|--------|-----------|
 | **B2B受注産業のメール知が散逸する** | 4シャードwikiに案件・顧客・業者・知見を編む | BusinessCurator |
+| **Gmailバックアップが手作業で回らない** | OAuth / SA+DWD 両対応、Message-ID重複排除で自動取得 | GmailGrabber |
 
 ---
 
@@ -40,9 +41,9 @@ Karpathy式パーソナルwikiのエンタープライズ拡張として、
 - **manager / curator 二層構造**: マスタは人間が定義、AIが運用
 - **triageはルールベース優先**: 80%をルールで決着、20%をLLMで
 - **md / Python 二層分離**: 機械的処理はPython、判断と対話はmd
-- **Clean Architecture × TDD**: 589 tests / 95.08% coverage / mypy strict 0 errors
+- **Clean Architecture × TDD**: 645 tests / mypy strict / ruff
 
-#### 主要コマンド（全20コマンド）
+#### 主要コマンド（全22コマンド）
 
 | カテゴリ | 代表コマンド | 用途 |
 |---|---|---|
@@ -51,6 +52,35 @@ Karpathy式パーソナルwikiのエンタープライズ拡張として、
 | Auxiliary | `/wiki-query` `/wiki-status` | 横断質問応答・メトリクス |
 
 → 詳細は [BusinessCurator/README.md](BusinessCurator/README.md) を参照
+
+### GmailGrabber
+
+**Clean Architecture × TDD で構築する Gmail バックアップツール**
+
+個人 OAuth と Workspace Service Account + DWD (Domain-Wide Delegation) の
+両方をサポートし、RFC5322 Message-ID で重複排除します。
+
+> BusinessCurator の `data/` ディレクトリに `.eml` / `.mbox` を供給する
+> パイプラインの入口として機能します。
+
+#### 主な特徴
+
+- **個人 OAuth / Workspace SA+DWD 両対応**: 小規模〜大規模組織をカバー
+- **RFC5322 Message-ID 重複排除**: CC 配信メールの二重取得を防止
+- **中断・再開機構**: ユーザー単位の fetched IDs state persistence
+- **出力形式**: `.eml` (1メール1ファイル) / `.mbox` (一括束ね)
+- **Clean Architecture × TDD**: 274 tests / mypy strict / ruff
+
+#### コマンド（全4コマンド）
+
+| コマンド | 用途 |
+|---|---|
+| `/gmail-auth` | OAuth 認証フロー |
+| `/gmail-backup` | 検索クエリで単一ユーザーバックアップ |
+| `/gmail-labels` | ラベル一覧取得 |
+| `/gmail-multi-backup` | Workspace 複数ユーザー SA 一括バックアップ + 重複排除 |
+
+→ 詳細は [GmailGrabber/README.md](GmailGrabber/README.md) を参照
 
 ---
 
@@ -65,7 +95,11 @@ Karpathy式パーソナルwikiのエンタープライズ拡張として、
 ### 2. プラグインインストール
 
 ```ClaudeCLI
+# ビジネスメール知識管理
 /plugin install BusinessCurator@Plugins-Bizuayeu
+
+# Gmail バックアップ
+/plugin install GmailGrabber@Plugins-Bizuayeu
 ```
 
 ---

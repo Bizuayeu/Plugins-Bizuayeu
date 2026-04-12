@@ -18,6 +18,7 @@ Plugins-Bizuayeu serves as **the extension of a practitioner's hand**.
 | Challenge | Solution | Plugin |
 |-----------|----------|--------|
 | **B2B email knowledge gets lost** | Weaves projects, clients, vendors, and know-how into a 4-shard wiki | BusinessCurator |
+| **Gmail backup doesn't scale manually** | OAuth / SA+DWD dual support with Message-ID dedup | GmailGrabber |
 
 ---
 
@@ -39,9 +40,9 @@ into a structured wiki across 4 shards (projects / clients / vendors / knowledge
 - **Two-layer structure**: humans define masters (manager), AI operates them (curator)
 - **Rule-first triage**: 80% resolved by rules, 20% by LLM
 - **md / Python separation**: mechanical processing in Python, judgment and dialogue in md
-- **Clean Architecture × TDD**: 589 tests / 95.08% coverage / mypy strict 0 errors
+- **Clean Architecture × TDD**: 645 tests / mypy strict / ruff
 
-#### Main Commands (20 total)
+#### Main Commands (22 total)
 
 | Category | Representative Commands | Purpose |
 |---|---|---|
@@ -50,6 +51,35 @@ into a structured wiki across 4 shards (projects / clients / vendors / knowledge
 | Auxiliary | `/wiki-query` `/wiki-status` | Cross-shard query / metrics |
 
 → See [BusinessCurator/README.md](BusinessCurator/README.md) for details
+
+### GmailGrabber
+
+**Gmail Backup Tool Built with Clean Architecture × TDD**
+
+Supports both individual OAuth and Workspace Service Account + DWD (Domain-Wide Delegation),
+with RFC5322 Message-ID deduplication for multi-user environments.
+
+> Serves as the pipeline entry point, feeding `.eml` / `.mbox` files
+> into BusinessCurator's `data/` directory.
+
+#### Key Features
+
+- **OAuth / Workspace SA+DWD dual support**: Covers small to large organizations
+- **RFC5322 Message-ID dedup**: Prevents duplicate retrieval of CC'd emails
+- **Resume mechanism**: Per-user fetched IDs state persistence
+- **Output formats**: `.eml` (one file per email) / `.mbox` (bundled)
+- **Clean Architecture × TDD**: 274 tests / mypy strict / ruff
+
+#### Commands (4 total)
+
+| Command | Purpose |
+|---|---|
+| `/gmail-auth` | OAuth authentication flow |
+| `/gmail-backup` | Single-user search query backup |
+| `/gmail-labels` | List Gmail labels |
+| `/gmail-multi-backup` | Workspace multi-user SA batch backup + dedup |
+
+→ See [GmailGrabber/README.md](GmailGrabber/README.md) for details
 
 ---
 
@@ -64,7 +94,11 @@ into a structured wiki across 4 shards (projects / clients / vendors / knowledge
 ### 2. Install Plugin
 
 ```ClaudeCLI
+# Business email knowledge management
 /plugin install BusinessCurator@Plugins-Bizuayeu
+
+# Gmail backup
+/plugin install GmailGrabber@Plugins-Bizuayeu
 ```
 
 ---
