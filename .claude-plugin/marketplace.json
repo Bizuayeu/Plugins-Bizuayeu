@@ -29,6 +29,28 @@
         "clean-architecture",
         "b2b"
       ]
+    },
+    {
+      "name": "GmailGrabber",
+      "source": "./GmailGrabber",
+      "description": "Gmail backup tool with individual OAuth & Workspace multi-user Service Account + DWD, RFC5322 Message-ID dedup, .eml/.mbox export",
+      "version": "0.2.0",
+      "author": {
+        "name": "Weave @ GmailGrabber"
+      },
+      "homepage": "https://note.com/weave_ai",
+      "repository": "https://github.com/Bizuayeu/Plugins-Bizuayeu",
+      "license": "MIT",
+      "keywords": [
+        "gmail",
+        "backup",
+        "email",
+        "eml",
+        "mbox",
+        "clean-architecture",
+        "oauth",
+        "tdd"
+      ]
     }
   ]
 }
