@@ -43,7 +43,7 @@ BusinessCurator/
 
 ---
 
-## コマンド全 20 件
+## コマンド全 21 件
 
 ### Manager 層（マスタデータ CRUD）
 
@@ -80,6 +80,8 @@ manager は `[project-manager.md](project-manager.md)` / `[client-manager.md](cl
 | `/wiki-query` | （curator 系） | wiki 横断質問応答 |
 | `/wiki-status` | （CLI 直接） | シャード横断メトリクス |
 | `/wiki-rebuild-resolver` | （CLI 直接） | エイリアスリゾルバ再構築 |
+| `/wiki-index-rebuild` | （CLI 直接） | 日本語ナビゲーション用 _index.md ツリー再生成 |
+| `/wiki-verify-links` | （CLI 直接） | wikilink の整合性検証（broken / stale link 検出） |
 | `/wiki-cleanup` | curator 系 | 既存記事の品質改善 |
 
 ---

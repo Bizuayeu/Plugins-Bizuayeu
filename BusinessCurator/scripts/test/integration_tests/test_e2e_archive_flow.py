@@ -126,18 +126,18 @@ class TestArchiveFlowHappyPathE2E:
         assert (dst_dir / "_project.md").exists()
         assert (dst_dir / "topic-design.md").exists()
 
-        # ----- Step 6: resolver で archived フラグ確認 -----
+        # ----- Step 6: resolver で archive_status 確認 -----
         status_cli.main(["--plugin-root", str(plugin_root)])
         result = _capture_json(capsys)
         assert result["metrics"]["alias_records_active"] == 0
-        assert result["metrics"]["alias_records_archived"] == 1
+        assert result["metrics"]["alias_records_completed"] == 1
 
         # find で target_path が archive/ に切り替わっていることを確認
         resolver_cli.main(
             ["find", "--plugin-root", str(plugin_root), "--id", "projects/MaruMaru"]
         )
         result = _capture_json(capsys)
-        assert result["record"]["archived"] is True
+        assert result["record"]["archive_status"] == "completed"
         assert "archive/projects/MaruMaru" in result["record"]["target_path"]
 
         # ----- Step 7: 二重 archive で fail -----
@@ -184,12 +184,12 @@ class TestArchiveNoMoveE2E:
         assert src_dir.exists()
         assert (src_dir / "_project.md").exists()
 
-        # resolver の archived フラグは立っている
+        # resolver の archive_status は completed
         resolver_cli.main(
             ["find", "--plugin-root", str(plugin_root), "--id", "projects/X"]
         )
         result = _capture_json(capsys)
-        assert result["record"]["archived"] is True
+        assert result["record"]["archive_status"] == "completed"
 
 
 # =============================================================================

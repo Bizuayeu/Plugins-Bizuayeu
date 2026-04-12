@@ -31,7 +31,7 @@ from domain.exceptions import EntityNotFoundError
 from domain.types.alias import AliasRecord
 from domain.types.email import EmailMessage
 from domain.types.entry import RawEntry
-from domain.types.shard import ShardKind
+from domain.types.shard import ArchiveStatus, ShardKind
 from domain.types.triage import TriageLogEntry
 
 # =============================================================================
@@ -280,14 +280,27 @@ def build_alias_record(
     canonical: str = "デフォルト案件",
     aliases: Optional[List[str]] = None,
     target_path: Optional[str] = None,
-    archived: bool = False,
+    archive_status: ArchiveStatus = "active",
 ) -> AliasRecord:
-    """AliasRecord のテストデータを生成"""
+    """
+    AliasRecord のテストデータを生成
+
+    Note:
+        target_path 省略時は archive_status に合わせて自動選択:
+          - active:    shards/<kind>/<slug>/_project.md (projects 用)
+          - completed: archive/<kind>/<slug>/_project.md
+          - removed:   shards/<kind>/<slug>/_project.md (元のまま)
+    """
+    if target_path is None:
+        if archive_status == "completed":
+            target_path = f"archive/{kind}/{slug}/_project.md"
+        else:
+            target_path = f"shards/{kind}/{slug}/_project.md"
     return {
         "id": f"{kind}/{slug}",
         "canonical": canonical,
         "aliases": aliases or [],
         "shard": kind,
-        "target_path": target_path or f"shards/{kind}/{slug}/_project.md",
-        "archived": archived,
+        "target_path": target_path,
+        "archive_status": archive_status,
     }

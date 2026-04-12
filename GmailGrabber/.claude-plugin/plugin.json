@@ -1,0 +1,21 @@
+{
+  "name": "GmailGrabber",
+  "version": "0.2.0",
+  "description": "Gmail backup tool with Clean Architecture: individual OAuth & Workspace multi-user Service Account + DWD, RFC5322 Message-ID dedup, .eml/.mbox export, resume",
+  "author": {
+    "name": "Weave @ GmailGrabber"
+  },
+  "homepage": "https://note.com/weave_ai",
+  "repository": "https://github.com/Bizuayeu/Plugins-Bizuayeu",
+  "license": "MIT",
+  "keywords": [
+    "gmail",
+    "backup",
+    "email",
+    "eml",
+    "mbox",
+    "clean-architecture",
+    "oauth",
+    "tdd"
+  ]
+}

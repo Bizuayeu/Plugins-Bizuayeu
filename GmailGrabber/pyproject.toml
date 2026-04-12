@@ -1,0 +1,168 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gmailgrabber"
+version = "0.2.0"
+description = "GmailGrabber - Clean Architecture Gmail backup with multi-user Workspace support (Service Account + DWD), RFC5322 Message-ID deduplication, and .eml/.mbox export"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Weave"}
+]
+readme = "README.md"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "google-api-python-client>=2.0",
+    "google-auth-oauthlib>=1.0",
+    "google-auth-httplib2>=0.2",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["scripts*"]
+exclude = ["commands*", "skills*", "docs*"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest~=8.0",
+    "pytest-cov~=6.0",
+    "ruff~=0.11",
+    "mypy~=1.13",
+    "hypothesis~=6.122",
+]
+
+# =============================================================================
+# Pytest Configuration
+# =============================================================================
+
+[tool.pytest.ini_options]
+testpaths = ["scripts/test"]
+pythonpath = ["scripts"]
+
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+markers = [
+    "unit: 単体テスト（高速、外部依存なし）",
+    "integration: 統合テスト（ファイルI/O）",
+    "property: Property-based tests using hypothesis",
+    "cli: CLI統合テスト（subprocess経由）",
+    "slow: 時間のかかるテスト",
+]
+
+addopts = [
+    "-v",
+    "--strict-markers",
+    "--tb=short",
+]
+
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+
+# =============================================================================
+# Coverage Configuration
+# =============================================================================
+
+[tool.coverage.run]
+source = ["scripts"]
+branch = true
+omit = [
+    "scripts/test/*",
+    "*/__pycache__/*",
+]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+precision = 1
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "^\\s*\\.\\.\\.\\s*$",
+    "@runtime_checkable",
+]
+
+# =============================================================================
+# Ruff Configuration
+# =============================================================================
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["scripts"]
+include = ["scripts/**/*.py"]
+exclude = [".pytest_cache", ".mypy_cache", ".ruff_cache", "__pycache__", ".venv", "*.egg-info"]
+
+[tool.ruff.format]
+quote-style = "preserve"
+indent-style = "space"
+docstring-code-format = false
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/test/*" = ["E501", "F401"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["domain", "application", "infrastructure", "interfaces"]
+known-third-party = ["pytest", "hypothesis", "googleapiclient", "google"]
+
+# =============================================================================
+# Mypy Configuration - Strict Mode
+# =============================================================================
+
+[tool.mypy]
+python_version = "3.10"
+
+strict = true
+warn_redundant_casts = true
+warn_unused_configs = true
+warn_no_return = true
+warn_return_any = true
+warn_unreachable = true
+
+disallow_any_generics = false
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "domain.*"
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+
+[[tool.mypy.overrides]]
+module = "application.*"
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+
+[[tool.mypy.overrides]]
+module = "infrastructure.*"
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+
+[[tool.mypy.overrides]]
+module = "interfaces.*"
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+
+[[tool.mypy.overrides]]
+module = "test.*"
+ignore_errors = true

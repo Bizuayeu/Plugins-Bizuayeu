@@ -7,8 +7,8 @@ AliasRecord TypedDict のフィールド検証。
 
 設計意図:
 - _alias_resolver.md の1エントリのドメイン表現
-- ResolverService の add/edit/remove/rebuild が扱う単位
-- archived フラグでアーカイブ後も参照を維持
+- ResolverService の add/edit/remove/complete_archive/rebuild が扱う単位
+- archive_status で active/completed/removed の 3 状態を表現
 """
 
 from typing import List, get_type_hints
@@ -60,11 +60,10 @@ class TestAliasRecord:
         assert hints["target_path"] is str
 
     @pytest.mark.unit
-    def test_has_archived_field(self) -> None:
-        """archived フィールド（アーカイブ済みフラグ、論理削除）"""
+    def test_has_archive_status_field(self) -> None:
+        """archive_status フィールド（active/completed/removed の 3 状態）"""
         hints = get_type_hints(AliasRecord)
-        assert "archived" in hints
-        assert hints["archived"] is bool
+        assert "archive_status" in hints
 
     @pytest.mark.unit
     def test_can_construct_active_project(self) -> None:
@@ -75,21 +74,21 @@ class TestAliasRecord:
             "aliases": ["○○MS", "現場番号2026-003", "○○町案件"],
             "shard": "projects",
             "target_path": "shards/projects/MaruMaruMansion/_project.md",
-            "archived": False,
+            "archive_status": "active",
         }
         assert rec["shard"] == "projects"
-        assert rec["archived"] is False
+        assert rec["archive_status"] == "active"
 
     @pytest.mark.unit
-    def test_can_construct_archived_project(self) -> None:
-        """アーカイブ済み案件のレコード構築（archived=True）"""
+    def test_can_construct_completed_project(self) -> None:
+        """完工アーカイブ案件のレコード構築（archive_status='completed'）"""
         rec: AliasRecord = {
             "id": "projects/BatsuBatsuBiru",
             "canonical": "完工済み：××ビル改修工事",
             "aliases": ["××ビル", "現場番号2025-018"],
             "shard": "projects",
             "target_path": "archive/projects/BatsuBatsuBiru/_project.md",
-            "archived": True,
+            "archive_status": "completed",
         }
-        assert rec["archived"] is True
+        assert rec["archive_status"] == "completed"
         assert "archive/" in rec["target_path"]

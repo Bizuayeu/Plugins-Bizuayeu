@@ -24,6 +24,7 @@ from typing import Any, List
 from domain.constants import SHARD_KINDS
 from domain.exceptions import BusinessCuratorError
 from domain.file_naming import is_valid_entry_id
+from domain.types.shard import ARCHIVE_STATUSES
 
 __all__ = [
     "ValidationError",
@@ -169,14 +170,14 @@ def validate_alias_record(data: Any) -> None:
         data: 検証対象（dict 想定）
 
     Raises:
-        ValidationError: フィールド欠落・型不一致・ID/shard 整合性違反
+        ValidationError: フィールド欠落・型不一致・ID/shard/archive_status 整合性違反
     """
     if not isinstance(data, dict):
         raise ValidationError(
             f"alias record must be dict, got {type(data).__name__}"
         )
 
-    for field in ["id", "canonical", "aliases", "shard", "target_path", "archived"]:
+    for field in ["id", "canonical", "aliases", "shard", "target_path", "archive_status"]:
         if field not in data:
             raise ValidationError(f"missing required field: {field}")
 
@@ -205,5 +206,26 @@ def validate_alias_record(data: Any) -> None:
     # aliases は list[str]
     _require_list_of_str(data["aliases"], "aliases")
 
-    # archived は bool
-    _require_type(data["archived"], bool, "archived")
+    # archive_status は ARCHIVE_STATUSES のいずれか
+    status = data["archive_status"]
+    if not isinstance(status, str):
+        raise ValidationError(
+            f"archive_status must be str, got {type(status).__name__}"
+        )
+    if status not in ARCHIVE_STATUSES:
+        raise ValidationError(
+            f"invalid archive_status: {status!r} (expected one of {ARCHIVE_STATUSES})"
+        )
+
+    # target_path と archive_status の整合性
+    target_path = data["target_path"]
+    if status == "completed":
+        if not target_path.startswith("archive/"):
+            raise ValidationError(
+                f"archive_status='completed' requires target_path under 'archive/', got {target_path!r}"
+            )
+    elif status == "active":
+        if not target_path.startswith("shards/"):
+            raise ValidationError(
+                f"archive_status='active' requires target_path under 'shards/', got {target_path!r}"
+            )

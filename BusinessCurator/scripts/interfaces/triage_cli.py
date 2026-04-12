@@ -77,11 +77,11 @@ def _build_rules_from_resolver(records: List[AliasRecord]) -> List[TriageRule]:
         - canonical を subject パターンに（regex エスケープ）
         - aliases も同様
         - target_kind/slug は record の shard/slug
-        - archived レコードは除外
+        - 非 active (completed/removed) レコードは除外
     """
     rules: List[TriageRule] = []
     for rec in records:
-        if rec["archived"]:
+        if rec["archive_status"] != "active":
             continue
         # ID から slug を抽出
         _, _, slug = rec["id"].partition("/")

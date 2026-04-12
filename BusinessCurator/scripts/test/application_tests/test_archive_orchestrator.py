@@ -89,13 +89,30 @@ class TestArchiveOrchestratorCreateManifest:
             orch.create_manifest("C1")
 
     @pytest.mark.unit
-    def test_already_archived_project_raises(self) -> None:
-        records = [build_alias_record(slug="Done", archived=True)]
+    def test_already_completed_project_raises(self) -> None:
+        """archive_status='completed' のレコードは再アーカイブ不可"""
+        records = [
+            build_alias_record(
+                slug="Done",
+                archive_status="completed",
+                target_path="archive/projects/Done/_project.md",
+            )
+        ]
         orch, _ = _make_orchestrator(initial_records=records)
         from domain.exceptions import ArchiveError
 
         with pytest.raises(ArchiveError, match="already archived"):
             orch.create_manifest("Done")
+
+    @pytest.mark.unit
+    def test_removed_project_cannot_be_archived(self) -> None:
+        """archive_status='removed' のレコードはアーカイブ不可（論理削除済み）"""
+        records = [build_alias_record(slug="Ghost", archive_status="removed")]
+        orch, _ = _make_orchestrator(initial_records=records)
+        from domain.exceptions import ArchiveError
+
+        with pytest.raises(ArchiveError, match="removed"):
+            orch.create_manifest("Ghost")
 
     @pytest.mark.unit
     def test_default_reason_is_completed(self) -> None:
@@ -112,7 +129,8 @@ class TestArchiveOrchestratorCreateManifest:
 
 class TestArchiveOrchestratorExecute:
     @pytest.mark.unit
-    def test_execute_marks_resolver_archived(self) -> None:
+    def test_execute_sets_archive_status_completed(self) -> None:
+        """execute() で archive_status='completed' + target_path が archive/ 配下に更新される"""
         records = [
             build_alias_record(
                 slug="MaruMaru",
@@ -121,9 +139,9 @@ class TestArchiveOrchestratorExecute:
         ]
         orch, repo = _make_orchestrator(initial_records=records)
         manifest = orch.execute("MaruMaru", reason="完工")
-        # resolver で archived = True に更新
+        # resolver で archive_status = "completed" に更新
         loaded = repo.load_all()[0]
-        assert loaded["archived"] is True
+        assert loaded["archive_status"] == "completed"
         # target_path も archive/ に更新
         assert "archive/projects/MaruMaru" in loaded["target_path"]
         # manifest 返却
@@ -131,7 +149,7 @@ class TestArchiveOrchestratorExecute:
 
     @pytest.mark.unit
     def test_execute_idempotent_after_first_call(self) -> None:
-        """1回目で archived=True、2回目は ArchiveError"""
+        """1回目で completed、2回目は ArchiveError"""
         records = [build_alias_record(slug="X")]
         orch, _ = _make_orchestrator(initial_records=records)
         orch.execute("X")

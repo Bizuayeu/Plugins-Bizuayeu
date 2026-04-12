@@ -100,11 +100,10 @@ class TestShardEntity:
         assert hints["aliases"] == List[str]
 
     @pytest.mark.unit
-    def test_has_archived_field(self) -> None:
-        """archived フィールド（アーカイブ済みフラグ）"""
+    def test_has_archive_status_field(self) -> None:
+        """archive_status フィールド（active/completed/removed）"""
         hints = get_type_hints(ShardEntity)
-        assert "archived" in hints
-        assert hints["archived"] is bool
+        assert "archive_status" in hints
 
     @pytest.mark.unit
     def test_has_category_field(self) -> None:
@@ -121,11 +120,11 @@ class TestShardEntity:
             "canonical_name": "○○マンション新築工事",
             "slug": "MaruMaruMansion",
             "aliases": ["○○MS", "現場番号2026-003", "○○町案件"],
-            "archived": False,
+            "archive_status": "active",
             "category": None,
         }
         assert entity["kind"] == "projects"
-        assert entity["archived"] is False
+        assert entity["archive_status"] == "active"
 
     @pytest.mark.unit
     def test_can_construct_knowledge_entity_with_category(self) -> None:
@@ -135,7 +134,7 @@ class TestShardEntity:
             "canonical_name": "排煙告示",
             "slug": "smoke-evacuation-notice",
             "aliases": ["排煙設備", "告示1436号"],
-            "archived": False,
+            "archive_status": "active",
             "category": "法規",
         }
         assert entity["category"] == "法規"

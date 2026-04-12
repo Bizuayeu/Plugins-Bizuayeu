@@ -80,15 +80,39 @@ class TestMetricsCollectorBasic:
     @pytest.mark.unit
     def test_counts_alias_records(self) -> None:
         records = [
-            build_alias_record(slug="A", archived=False),
-            build_alias_record(slug="B", archived=False),
-            build_alias_record(slug="C", archived=True),
+            build_alias_record(slug="A", archive_status="active"),
+            build_alias_record(slug="B", archive_status="active"),
+            build_alias_record(slug="C", archive_status="removed"),
         ]
         uc = _make_uc(alias_records=records)
         result = uc.execute()
         assert result.alias_records_total == 3
         assert result.alias_records_active == 2
+        assert result.alias_records_removed == 1
         assert result.alias_records_archived == 1
+
+    @pytest.mark.unit
+    def test_counts_completed_and_removed_separately(self) -> None:
+        records = [
+            build_alias_record(slug="A", archive_status="active"),
+            build_alias_record(
+                slug="B",
+                archive_status="completed",
+                target_path="archive/projects/B/_project.md",
+            ),
+            build_alias_record(slug="C", archive_status="removed"),
+            build_alias_record(
+                slug="D",
+                archive_status="completed",
+                target_path="archive/projects/D/_project.md",
+            ),
+        ]
+        uc = _make_uc(alias_records=records)
+        result = uc.execute()
+        assert result.alias_records_active == 1
+        assert result.alias_records_completed == 2
+        assert result.alias_records_removed == 1
+        assert result.alias_records_archived == 3  # completed + removed
 
     @pytest.mark.unit
     def test_alias_per_shard(self) -> None:
@@ -107,10 +131,16 @@ class TestMetricsCollectorBasic:
         assert result.alias_per_shard["knowledge"] == 1
 
     @pytest.mark.unit
-    def test_alias_per_shard_excludes_archived_from_active_count(self) -> None:
+    def test_alias_per_shard_excludes_non_active_from_active_count(self) -> None:
         records = [
-            build_alias_record(kind="projects", slug="P1", archived=False),
-            build_alias_record(kind="projects", slug="P2", archived=True),
+            build_alias_record(kind="projects", slug="P1", archive_status="active"),
+            build_alias_record(kind="projects", slug="P2", archive_status="removed"),
+            build_alias_record(
+                kind="projects",
+                slug="P3",
+                archive_status="completed",
+                target_path="archive/projects/P3/_project.md",
+            ),
         ]
         uc = _make_uc(alias_records=records)
         result = uc.execute()

@@ -166,7 +166,7 @@ class TestValidateAliasRecord:
             "aliases": ["○○MS", "現場番号2026-003"],
             "shard": "projects",
             "target_path": "shards/projects/MaruMaruMansion/_project.md",
-            "archived": False,
+            "archive_status": "active",
         }
 
     @pytest.mark.unit
@@ -199,10 +199,41 @@ class TestValidateAliasRecord:
             validate_alias_record(valid_record)
 
     @pytest.mark.unit
-    def test_archived_must_be_bool(self, valid_record: dict) -> None:  # type: ignore[type-arg]
-        valid_record["archived"] = "false"
-        with pytest.raises(ValidationError, match="archived"):
+    def test_archive_status_must_be_valid_enum(self, valid_record: dict) -> None:  # type: ignore[type-arg]
+        """archive_status が ARCHIVE_STATUSES 外だと ValidationError"""
+        valid_record["archive_status"] = "unknown"
+        with pytest.raises(ValidationError, match="archive_status"):
             validate_alias_record(valid_record)
+
+    @pytest.mark.unit
+    def test_archive_status_must_be_string(self, valid_record: dict) -> None:  # type: ignore[type-arg]
+        """archive_status が非文字列だと ValidationError"""
+        valid_record["archive_status"] = True
+        with pytest.raises(ValidationError, match="archive_status"):
+            validate_alias_record(valid_record)
+
+    @pytest.mark.unit
+    def test_completed_requires_archive_target_path(self, valid_record: dict) -> None:  # type: ignore[type-arg]
+        """archive_status='completed' は target_path が archive/ 配下を要求"""
+        valid_record["archive_status"] = "completed"
+        # target_path は shards/ のまま → 整合性違反
+        with pytest.raises(ValidationError, match="archive"):
+            validate_alias_record(valid_record)
+
+    @pytest.mark.unit
+    def test_active_requires_shards_target_path(self, valid_record: dict) -> None:  # type: ignore[type-arg]
+        """archive_status='active' は target_path が shards/ 配下を要求"""
+        valid_record["archive_status"] = "active"
+        valid_record["target_path"] = "archive/projects/MaruMaruMansion/_project.md"
+        with pytest.raises(ValidationError, match="shards"):
+            validate_alias_record(valid_record)
+
+    @pytest.mark.unit
+    def test_removed_allows_shards_target_path(self, valid_record: dict) -> None:  # type: ignore[type-arg]
+        """archive_status='removed' は target_path 接頭辞を問わない（元のまま残す）"""
+        valid_record["archive_status"] = "removed"
+        # shards/ のまま残せる
+        validate_alias_record(valid_record)
 
     @pytest.mark.unit
     def test_id_with_empty_slug_raises(self, valid_record: dict) -> None:  # type: ignore[type-arg]

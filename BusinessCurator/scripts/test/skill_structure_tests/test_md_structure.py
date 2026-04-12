@@ -63,6 +63,8 @@ REQUIRED_COMMANDS: List[str] = [
     "wiki-rebuild-resolver.md",
     "wiki-archive.md",
     "wiki-cleanup.md",
+    "wiki-index-rebuild.md",
+    "wiki-verify-links.md",
 ]
 
 # CLI が呼ばれる command → CLI モジュール名 のマップ
@@ -71,6 +73,8 @@ COMMAND_TO_CLI: Dict[str, str] = {
     "wiki-triage.md": "interfaces.triage_cli",
     "wiki-status.md": "interfaces.status_cli",
     "wiki-archive.md": "interfaces.archive_cli",
+    "wiki-index-rebuild.md": "interfaces.index_cli",
+    "wiki-verify-links.md": "interfaces.quality_cli",
     "wiki-project-add.md": "interfaces.resolver_cli",
     "wiki-project-edit.md": "interfaces.resolver_cli",
     "wiki-project-close.md": "interfaces.resolver_cli",

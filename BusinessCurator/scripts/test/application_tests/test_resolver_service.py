@@ -3,12 +3,12 @@
 application/resolver/resolver_service.py テスト
 ================================================
 
-ResolverService の add/edit/remove/rebuild 動作検証。
+ResolverService の add/edit/remove/complete_archive/rebuild 動作検証。
 
 設計意図:
 - AliasResolverRepositoryProtocol を Fake で注入
 - 全操作後の永続化（save_all 呼び出し）を検証
-- 重複ID/未登録ID/論理削除のエッジケースをカバー
+- 重複ID/未登録ID/論理削除/完工アーカイブのエッジケースをカバー
 - property-based test で add → remove → add 安定性
 """
 
@@ -69,7 +69,7 @@ class TestResolverServiceAdd:
             "aliases": [],
             "shard": "projects",
             "target_path": "x",
-            "archived": False,
+            "archive_status": "active",
         }
         with pytest.raises(ResolverError):
             svc.add(bad)
@@ -142,14 +142,14 @@ class TestResolverServiceEdit:
 
     @pytest.mark.unit
     def test_edit_target_path(self) -> None:
-        """target_path 更新"""
+        """target_path 更新（active 同士での更新）"""
         repo = FakeAliasResolverRepository(
             initial=[build_alias_record(slug="A")]
         )
         svc = ResolverService(repo)
-        svc.edit("projects/A", target_path="archive/projects/A/_project.md")
+        svc.edit("projects/A", target_path="shards/projects/A_renamed/_project.md")
         rec = repo.load_all()[0]
-        assert rec["target_path"] == "archive/projects/A/_project.md"
+        assert rec["target_path"] == "shards/projects/A_renamed/_project.md"
 
 
 # =============================================================================
@@ -158,17 +158,17 @@ class TestResolverServiceEdit:
 
 
 class TestResolverServiceRemove:
-    """remove メソッドのテスト（論理削除）"""
+    """remove メソッドのテスト（論理削除 → archive_status="removed"）"""
 
     @pytest.mark.unit
-    def test_remove_marks_archived(self) -> None:
+    def test_remove_marks_removed(self) -> None:
         repo = FakeAliasResolverRepository(
-            initial=[build_alias_record(slug="A", archived=False)]
+            initial=[build_alias_record(slug="A", archive_status="active")]
         )
         svc = ResolverService(repo)
         svc.remove("projects/A")
         rec = repo.load_all()[0]
-        assert rec["archived"] is True
+        assert rec["archive_status"] == "removed"
 
     @pytest.mark.unit
     def test_remove_does_not_delete(self) -> None:
@@ -188,14 +188,91 @@ class TestResolverServiceRemove:
             svc.remove("projects/Unknown")
 
     @pytest.mark.unit
-    def test_remove_already_archived_is_noop(self) -> None:
-        """既にarchived=Trueでも例外なく成功（idempotent）"""
+    def test_remove_already_removed_is_noop(self) -> None:
+        """既に removed でも例外なく成功（idempotent）"""
         repo = FakeAliasResolverRepository(
-            initial=[build_alias_record(slug="A", archived=True)]
+            initial=[build_alias_record(slug="A", archive_status="removed")]
         )
         svc = ResolverService(repo)
         svc.remove("projects/A")  # raisesなし
-        assert repo.load_all()[0]["archived"] is True
+        assert repo.load_all()[0]["archive_status"] == "removed"
+
+
+# =============================================================================
+# complete_archive (v4 新規)
+# =============================================================================
+
+
+class TestResolverServiceCompleteArchive:
+    """complete_archive メソッドのテスト（完工アーカイブ）"""
+
+    @pytest.mark.unit
+    def test_complete_archive_sets_status_and_target_path(self) -> None:
+        """archive_status='completed' と target_path が archive/ に更新される"""
+        repo = FakeAliasResolverRepository(
+            initial=[build_alias_record(slug="A", archive_status="active")]
+        )
+        svc = ResolverService(repo)
+        svc.complete_archive(
+            "projects/A",
+            new_target_path="archive/projects/A/_project.md",
+        )
+        rec = repo.load_all()[0]
+        assert rec["archive_status"] == "completed"
+        assert rec["target_path"] == "archive/projects/A/_project.md"
+
+    @pytest.mark.unit
+    def test_complete_archive_unknown_id_raises(self) -> None:
+        repo = FakeAliasResolverRepository()
+        svc = ResolverService(repo)
+        with pytest.raises(EntityNotFoundError):
+            svc.complete_archive(
+                "projects/Unknown",
+                new_target_path="archive/projects/Unknown/_project.md",
+            )
+
+    @pytest.mark.unit
+    def test_complete_archive_rejects_non_archive_target_path(self) -> None:
+        """target_path が archive/ 接頭辞でない場合 ResolverError"""
+        repo = FakeAliasResolverRepository(
+            initial=[build_alias_record(slug="A")]
+        )
+        svc = ResolverService(repo)
+        with pytest.raises(ResolverError):
+            svc.complete_archive(
+                "projects/A",
+                new_target_path="shards/projects/A/_project.md",
+            )
+
+    @pytest.mark.unit
+    def test_complete_archive_persists(self) -> None:
+        repo = FakeAliasResolverRepository(
+            initial=[build_alias_record(slug="A")]
+        )
+        svc = ResolverService(repo)
+        before = repo.save_count
+        svc.complete_archive(
+            "projects/A",
+            new_target_path="archive/projects/A/_project.md",
+        )
+        assert repo.save_count == before + 1
+
+    @pytest.mark.unit
+    def test_complete_archive_after_remove_transitions(self) -> None:
+        """removed → completed は complete_archive() で可能（removed フラグは上書き）
+
+        実務上はほぼ発生しないが、archive_status 状態遷移の自由度を保証する。
+        """
+        repo = FakeAliasResolverRepository(
+            initial=[build_alias_record(slug="A", archive_status="removed")]
+        )
+        svc = ResolverService(repo)
+        svc.complete_archive(
+            "projects/A",
+            new_target_path="archive/projects/A/_project.md",
+        )
+        rec = repo.load_all()[0]
+        assert rec["archive_status"] == "completed"
 
 
 # =============================================================================
@@ -236,7 +313,7 @@ class TestResolverServiceRebuild:
             "aliases": [],
             "shard": "projects",
             "target_path": "x",
-            "archived": False,
+            "archive_status": "active",
         }
         with pytest.raises(ResolverError):
             svc.rebuild([build_alias_record(slug="Good"), bad])
@@ -290,18 +367,57 @@ class TestResolverServiceQuery:
             svc.find("projects/Unknown")
 
     @pytest.mark.unit
-    def test_list_active_excludes_archived(self) -> None:
+    def test_list_active_excludes_non_active(self) -> None:
+        """completed / removed は list_active() に含まれない"""
         repo = FakeAliasResolverRepository(
             initial=[
-                build_alias_record(slug="A", archived=False),
-                build_alias_record(slug="B", archived=True),
-                build_alias_record(slug="C", archived=False),
+                build_alias_record(slug="A", archive_status="active"),
+                build_alias_record(slug="B", archive_status="removed"),
+                build_alias_record(slug="C", archive_status="active"),
+                build_alias_record(
+                    slug="D",
+                    archive_status="completed",
+                    target_path="archive/projects/D/_project.md",
+                ),
             ]
         )
         svc = ResolverService(repo)
         active = svc.list_active()
         ids = sorted(r["id"] for r in active)
         assert ids == ["projects/A", "projects/C"]
+
+    @pytest.mark.unit
+    def test_list_completed_returns_only_completed(self) -> None:
+        """list_completed() は completed のみ返す"""
+        repo = FakeAliasResolverRepository(
+            initial=[
+                build_alias_record(slug="A", archive_status="active"),
+                build_alias_record(
+                    slug="B",
+                    archive_status="completed",
+                    target_path="archive/projects/B/_project.md",
+                ),
+                build_alias_record(slug="C", archive_status="removed"),
+                build_alias_record(
+                    slug="D",
+                    archive_status="completed",
+                    target_path="archive/projects/D/_project.md",
+                ),
+            ]
+        )
+        svc = ResolverService(repo)
+        completed = svc.list_completed()
+        ids = sorted(r["id"] for r in completed)
+        assert ids == ["projects/B", "projects/D"]
+
+    @pytest.mark.unit
+    def test_list_completed_empty(self) -> None:
+        """completed が存在しない場合は空リスト"""
+        repo = FakeAliasResolverRepository(
+            initial=[build_alias_record(slug="A", archive_status="active")]
+        )
+        svc = ResolverService(repo)
+        assert svc.list_completed() == []
 
 
 # =============================================================================
@@ -323,7 +439,7 @@ class TestResolverServiceProperties:
     @given(slugs=st.lists(_slug_strategy, min_size=1, max_size=5, unique=True))
     @settings(max_examples=30, suppress_health_check=[HealthCheck.too_slow])
     def test_add_then_remove_then_re_add_keeps_count(self, slugs: List[str]) -> None:
-        """全 slug を add → 全 remove → 全 add しても、結果は同数（archivedは上書き）"""
+        """全 slug を add → 全 remove → 全 add しても、結果は同数（archive_status は上書き）"""
         repo = FakeAliasResolverRepository()
         svc = ResolverService(repo)
         for s in slugs:
@@ -334,8 +450,8 @@ class TestResolverServiceProperties:
             svc.remove(f"projects/{s}")
         # 論理削除なのでレコード数は変わらない
         assert len(repo.load_all()) == len(slugs)
-        # 全 archived
-        assert all(r["archived"] for r in repo.load_all())
+        # 全 removed
+        assert all(r["archive_status"] == "removed" for r in repo.load_all())
 
         # 再 add は重複として失敗するはず（論理削除でも id 衝突）
         for s in slugs:

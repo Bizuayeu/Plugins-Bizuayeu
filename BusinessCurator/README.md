@@ -42,7 +42,7 @@ Karpathy 式パーソナル wiki (`wiki` skill) の **エンタープライズ�
 
 ---
 
-## 全 20 コマンド
+## 全 22 コマンド
 
 ### Manager 層 (マスタ CRUD、12 commands)
 
@@ -62,13 +62,15 @@ Karpathy 式パーソナル wiki (`wiki` skill) の **エンタープライズ�
 | `/wiki-absorb` | shards/ にエントリを吸収 |
 | `/wiki-archive` | 完工案件を archive/ へ |
 
-### Auxiliary 層 (補助、4 commands)
+### Auxiliary 層 (補助、6 commands)
 
 | コマンド | 用途 |
 |---|---|
 | `/wiki-query` | wiki 横断質問応答 |
 | `/wiki-status` | シャード横断メトリクス |
 | `/wiki-rebuild-resolver` | エイリアスリゾルバ再構築 |
+| `/wiki-index-rebuild` | `_index.md` ツリー再生成 |
+| `/wiki-verify-links` | wikilink 整合性検証 (broken / stale link 検出) |
 | `/wiki-cleanup` | 既存記事の品質改善 |
 
 ---
@@ -85,14 +87,14 @@ BusinessCurator/
   _alias_resolver.md                            ← 全シャード統合エイリアス解決器
 
   skills/wiki/                                ← 11 skill md
-  commands/                                   ← 20 command md
+  commands/                                   ← 22 command md
 
   scripts/                                    ← Clean Architecture 実装
-    domain/                                   ← 純粋型・例外・Protocol
-    application/                              ← UseCase
-    infrastructure/                           ← 実 I/O アダプタ
+    domain/                                   ← 純粋型・例外・Protocol・IndexEntry
+    application/                              ← UseCase (resolver/archive/quality/indexing/status)
+    infrastructure/                           ← 実 I/O アダプタ・migrations
     interfaces/                               ← CLI (Composition Root)
-    test/                                     ← 589 tests
+    test/                                     ← 645 tests
 
   data/                                       ← 生メール (.eml/.mbox、変更不可)
   inbox/
@@ -163,14 +165,14 @@ python -m pytest scripts/test/skill_structure_tests/ -v   # md 構造
 
 # 統計
 python -m pytest scripts/test/ -q --no-cov
-# → 589 passed
+# → 645 passed
 ```
 
 ### 静的解析
 
 ```bash
 python -m mypy scripts/ --strict
-# → Success: no issues found in 94 source files
+# → Success: no issues found in 100+ source files
 
 python -m ruff check scripts/
 # → All checks passed!
@@ -194,11 +196,11 @@ python -m ruff check scripts/
 
 | 項目 | 値 |
 |---|---|
-| **テスト数** | **589 passed** |
-| **カバレッジ** | **95.08%** (fail_under=80) |
-| **mypy strict** | **0 errors** (94 source files) |
+| **テスト数** | **645 passed** |
+| **カバレッジ** | **95%+** (fail_under=80) |
+| **mypy strict** | **0 errors** (100+ source files) |
 | **ruff** | **All checks passed** |
-| **md ファイル数** | **31** (11 skill + 20 command) |
+| **md ファイル数** | **33** (11 skill + 22 command) |
 | **TDD サイクル** | Red → Green → Refactor を全機能で遵守 |
 
 ### レイヤ別カバレッジ
@@ -224,6 +226,26 @@ python -m ruff check scripts/
 4. **エイリアスリゾルバをルートに同居**: アクセスコスト最小化
 5. **archive は手動発動**: 完工判断は業務判断
 6. **業種非依存設計**: B2B 受注産業の汎用構造
+
+---
+
+## Changelog
+
+### v1.0.0 (2026-04-12)
+
+- **archive_status 3 状態統一**: `archived: bool` → `archive_status: Literal["active","completed","removed"]`。AliasRecord + ShardEntity 同時移行、後方互換性なし
+- **complete_archive()**: 完工アーカイブの atomic メソッド。旧 `edit + remove` 2 段階呼びを廃止
+- **Repository 3 セクション化**: `## archive/<kind>/ [completed]` / `[removed]` で kind 別に archive セクション分離
+- **Migration script**: `infrastructure/migrations/migrate_to_archive_status.py` (旧 `## archive/ [archived]` → 新フォーマット一発変換)
+- **wikilink_verifier**: `application/quality/wikilink_verifier.py` + `interfaces/quality_cli.py` で broken/stale link を production 検出
+- **`/wiki-index-rebuild`**: `_index.md` ツリー再生成コマンド
+- **`/wiki-verify-links`**: wikilink 整合性検証コマンド
+- **thread_id regression tests**: production の thread_id 非汚染を 4 件のテストで永続保証
+- テスト数: 589 → **645** (+56)
+
+### v0.1.0 (2026-04-07)
+
+- 初回リリース: Clean Architecture × TDD、4 シャード wiki、20 コマンド
 
 ---
 
