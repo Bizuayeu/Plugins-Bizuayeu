@@ -16,7 +16,7 @@ paths:
 # Operations Guidelines
 
 デプロイ・インフラ・運用に関わる作業時の確認事項。
-開発方法論は `dev/CODE.md` を参照。
+開発方法論は `./DEV.md` を参照。
 詳細チェックリストは [バイブコーディングで「プロダクト」をリリースする前に（Qiita）](https://qiita.com/Akira-Isegawa/items/00f23d206c504db2ac3b) を参照。
 
 ---
