@@ -28,7 +28,7 @@ triage 済みエントリをシャード wiki に編み込みます。
 
 ## 共通原則
 
-`[../../../.claude/skills/wiki/SKILL.md](../../../.claude/skills/wiki/SKILL.md)` の **writer, not filing clerk** 原則を継承：
+`[../skills/wiki/SKILL.md](../skills/wiki/SKILL.md)` の **writer, not filing clerk** 原則を継承：
 
 - 事実をどこに置くかではなく、それが何を意味するかを問う
 - 既存記事に append するのではなく、新たな次元を見出して統合する

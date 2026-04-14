@@ -9,7 +9,7 @@ description: 得意先 wiki キュレーション方針。案件横断での得�
 
 ## 継承する原則
 
-`[../../../../.claude/skills/wiki/SKILL.md](../../../../.claude/skills/wiki/SKILL.md)` の writer 原則を継承。
+`[SKILL.md](SKILL.md)` の writer 原則を継承。
 
 ## 得意先固有の方針
 

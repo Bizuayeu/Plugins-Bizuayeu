@@ -253,5 +253,5 @@ MIT
 - 実装環境: Claude Code + Plugins-Weave
 
 参照プラグイン:
-- `[wiki](.claude/skills/wiki/SKILL.md)` (Karpathy 式パーソナル wiki) — 原型
+- `[wiki](skills/wiki/SKILL.md)` (Karpathy 式パーソナル wiki) — 原型
 - `[EpisodicRAG](../../plugins-weave/EpisodicRAG/)` — Clean Architecture × TDD パターン提供
