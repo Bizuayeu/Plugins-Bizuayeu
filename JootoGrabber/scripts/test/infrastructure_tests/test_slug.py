@@ -11,6 +11,8 @@ class TestBoardSlug:
             ("  leading trailing  ", 42, "42_leading_trailing"),
             ("slash/in:name?", 7, "7_slash_in_name"),
             ("", 9, "9"),
+            ("FY26_04 滝野川５丁目", 100, "100_FY26_04_滝野川５丁目"),
+            ("１課", 1241348, "1241348_１課"),
         ],
     )
     def test_cases(self, title: str, board_id: int, expected: str) -> None:

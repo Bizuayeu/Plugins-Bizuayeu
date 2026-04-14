@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 
-_UNSAFE = re.compile(r"[^0-9A-Za-z\u3040-\u30ff\u4e00-\u9fff_-]+")
+_UNSAFE = re.compile(r"[^0-9A-Za-z\u3040-\u30ff\u4e00-\u9fff\uff10-\uff5a_-]+")
 
 
 def board_slug(board_id: int, title: str) -> str:
