@@ -12,7 +12,7 @@ JootoGrabber 出力（`data/jooto/{id}_{slug}/`）を MeguruWiki project shard �
 
 ## 継承する原則
 
-`[../../../../.claude/skills/wiki/SKILL.md](../../../../.claude/skills/wiki/SKILL.md)` の **writer, not filing clerk** 原則を継承：
+`[SKILL.md](SKILL.md)`（BusinessCurator wiki スキル本体）の **writer, not filing clerk** 原則を継承：
 
 タスクを丸ごと転記するのではなく、「**いま何を追うべきか**」を抽出して記事化する。
 
