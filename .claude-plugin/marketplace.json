@@ -51,6 +51,26 @@
         "oauth",
         "tdd"
       ]
+    },
+    {
+      "name": "JootoGrabber",
+      "source": "./JootoGrabber",
+      "description": "Jooto API backup with API-key auth (X-Jooto-Api-Key), board/task export, incremental sync for BusinessCurator ingestion",
+      "version": "0.1.0",
+      "author": {
+        "name": "Weave @ JootoGrabber"
+      },
+      "homepage": "https://note.com/weave_ai",
+      "repository": "https://github.com/Bizuayeu/Plugins-Bizuayeu",
+      "license": "MIT",
+      "keywords": [
+        "jooto",
+        "project-management",
+        "backup",
+        "api",
+        "clean-architecture",
+        "tdd"
+      ]
     }
   ]
 }

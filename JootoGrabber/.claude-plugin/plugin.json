@@ -1,0 +1,19 @@
+{
+  "name": "JootoGrabber",
+  "version": "0.1.0",
+  "description": "Jooto API backup tool with Clean Architecture: API key auth, board/task fetching, incremental sync, JSON export for BusinessCurator ingestion",
+  "author": {
+    "name": "Weave @ JootoGrabber"
+  },
+  "homepage": "https://note.com/weave_ai",
+  "repository": "https://github.com/Bizuayeu/Plugins-Bizuayeu",
+  "license": "MIT",
+  "keywords": [
+    "jooto",
+    "project-management",
+    "backup",
+    "clean-architecture",
+    "tdd",
+    "api"
+  ]
+}
