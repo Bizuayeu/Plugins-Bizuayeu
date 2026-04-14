@@ -13,7 +13,7 @@ description: 案件 wiki キュレーション方針。raw-entries をエピソ�
 
 ## 継承する原則
 
-`[../../../../.claude/skills/wiki/SKILL.md](../../../../.claude/skills/wiki/SKILL.md)` の **writer, not filing clerk** 原則を継承します：
+`[SKILL.md](SKILL.md)` の **writer, not filing clerk** 原則を継承します：
 
 - 事実をどこに置くかではなく、それが何を意味するかを問う
 - 既存記事に append するのではなく、新たな次元を見出して統合する

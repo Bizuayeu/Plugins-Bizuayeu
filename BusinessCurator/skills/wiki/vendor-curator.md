@@ -9,7 +9,7 @@ description: 取引先 wiki キュレーション方針。実績・品質評価�
 
 ## 継承する原則
 
-`[../../../../.claude/skills/wiki/SKILL.md](../../../../.claude/skills/wiki/SKILL.md)` の writer 原則を継承。
+`[SKILL.md](SKILL.md)` の writer 原則を継承。
 
 ## 取引先固有の方針
 

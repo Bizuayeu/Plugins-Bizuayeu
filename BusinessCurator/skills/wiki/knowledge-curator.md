@@ -9,7 +9,7 @@ description: 知見 wiki キュレーション方針。案件から汎用的知�
 
 ## 継承する原則
 
-`[../../../../.claude/skills/wiki/SKILL.md](../../../../.claude/skills/wiki/SKILL.md)` の writer 原則を継承。
+`[SKILL.md](SKILL.md)` の writer 原則を継承。
 
 ## 知見固有の方針
 

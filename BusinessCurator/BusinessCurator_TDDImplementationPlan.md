@@ -306,7 +306,7 @@ TDDサイクル:
 タスク:
 1. `skills/wiki/SKILL.md`（ナビゲーター + 簡易操作、digest-auto SKILL.mdの構成パターン参照）
 2. 4つの manager skill（CRUD、AskUserQuestion対話）
-3. 4つの curator skill（[wiki SKILL.md](../../.claude/skills/wiki/SKILL.md) から共通原則「writer, not filing clerk」継承）
+3. 4つの curator skill（[wiki SKILL.md](skills/wiki/SKILL.md) から共通原則「writer, not filing clerk」継承）
 4. `triage.md`（ルール記述 + claude -p フォールバック手順）
 5. `archive.md`（対話フロー + Python CLI呼び出し）
 6. 20個の command md
