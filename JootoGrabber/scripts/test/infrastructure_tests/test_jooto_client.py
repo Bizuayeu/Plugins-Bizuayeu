@@ -28,7 +28,7 @@ class FakeTransport:
 
 
 def _cfg() -> Config:
-    return Config(api_key="secret-key", base_url="https://app.jooto.com")
+    return Config(api_key="secret-key", base_url="https://api.jooto.com")
 
 
 class TestJootoClientGet:
@@ -38,7 +38,7 @@ class TestJootoClientGet:
 
         client.get("/organizations")
 
-        assert t.last_url == "https://app.jooto.com/organizations"
+        assert t.last_url == "https://api.jooto.com/organizations"
         assert t.last_headers["X-Jooto-Api-Key"] == "secret-key"
 
     def test_returns_parsed_body_on_200(self) -> None:
@@ -52,7 +52,7 @@ class TestJootoClientGet:
         client = JootoClient(_cfg(), transport=t)
 
         client.get("organizations")  # no leading slash
-        assert t.last_url == "https://app.jooto.com/organizations"
+        assert t.last_url == "https://api.jooto.com/organizations"
 
     @pytest.mark.parametrize("status", [401, 403])
     def test_auth_status_raises_auth_error(self, status: int) -> None:

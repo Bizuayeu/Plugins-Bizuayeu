@@ -21,7 +21,7 @@ def _make_client(response: HttpResponse) -> tuple[JootoClient, _StubTransport]:
     from infrastructure.config import Config
 
     t = _StubTransport(response)
-    return JootoClient(Config(api_key="k", base_url="https://app.jooto.com"), t), t
+    return JootoClient(Config(api_key="k", base_url="https://api.jooto.com"), t), t
 
 
 class TestRunAuth:
@@ -32,7 +32,7 @@ class TestRunAuth:
         result = auth_cli.run_auth(client)
         assert result == {
             "status": "ok",
-            "base_url": "https://app.jooto.com",
+            "base_url": "https://api.jooto.com",
             "boards_total": 30,
         }
         assert transport.calls[0][0].endswith("/v1/boards?per_page=1")

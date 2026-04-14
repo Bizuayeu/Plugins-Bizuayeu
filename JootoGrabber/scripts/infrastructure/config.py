@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Mapping
 
-_DEFAULT_BASE_URL = "https://app.jooto.com"
+_DEFAULT_BASE_URL = "https://api.jooto.com"
 
 
 class ConfigError(ValueError):
