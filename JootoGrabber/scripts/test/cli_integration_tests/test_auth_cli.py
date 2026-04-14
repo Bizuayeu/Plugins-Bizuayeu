@@ -25,16 +25,17 @@ def _make_client(response: HttpResponse) -> tuple[JootoClient, _StubTransport]:
 
 
 class TestRunAuth:
-    def test_ok_result(self) -> None:
-        client, _ = _make_client(
-            HttpResponse(status=200, body={"organizations": [{"id": 1}, {"id": 2}]})
+    def test_ok_result_reports_boards_total(self) -> None:
+        client, transport = _make_client(
+            HttpResponse(status=200, body={"boards": [{"id": 1}], "total": 30, "page": 1})
         )
         result = auth_cli.run_auth(client)
         assert result == {
             "status": "ok",
             "base_url": "https://app.jooto.com",
-            "organizations_count": 2,
+            "boards_total": 30,
         }
+        assert transport.calls[0][0].endswith("/v1/boards?per_page=1")
 
     def test_auth_error_returns_structured_result(self) -> None:
         client, _ = _make_client(HttpResponse(status=401, body={"message": "no"}))
@@ -52,17 +53,18 @@ class TestRunAuth:
         assert result["reason"] == "rate_limited"
         assert result["http_status"] == 429
 
-    def test_organizations_key_missing_counts_zero(self) -> None:
-        client, _ = _make_client(HttpResponse(status=200, body={}))
+    def test_unexpected_200_body_is_error(self) -> None:
+        client, _ = _make_client(HttpResponse(status=200, body={"_raw": "<html>..."}))
         result = auth_cli.run_auth(client)
-        assert result["organizations_count"] == 0
+        assert result["status"] == "error"
+        assert result["reason"] == "unexpected_response"
 
 
 class TestMainCli:
     def test_main_prints_json_and_exits_zero_on_success(
         self, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        client, _ = _make_client(HttpResponse(status=200, body={"organizations": []}))
+        client, _ = _make_client(HttpResponse(status=200, body={"boards": [], "total": 0}))
         monkeypatch.setattr(auth_cli, "_build_client", lambda: client)
 
         code = auth_cli.main([])

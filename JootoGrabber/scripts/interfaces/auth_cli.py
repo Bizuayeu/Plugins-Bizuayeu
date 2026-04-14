@@ -16,9 +16,12 @@ from infrastructure.jooto_client import (
 from infrastructure.urllib_transport import UrllibTransport
 
 
+_AUTH_PROBE_PATH = "/v1/boards?per_page=1"
+
+
 def run_auth(client: JootoClient) -> dict[str, Any]:
     try:
-        body = client.get("/organizations")
+        body = client.get(_AUTH_PROBE_PATH)
     except JootoAuthError as e:
         return {"status": "error", "reason": "unauthorized", "http_status": e.http_status}
     except JootoRateLimitError as e:
@@ -26,11 +29,17 @@ def run_auth(client: JootoClient) -> dict[str, Any]:
     except JootoHttpError as e:
         return {"status": "error", "reason": "http_error", "http_status": e.http_status}
 
-    orgs = body.get("organizations", []) if isinstance(body, dict) else []
+    if not isinstance(body, dict) or "boards" not in body:
+        return {
+            "status": "error",
+            "reason": "unexpected_response",
+            "http_status": 200,
+        }
+
     return {
         "status": "ok",
         "base_url": client._config.base_url,  # noqa: SLF001 — deliberate read of config
-        "organizations_count": len(orgs),
+        "boards_total": int(body.get("total", 0)),
     }
 
 

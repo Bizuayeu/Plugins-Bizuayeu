@@ -4,7 +4,7 @@ description: Jooto API key による認証を確認する
 
 # /jooto-auth
 
-`.env` に設定した `JOOTO_API_KEY` で Jooto API (`GET /organizations`) を呼び出し、認証が通ることを確認します。
+`.env` に設定した `JOOTO_API_KEY` で Jooto API (`GET /v1/boards?per_page=1`) を呼び出し、認証が通ることとアクセス可能なボード総数を確認します。
 
 ## 使い方
 
@@ -25,7 +25,7 @@ PYTHONPATH=scripts python -m interfaces.auth_cli
 {
   "status": "ok",
   "base_url": "https://app.jooto.com",
-  "organizations_count": 1
+  "boards_total": 30
 }
 ```
 
