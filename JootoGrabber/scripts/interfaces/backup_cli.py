@@ -6,11 +6,12 @@ import sys
 from pathlib import Path
 from typing import Any, Sequence
 
-from application.backup import backup_board
+from application.backup import backup_board, should_skip
 from application.boards import list_boards
 from infrastructure.config import ConfigError, load_config
 from infrastructure.env_loader import load_env
 from infrastructure.jooto_client import JootoClient, JootoError
+from infrastructure.sync_state import load_sync_state, save_sync_state
 from infrastructure.urllib_transport import UrllibTransport
 
 
@@ -37,6 +38,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         default=Path("data/jooto"),
         help="Output root directory (default: data/jooto)",
     )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Ignore sync_state and refetch every board",
+    )
     args = parser.parse_args(argv)
 
     try:
@@ -45,21 +51,38 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(json.dumps({"status": "error", "reason": "config_error", "message": str(e)}))
         return 2
 
+    sync_state_path = args.output / "_sync_state.json"
+    sync_state = {} if args.force else load_sync_state(sync_state_path)
+
     try:
         if args.board is not None:
-            board = _fetch_board(client, args.board)
-            boards = [board]
+            boards = [_fetch_board(client, args.board)]
         else:
             boards = list_boards(client, include_archived=False)
 
-        results = [backup_board(client, b, output_root=args.output) for b in boards]
+        results: list[dict[str, Any]] = []
+        skipped: list[dict[str, Any]] = []
+        for b in boards:
+            if should_skip(b, sync_state=sync_state):
+                skipped.append({"board_id": int(b["id"]), "title": b.get("title")})
+                continue
+            results.append(backup_board(client, b, output_root=args.output))
+            sync_state[str(b["id"])] = str(b.get("updated_at", ""))
+
+        save_sync_state(sync_state_path, sync_state)
     except JootoError as e:
         print(json.dumps({"status": "error", "reason": "api_error", "message": str(e)}))
         return 1
 
     print(
         json.dumps(
-            {"status": "ok", "boards_backed_up": len(results), "results": results},
+            {
+                "status": "ok",
+                "boards_backed_up": len(results),
+                "boards_skipped": len(skipped),
+                "results": results,
+                "skipped": skipped,
+            },
             ensure_ascii=False,
         )
     )

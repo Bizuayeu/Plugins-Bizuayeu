@@ -47,3 +47,10 @@ data/jooto/
 - `data/` は `.gitignore` 済み（機密性があるため）
 - 約30〜40 ボード × 3 エンドポイント = 100〜200 req/回。GET レート制限 600/分の範囲内。
 - アーカイブ済みボード取得は `--board <id>` で個別指定のみ（`--all-active` は対象外）
+
+## 差分同期 (sync_state)
+
+`data/jooto/_sync_state.json` に `{board_id: updated_at}` を記録し、2回目以降は `board.updated_at` が変わっていないボードを自動スキップします。
+
+- 強制再取得: `--force` フラグ
+- sync_state をリセット: `_sync_state.json` を削除

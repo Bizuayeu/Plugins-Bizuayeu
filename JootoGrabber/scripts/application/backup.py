@@ -9,6 +9,14 @@ from infrastructure.slug import board_slug
 from infrastructure.storage import write_json
 
 
+def should_skip(board: dict[str, Any], *, sync_state: dict[str, str]) -> bool:
+    """Return True when the board hasn't changed since the last backup."""
+    last = sync_state.get(str(board["id"]))
+    if last is None:
+        return False
+    return str(board.get("updated_at", "")) <= last
+
+
 def backup_board(
     client: JootoClient,
     board: dict[str, Any],
