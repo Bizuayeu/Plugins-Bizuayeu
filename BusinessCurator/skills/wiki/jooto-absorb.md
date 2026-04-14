@@ -21,10 +21,17 @@ JootoGrabber 出力（`data/jooto/{id}_{slug}/`）を MeguruWiki project shard �
 ## 入出力
 
 **入力**: `JootoGrabber/data/jooto/{id}_{slug}/`
-- `board.json` — board メタ情報（id, title, archived, updated_at）
-- `tasks.json` — 配列。各要素に title, status, assignees, due_date, updated_at 等
-- `lists.json` — 列（ToDo / 進行中 / 完了 等）
-- `categories.json` — ラベル
+- `board.json` — board メタ情報（`id`, `title`, `archived`, `updated_at`）
+- `tasks.json` — タスク配列。主要フィールド:
+  - `id`, `task_number`（表示用番号）, `name`（タスク名。`title` ではない）
+  - `status`: `to_do` / `in_progress` / `done`
+  - `list_id` — 列への所属
+  - `deadline_date_time` — 期限（多くは `null`）
+  - `assigned_user_ids` — 担当者 user id の配列（名前は別途 `/v1/users` で解決）
+  - `categories` — タスクに付いたラベル配列
+  - `updated_at` — 完了日付の近似として利用
+- `lists.json` — 列（Jooto 上のカンバン列）。`id`, `name`（列名。`title` ではない）, `order`, `auto_task_status`
+- `categories.json` — ボードに定義されたラベル
 
 **出力**: `MeguruWiki/shards/projects/{Slug}/_project.md`
 - frontmatter の `jooto` フィールド追加/更新
@@ -36,15 +43,21 @@ JootoGrabber 出力（`data/jooto/{id}_{slug}/`）を MeguruWiki project shard �
 
 ## 実行手順
 
-### 1. Board → Project マッピング
+### 1. Board → ターゲット shard マッピング
 
-対象 board ごとに、対応する MeguruWiki project slug を決定する。優先度:
+対象 board を以下3クラスに分類し、それぞれ配置先を決める:
 
-1. **`_alias_resolver.md` 突合** — board.title が既存 project の alias/title と一致
+| クラス | 判定 | 配置先 |
+|---|---|---|
+| **project** | board 名が地名/案件名（例: `FY26_18 東長崎4丁目`, `66_多摩川1丁目プロジェクト`） | `shards/projects/{Slug}/_project.md` |
+| **team** | 部署・個人・テンプレート（例: `バックオフィス`, `１課`, `牛山への依頼`, `設計PM`, `工事への申し送り`, `設計PMテンプレート`） | `shards/teams/{Slug}.md`（なければ新規作成） |
+| **ambiguous** | project とも team とも判定不能、または project slug と一致しない | `inbox/unclassified/jooto-{board_id}.md` |
+
+project クラスの slug 決定優先度:
+
+1. **`_alias_resolver.md` 突合** — `board.title` が既存 project の alias/title と一致
 2. **タイトル正規化マッチ** — `FY26_18 東長崎4丁目` → `HigashiNagasaki4Chome` 等、空白/全半角/記号を正規化して類似度判定
-3. **LLM 推論** — 一致しない場合、board 内のタスク内容から推測
-
-いずれも確信度が低い場合は **`inbox/unclassified/jooto-{board_id}.md`** に退避し、人間レビューへ。
+3. **確信度が低ければ ambiguous に落とす**（勝手に新規 project を起こさない）
 
 ### 2. 既存 frontmatter の更新
 
@@ -65,29 +78,34 @@ jooto:
 ```markdown
 ## Jooto
 
-_最終同期: YYYY-MM-DD HH:MM_
+_最終同期: YYYY-MM-DD_  _board: [{board.title}](https://app.jooto.com/boards/{board_id})_
 
-### 進行中 (In Progress)
+### 進行中 (N)
 
-- **{task.title}** — 担当: {assignee} / 期限: {due or 未定} / [jooto#{task.id}]({url})
-  - {短い補足があれば1行}
+**{list.name}** (M件)
+- **#{task.task_number} {task.name}** — 期限: {date or 未定} / [jooto#{task.id}]({url})
 
-### 未着手 (To Do)
+### 未着手 (N)
 
-- ...
+**{list.name}** (M件)
+- **#{task.task_number} {task.name}** — 期限: {date or 未定} / [jooto#{task.id}]({url})
+- …他 X 件
 
-### 完了 (Done) — 直近5件
+### 完了 (直近5件)
 
-- ~~{title}~~ — {completed_at 日付} / [jooto#{id}]({url})
+- ~~#{task_number} {task.name}~~ — 完了: YYYY-MM-DD / [jooto#{id}]({url})
 ```
 
 **ルール**:
-- lists.json の列名を参照し、「進行中 / To Do / Done」に正規化
-- 期限切れ（today > due、かつ Done でない）は先頭に `⚠️`
-- Done は updated_at 降順で最大5件
-- タスクが0件のセクションは省略
-- assignee が未設定なら「担当: 未定」
-- URL は `https://app.jooto.com/boards/{board_id}/tasks/{task_id}` で構築
+- タスクの分類は `task.status`（`to_do` / `in_progress` / `done`）を使う。`lists.json` の列名では分類しない（列 = 工程段階の意味で使われており、status とは独立）
+- **進行中・未着手** は `list_id` → `list.name` で**列ごとにカテゴライズ**。列の表示順は `list.order` 昇順
+- **各列内の並び順は `tasks.json` の API レスポンス順を保持**（Jooto 画面の列内並びと一致）
+- **進行中**: 全件表示。**未着手**: 列ごとに上位3件 + `- …他 N 件`
+- 完了: `updated_at` 降順で最大5件
+- 期限切れ（`today > deadline_date_time` かつ `status != done`）は行頭に `⚠️`
+- タスクが0件のセクション/列は省略
+- タスク URL: `https://app.jooto.com/boards/{board_id}/tasks/{task_id}`
+- 担当者名の解決は MVP ではスコープ外（assigned_user_ids を `/v1/users` で突合する拡張は別途）
 
 ### 4. 冪等性の担保
 
