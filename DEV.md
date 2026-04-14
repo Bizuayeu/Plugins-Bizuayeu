@@ -63,6 +63,16 @@ Infrastructure → Interface(Adapter) → UseCase → Domain
 3. **再考** — 抽象度は正しいか？ より小さい問題に分割できないか？ もっと単純な方法はないか？
 4. **確認** — AskUserQuestion で候補を提示し、ユーザーに選択を仰ぐ
 
+### Completion Checklist
+
+開発完了時に以下を **ユーザーに確認** する：
+
+- **README.md** — 作成または更新が必要か
+- **CHANGELOG.md** — 作成または更新が必要か
+
+System Prompt のデフォルト「ドキュメントを勝手に作らない」は尊重する。
+ただしこれらは重要なので、**確認自体を省略しない**。
+
 ---
 
 ## Decision Priority
