@@ -50,7 +50,7 @@ PYTHONPATH=scripts python -m interfaces.multi_backup_cli \
 PYTHONPATH=scripts python -m interfaces.multi_backup_cli \
   --service-account-key "$APPDATA/GmailGrabber/sa_key.json" \
   --impersonate-users-file "$APPDATA/GmailGrabber/users.txt" \
-  --output-dir 'C:/Users/anyth/DEV/homunculus/Weave/BusinessWiki/data/2026-04' \
+  --output-dir '/path/to/workspace/BusinessWiki/data/2026-04' \
   --format eml \
   --after 2026/04/01 --before 2026/04/12
 ```
@@ -63,7 +63,7 @@ PYTHONPATH=scripts python -m interfaces.multi_backup_cli \
   "multi_plan_id": "multi_plan_20260411_100030_abc12345ef",
   "user_count": 30,
   "query": "after:2026/04/01 before:2026/04/12",
-  "output_dir": "C:/Users/anyth/DEV/homunculus/Weave/BusinessWiki/data/2026-04",
+  "output_dir": "/path/to/workspace/BusinessWiki/data/2026-04",
   "output_format": "eml",
   "per_user_success": {"user1@meguru.com": 50, "user2@meguru.com": 12, ...},
   "per_user_deduped": {"user1@meguru.com": 0, "user2@meguru.com": 38, ...},

@@ -45,7 +45,7 @@ cd /path/to/GmailGrabber
 PYTHONPATH=scripts python -m interfaces.backup_cli \
   --email togami-log@meguru-construction.com \
   --client-secret ~/.gmailgrabber/client_secret.json \
-  --output-dir 'C:/Users/anyth/DEV/homunculus/Weave/BusinessWiki/data/2026-04' \
+  --output-dir '/path/to/workspace/BusinessWiki/data/2026-04' \
   --format eml \
   --after 2026/04/01 --before 2026/04/12
 ```
@@ -58,7 +58,7 @@ PYTHONPATH=scripts python -m interfaces.backup_cli \
   "plan_id": "plan_20260411_100030_abc12345",
   "account": "togami-log@meguru-construction.com",
   "query": "after:2026/04/01 before:2026/04/12",
-  "output_dir": "C:/Users/anyth/DEV/homunculus/Weave/BusinessWiki/data/2026-04",
+  "output_dir": "/path/to/workspace/BusinessWiki/data/2026-04",
   "output_format": "eml",
   "success_count": 42,
   "failure_count": 0,

@@ -139,7 +139,7 @@ PYTHONPATH=scripts python -m interfaces.multi_backup_cli \
 PYTHONPATH=scripts python -m interfaces.multi_backup_cli \
   --service-account-key "$APPDATA/GmailGrabber/sa_key.json" \
   --impersonate-users-file "$APPDATA/GmailGrabber/users.txt" \
-  --output-dir 'C:/Users/anyth/DEV/homunculus/Weave/BusinessWiki/data/2026-04' \
+  --output-dir '/path/to/workspace/BusinessWiki/data/2026-04' \
   --format eml \
   --after 2026/04/01 --before 2026/04/12
 ```
@@ -187,8 +187,8 @@ PYTHONPATH=scripts python -m interfaces.multi_backup_cli \
 ```bash
 cd C:/Users/anyth/.claude/plugins/cache/plugins-bizuayeu/BusinessCurator/1.0.0/scripts
 python -m interfaces.ingest_cli \
-  --plugin-root 'C:/Users/anyth/DEV/homunculus/Weave/BusinessWiki' \
-  --source 'C:/Users/anyth/DEV/homunculus/Weave/BusinessWiki/data/2026-04'
+  --plugin-root '/path/to/workspace/BusinessWiki' \
+  --source '/path/to/workspace/BusinessWiki/data/2026-04'
 ```
 
 その後 `/wiki-triage` → `/wiki-absorb projects` で 4シャード wiki に編み込みます。

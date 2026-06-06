@@ -72,7 +72,7 @@ togami-log@ の 4月分を BusinessWiki に保存:
 PYTHONPATH=scripts python -m interfaces.backup_cli \
   --email togami-log@meguru-construction.com \
   --client-secret ~/.gmailgrabber/client_secret.json \
-  --output-dir 'C:/Users/anyth/DEV/homunculus/Weave/BusinessWiki/data/2026-04' \
+  --output-dir '/path/to/workspace/BusinessWiki/data/2026-04' \
   --format eml \
   --after 2026/04/01 --before 2026/04/12
 ```
