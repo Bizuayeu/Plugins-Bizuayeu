@@ -19,6 +19,7 @@ Plugins-Bizuayeu serves as **the extension of a practitioner's hand**.
 |-----------|----------|--------|
 | **B2B email knowledge gets lost** | Weaves projects, clients, vendors, and know-how into a 4-shard wiki | BusinessCurator |
 | **Gmail backup doesn't scale manually** | OAuth / SA+DWD dual support with Message-ID dedup | GmailGrabber |
+| **Jooto task-management data can't feed into BusinessCurator** | API-key auth fetches board/task/list as JSON, with incremental sync to cut re-fetch cost | JootoGrabber |
 
 ---
 
@@ -81,6 +82,32 @@ with RFC5322 Message-ID deduplication for multi-user environments.
 
 → See [GmailGrabber/README.md](GmailGrabber/README.md) for details
 
+### JootoGrabber
+
+**Jooto API Backup Tool**
+
+Fetches Jooto board / task / list / category data via API-key authentication
+(`X-Jooto-Api-Key`) and saves it as JSON under `data/jooto/`, ready for BusinessCurator ingestion.
+
+> Like GmailGrabber, this serves as a pipeline entry point feeding BusinessCurator.
+
+#### Key Features
+
+- **API key authentication**: Simple auth via the `X-Jooto-Api-Key` header
+- **board / task / list / category JSON export**: Format ready for BusinessCurator ingestion
+- **Incremental sync**: Tracks `updated_at` in `_sync_state.json`, skipping unchanged boards
+- **Clean Architecture × TDD**: 39 tests
+
+#### Commands (3 total)
+
+| Command | Purpose |
+|---|---|
+| `/jooto-auth` | Verify API key authentication |
+| `/jooto-list-boards` | List accessible boards |
+| `/jooto-backup` | Back up a single board or all active boards (incremental sync supported) |
+
+→ See [JootoGrabber/README.md](JootoGrabber/README.md) for details
+
 ---
 
 ## Quick Installation
@@ -88,17 +115,20 @@ with RFC5322 Message-ID deduplication for multi-user environments.
 ### 1. Add Marketplace
 
 ```ClaudeCLI
-/marketplace add https://github.com/Bizuayeu/Plugins-Bizuayeu
+/plugin marketplace add https://github.com/Bizuayeu/Plugins-Bizuayeu
 ```
 
 ### 2. Install Plugin
 
 ```ClaudeCLI
 # Business email knowledge management
-/plugin install BusinessCurator@Plugins-Bizuayeu
+/plugin install BusinessCurator@plugins-bizuayeu
 
 # Gmail backup
-/plugin install GmailGrabber@Plugins-Bizuayeu
+/plugin install GmailGrabber@plugins-bizuayeu
+
+# Jooto backup
+/plugin install JootoGrabber@plugins-bizuayeu
 ```
 
 ---

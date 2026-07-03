@@ -19,6 +19,7 @@ Plugins-Bizuayeuは **実務家の手の延長** を担います。
 |------|--------|-----------|
 | **B2B受注産業のメール知が散逸する** | 4シャードwikiに案件・顧客・業者・知見を編む | BusinessCurator |
 | **Gmailバックアップが手作業で回らない** | OAuth / SA+DWD 両対応、Message-ID重複排除で自動取得 | GmailGrabber |
+| **Jootoのタスク管理データがBusinessCuratorに取り込めない** | API Key認証でboard/task/listをJSON取得、差分同期で再取得コストを抑制 | JootoGrabber |
 
 ---
 
@@ -82,6 +83,32 @@ Karpathy式パーソナルwikiのエンタープライズ拡張として、
 
 → 詳細は [GmailGrabber/README.md](GmailGrabber/README.md) を参照
 
+### JootoGrabber
+
+**Jooto API バックアップツール**
+
+Jooto の board / task / list / category を API Key 認証（`X-Jooto-Api-Key`）で取得し、
+BusinessCurator が吸収可能な JSON として `data/jooto/` 配下に保存します。
+
+> GmailGrabber と同様、BusinessCurator への供給パイプラインの入口として機能します。
+
+#### 主な特徴
+
+- **API Key 認証**: `X-Jooto-Api-Key` ヘッダによるシンプルな認証
+- **board / task / list / category を JSON 出力**: BusinessCurator 吸収用フォーマット
+- **差分同期**: `_sync_state.json` で `updated_at` を追跡し、未更新ボードの再取得をスキップ
+- **Clean Architecture × TDD**: 39 tests
+
+#### コマンド（全3コマンド）
+
+| コマンド | 用途 |
+|---|---|
+| `/jooto-auth` | API key 認証確認 |
+| `/jooto-list-boards` | ボード一覧取得 |
+| `/jooto-backup` | 単一 or 全アクティブボードのバックアップ（差分同期対応） |
+
+→ 詳細は [JootoGrabber/README.md](JootoGrabber/README.md) を参照
+
 ---
 
 ## クイックインストール
@@ -89,17 +116,20 @@ Karpathy式パーソナルwikiのエンタープライズ拡張として、
 ### 1. マーケットプレイス追加
 
 ```ClaudeCLI
-/marketplace add https://github.com/Bizuayeu/Plugins-Bizuayeu
+/plugin marketplace add https://github.com/Bizuayeu/Plugins-Bizuayeu
 ```
 
 ### 2. プラグインインストール
 
 ```ClaudeCLI
 # ビジネスメール知識管理
-/plugin install BusinessCurator@Plugins-Bizuayeu
+/plugin install BusinessCurator@plugins-bizuayeu
 
 # Gmail バックアップ
-/plugin install GmailGrabber@Plugins-Bizuayeu
+/plugin install GmailGrabber@plugins-bizuayeu
+
+# Jooto バックアップ
+/plugin install JootoGrabber@plugins-bizuayeu
 ```
 
 ---
