@@ -60,7 +60,7 @@ JootoGrabber/
 - unit: API key 未設定時のエラー、ヘッダ組み立て
 - unit: 401/403/429 の例外マッピング
 - integration: モックサーバ or recorded response で /users/me パース
-**Status**: Not Started
+**Status**: Complete
 
 ## Stage 2: Board & Task Fetching
 
@@ -73,7 +73,7 @@ JootoGrabber/
 - unit: ページング終了条件、空レスポンス
 - property: 任意のタスク数 N に対し `len(fetched) == N`
 - integration: 固定 fixture でのフルフェッチ
-**Status**: Not Started
+**Status**: Complete
 
 ## Stage 3: Incremental Sync
 
@@ -85,7 +85,7 @@ JootoGrabber/
 **Tests**:
 - unit: sync_state の読み書き・破損時の再構築
 - integration: 2段階フェッチで差分のみ更新されることを確認
-**Status**: Not Started
+**Status**: Complete
 
 ## Stage 4: Rate Limit & Reliability
 
