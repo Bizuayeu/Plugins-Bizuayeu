@@ -40,10 +40,10 @@ class TestBackupBoard:
 
         board_dir = tmp_path / "42_足立六町"
         assert (board_dir / "board.json").exists()
-        assert json.loads((board_dir / "board.json").read_text())["id"] == 42
-        assert json.loads((board_dir / "tasks.json").read_text()) == [{"id": 1, "title": "t"}]
-        assert json.loads((board_dir / "lists.json").read_text())[0]["id"] == 10
-        assert json.loads((board_dir / "categories.json").read_text())[0]["id"] == 99
+        assert json.loads((board_dir / "board.json").read_text(encoding="utf-8"))["id"] == 42
+        assert json.loads((board_dir / "tasks.json").read_text(encoding="utf-8")) == [{"id": 1, "title": "t"}]
+        assert json.loads((board_dir / "lists.json").read_text(encoding="utf-8"))[0]["id"] == 10
+        assert json.loads((board_dir / "categories.json").read_text(encoding="utf-8"))[0]["id"] == 99
 
         assert result["board_id"] == 42
         assert result["tasks_count"] == 1
