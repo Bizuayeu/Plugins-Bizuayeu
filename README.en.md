@@ -43,12 +43,12 @@ into a structured wiki across 4 shards (projects / clients / vendors / knowledge
 - **md / Python separation**: mechanical processing in Python, judgment and dialogue in md
 - **Clean Architecture × TDD**: 645 tests / mypy strict / ruff
 
-#### Main Commands (22 total)
+#### Main Commands (23 total)
 
 | Category | Representative Commands | Purpose |
 |---|---|---|
 | Manager | `/wiki-project-add` `/wiki-client-add` `/wiki-vendor-add` | Master data CRUD |
-| Operation | `/wiki-ingest` `/wiki-triage` `/wiki-absorb` `/wiki-archive` | Ingest → triage → absorb → archive |
+| Operation | `/wiki-ingest` `/wiki-triage` `/wiki-absorb` `/wiki-jooto-absorb` `/wiki-archive` | Ingest → triage → absorb → archive |
 | Auxiliary | `/wiki-query` `/wiki-status` | Cross-shard query / metrics |
 
 → See [BusinessCurator/README.md](BusinessCurator/README.md) for details

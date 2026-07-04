@@ -43,7 +43,7 @@ BusinessCurator/
 
 ---
 
-## コマンド全 21 件
+## コマンド全 23 件
 
 ### Manager 層（マスタデータ CRUD）
 
@@ -71,6 +71,7 @@ manager は `[project-manager.md](project-manager.md)` / `[client-manager.md](cl
 | `/wiki-ingest` | （CLI 直接） | data/ → raw-entries/ |
 | `/wiki-triage` | [triage.md](triage.md) | raw-entries/ をシャードに振り分け |
 | `/wiki-absorb` | curator 系 | shards/ にエントリを吸収 |
+| `/wiki-jooto-absorb` | [jooto-absorb.md](jooto-absorb.md) | JootoGrabber export (data/jooto/) を wiki に吸収 |
 | `/wiki-archive` | [archive.md](archive.md) | 完工案件を archive/ に移動 |
 
 ### 補助層（query / status / cleanup / rebuild）

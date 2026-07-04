@@ -42,7 +42,7 @@ Karpathy 式パーソナル wiki (`wiki` skill) の **エンタープライズ�
 
 ---
 
-## 全 22 コマンド
+## 全 23 コマンド
 
 ### Manager 層 (マスタ CRUD、12 commands)
 
@@ -53,13 +53,14 @@ Karpathy 式パーソナル wiki (`wiki` skill) の **エンタープライズ�
 | Vendor | `/wiki-vendor-add` `/wiki-vendor-edit` `/wiki-vendor-remove` |
 | Knowledge | `/wiki-knowledge-add-domain` `/wiki-knowledge-edit` `/wiki-knowledge-remove` |
 
-### Operation 層 (運用、4 commands)
+### Operation 層 (運用、5 commands)
 
 | コマンド | 用途 |
 |---|---|
 | `/wiki-ingest` | data/ → inbox/raw-entries/ |
 | `/wiki-triage` | raw-entries/ をシャードに振り分け |
 | `/wiki-absorb` | shards/ にエントリを吸収 |
+| `/wiki-jooto-absorb` | JootoGrabber export (data/jooto/) を wiki に吸収 |
 | `/wiki-archive` | 完工案件を archive/ へ |
 
 ### Auxiliary 層 (補助、6 commands)
@@ -86,8 +87,8 @@ BusinessCurator/
   _root.md                                    ← ルート wiki
   _alias_resolver.md                            ← 全シャード統合エイリアス解決器
 
-  skills/wiki/                                ← 11 skill md
-  commands/                                   ← 22 command md
+  skills/wiki/                                ← 12 skill md
+  commands/                                   ← 23 command md
 
   scripts/                                    ← Clean Architecture 実装
     domain/                                   ← 純粋型・例外・Protocol・IndexEntry
@@ -200,7 +201,7 @@ python -m ruff check scripts/
 | **カバレッジ** | fail_under=80 |
 | **mypy strict** | 111 source files checked |
 | **ruff** | 有効 |
-| **md ファイル数** | **33** (11 skill + 22 command) |
+| **md ファイル数** | **35** (12 skill + 23 command) |
 | **TDD サイクル** | Red → Green → Refactor を全機能で遵守 |
 
 ---
@@ -221,6 +222,11 @@ python -m ruff check scripts/
 ---
 
 ## Changelog
+
+### v1.1.0 (2026-07-04)
+
+- **`/wiki-jooto-absorb`**: JootoGrabber が export したボード/タスク JSON を wiki に吸収するコマンド + `jooto-absorb` スキル（実装は 2026-04-14、本リリースで版数・ドキュメントに記録化）
+- ドキュメント整合: コマンド数 23 / skill md 12 へ統計更新、SKILL.md 運用層テーブルに jooto-absorb を掲載
 
 ### v1.0.0 (2026-04-12)
 

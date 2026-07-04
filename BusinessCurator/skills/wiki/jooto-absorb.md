@@ -33,11 +33,11 @@ JootoGrabber 出力（`data/jooto/{id}_{slug}/`）を MeguruWiki project shard �
 - `lists.json` — 列（Jooto 上のカンバン列）。`id`, `name`（列名。`title` ではない）, `order`, `auto_task_status`
 - `categories.json` — ボードに定義されたラベル
 
-**出力**: `MeguruWiki/shards/projects/{Slug}/_project.md`
+**出力**: 運用 wiki インスタンスの `shards/projects/{Slug}/_project.md`
 - frontmatter の `jooto` フィールド追加/更新
 - 本文末尾付近の `## Jooto` セクション **全置換**（冪等）
 
-仕様詳細: [JOOTO_SCHEMA.md](../../../../MeguruWiki/docs/JOOTO_SCHEMA.md)
+仕様詳細: 運用 wiki インスタンス側の `docs/JOOTO_SCHEMA.md` で管理（本プラグインには同梱しない。Jooto API のフィールド仕様は上記「入力」節が要約）
 
 ---
 

@@ -4,7 +4,7 @@ Jooto API からボード/タスクを取得し、BusinessCurator が吸収可�
 
 - 認証: API Key（ヘッダ `X-Jooto-Api-Key`）
 - Base URL: `https://api.jooto.com`
-- 設計: Clean Architecture + TDD（[DEV.md](../DEV.md) 参照）
+- 設計: Clean Architecture + TDD（開発規範は [Plugins-Weave](https://github.com/Bizuayeu/Plugins-Weave) の ConsiderateCoder プラグイン `skills/dev-rules`・`skills/ops-rules` を参照）
 - 実装計画: [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)
 
 ## Status

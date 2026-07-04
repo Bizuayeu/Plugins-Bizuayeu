@@ -44,12 +44,12 @@ Karpathy式パーソナルwikiのエンタープライズ拡張として、
 - **md / Python 二層分離**: 機械的処理はPython、判断と対話はmd
 - **Clean Architecture × TDD**: 645 tests / mypy strict / ruff
 
-#### 主要コマンド（全22コマンド）
+#### 主要コマンド（全23コマンド）
 
 | カテゴリ | 代表コマンド | 用途 |
 |---|---|---|
 | Manager | `/wiki-project-add` `/wiki-client-add` `/wiki-vendor-add` | マスタCRUD |
-| Operation | `/wiki-ingest` `/wiki-triage` `/wiki-absorb` `/wiki-archive` | 取り込み→振り分け→吸収→アーカイブ |
+| Operation | `/wiki-ingest` `/wiki-triage` `/wiki-absorb` `/wiki-jooto-absorb` `/wiki-archive` | 取り込み→振り分け→吸収→アーカイブ |
 | Auxiliary | `/wiki-query` `/wiki-status` | 横断質問応答・メトリクス |
 
 → 詳細は [BusinessCurator/README.md](BusinessCurator/README.md) を参照

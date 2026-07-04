@@ -29,13 +29,13 @@ MeguruWiki の対応する `shards/projects/{Slug}/_project.md` に吸収しま�
 
 ## 前提
 
-1. `MeguruWiki/docs/JOOTO_SCHEMA.md` の仕様に従う
+1. 運用 wiki インスタンス側 `docs/JOOTO_SCHEMA.md` の仕様に従う（インスタンス側で管理、本プラグインには同梱しない）
 2. `JootoGrabber/data/jooto/` が最新化されている（未取得なら `/jooto-backup --all-active` を先に）
 3. `_alias_resolver.md` に board 名が alias として載っていると自動解決精度が高い
 
 ## 関連
 
 - [jooto-absorb.md](../skills/wiki/jooto-absorb.md)
-- [JOOTO_SCHEMA.md](../../../MeguruWiki/docs/JOOTO_SCHEMA.md)
+- JOOTO_SCHEMA.md — 運用 wiki インスタンス側 `docs/` で管理
 - `/jooto-backup`: 前段（JootoGrabber）
 - `/wiki-absorb`: メール吸収（別経路）

@@ -3,7 +3,7 @@
 Jooto API からボード/タスクを取得し、BusinessCurator が吸収可能な形式で出力する Claude Code プラグイン。
 
 - 参考: [Jooto API Reference](https://www.jooto.com/api/reference/authentication/)
-- 設計方針: [DEV.md](../DEV.md) の Clean Architecture + TDD
+- 設計方針: Clean Architecture + TDD（開発規範は [Plugins-Weave](https://github.com/Bizuayeu/Plugins-Weave) の ConsiderateCoder プラグイン `skills/dev-rules`・`skills/ops-rules` を参照）
 - 既存姉妹プラグイン: [GmailGrabber](../GmailGrabber/) を構造のテンプレートとする
 
 ---
