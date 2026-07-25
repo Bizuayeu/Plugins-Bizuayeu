@@ -19,6 +19,9 @@ on:
 
 # marketplace 未掲載の CorporateStrategist / ParsBanana は対象外（中断中の途中成果物）。
 
+# ruff / mypy は版で検査結果が変わるため固定する（無指定だと上流リリースで突然 red になる）。
+# 更新は「版を上げて指摘を解消する」commit として意図的に行う（自動追随させない）。
+
 jobs:
   # =============================================================================
   # BusinessCurator Jobs
@@ -35,7 +38,7 @@ jobs:
           python-version: "3.10"
 
       - name: Install ruff
-        run: pip install ruff
+        run: pip install ruff==0.16.0
 
       - name: Run ruff linter
         working-directory: BusinessCurator
@@ -56,7 +59,7 @@ jobs:
           python-version: "3.10"
 
       - name: Install mypy
-        run: pip install mypy
+        run: pip install mypy==2.3.0
 
       - name: Run mypy
         working-directory: BusinessCurator/scripts
@@ -100,7 +103,7 @@ jobs:
           python-version: "3.10"
 
       - name: Install ruff
-        run: pip install ruff
+        run: pip install ruff==0.16.0
 
       - name: Run ruff linter
         working-directory: GmailGrabber
@@ -121,7 +124,7 @@ jobs:
           python-version: "3.10"
 
       - name: Install mypy
-        run: pip install mypy
+        run: pip install mypy==2.3.0
 
       - name: Run mypy
         working-directory: GmailGrabber/scripts
@@ -165,7 +168,7 @@ jobs:
           python-version: "3.10"
 
       - name: Install ruff
-        run: pip install ruff
+        run: pip install ruff==0.16.0
 
       - name: Run ruff linter
         working-directory: JootoGrabber
@@ -186,7 +189,7 @@ jobs:
           python-version: "3.10"
 
       - name: Install mypy
-        run: pip install mypy
+        run: pip install mypy==2.3.0
 
       - name: Run mypy
         working-directory: JootoGrabber/scripts
