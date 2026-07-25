@@ -1,0 +1,216 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'BusinessCurator/**'
+      - 'GmailGrabber/**'
+      - 'JootoGrabber/**'
+      - '.github/workflows/test.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'BusinessCurator/**'
+      - 'GmailGrabber/**'
+      - 'JootoGrabber/**'
+      - '.github/workflows/test.yml'
+  workflow_dispatch:  # Manual trigger from GitHub UI
+
+# marketplace 未掲載の CorporateStrategist / ParsBanana は対象外（中断中の途中成果物）。
+
+jobs:
+  # =============================================================================
+  # BusinessCurator Jobs
+  # =============================================================================
+
+  lint-businesscurator:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install ruff
+        run: pip install ruff
+
+      - name: Run ruff linter
+        working-directory: BusinessCurator
+        run: ruff check scripts/
+
+      - name: Run ruff formatter check
+        working-directory: BusinessCurator
+        run: ruff format --check scripts/
+
+  type-check-businesscurator:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install mypy
+        run: pip install mypy
+
+      - name: Run mypy
+        working-directory: BusinessCurator/scripts
+        run: mypy --explicit-package-bases .
+
+  test-businesscurator:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e BusinessCurator[dev]
+
+      - name: Run tests
+        working-directory: BusinessCurator
+        run: python -m pytest
+
+  # =============================================================================
+  # GmailGrabber Jobs
+  # =============================================================================
+
+  lint-gmailgrabber:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install ruff
+        run: pip install ruff
+
+      - name: Run ruff linter
+        working-directory: GmailGrabber
+        run: ruff check scripts/
+
+      - name: Run ruff formatter check
+        working-directory: GmailGrabber
+        run: ruff format --check scripts/
+
+  type-check-gmailgrabber:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install mypy
+        run: pip install mypy
+
+      - name: Run mypy
+        working-directory: GmailGrabber/scripts
+        run: mypy --explicit-package-bases .
+
+  test-gmailgrabber:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e GmailGrabber[dev]
+
+      - name: Run tests
+        working-directory: GmailGrabber
+        run: python -m pytest
+
+  # =============================================================================
+  # JootoGrabber Jobs
+  # =============================================================================
+
+  lint-jootograbber:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install ruff
+        run: pip install ruff
+
+      - name: Run ruff linter
+        working-directory: JootoGrabber
+        run: ruff check scripts/
+
+      - name: Run ruff formatter check
+        working-directory: JootoGrabber
+        run: ruff format --check scripts/
+
+  type-check-jootograbber:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install mypy
+        run: pip install mypy
+
+      - name: Run mypy
+        working-directory: JootoGrabber/scripts
+        run: mypy --explicit-package-bases .
+
+  test-jootograbber:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e JootoGrabber[dev]
+
+      - name: Run tests
+        working-directory: JootoGrabber
+        run: python -m pytest
