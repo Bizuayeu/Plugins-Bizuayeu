@@ -146,12 +146,16 @@ interfaces ──→ application ──→ domain
 
 ## 2. ディレクトリ構造（完全形）
 
+> **配布物と wiki インスタンスの区別**: 以下のツリーのうち `_root.md` / `_alias_resolver.md` / `triage_logs/` / `data/` / `inbox/` / `shards/` / `archive/` は **実行時に `plugin_root` 起点で生成される wiki インスタンス側の実体**（`PathResolver` 参照）であり、配布物として git 追跡されるものではない。**BusinessWiki は 2026-07 に会社環境へ移管済みのため、DEV 配下のこのリポジトリには実体が存在しない**（DEV で見えるのは配布物層＝`skills/` `commands/` `scripts/` `docs/` のみ）。
+
 ```
 plugins-bizuayeu/BusinessCurator/
 ├── README.md
 ├── pyproject.toml                          ← EpisodicRAG pyproject.toml をコピー改変
 ├── BusinessCurator_ImplementationPlan.md   ← 既存（業務観点、温存）
 ├── BusinessCurator_TDDImplementationPlan.md ← 本ファイル
+│
+│  ── ここから wiki インスタンス側（実行時生成・DEV には実体なし）──
 ├── _root.md
 ├── _alias_resolver.md
 ├── triage_logs/
@@ -167,6 +171,7 @@ plugins-bizuayeu/BusinessCurator/
 │   └── knowledge/{Category}/*.md
 ├── archive/
 │   └── projects/{CompletedProject}/
+│  ── ここまで wiki インスタンス側 ──
 │
 ├── skills/wiki/
 │   ├── SKILL.md                            ← ナビゲーター + 簡易操作

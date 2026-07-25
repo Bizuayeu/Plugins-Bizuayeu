@@ -18,33 +18,37 @@ Jooto API からボード/タスクを取得し、BusinessCurator が吸収可�
 
 ## 成果物
 
+`[済]` は実体あり、`[未]` は未作成（2026-07-26 のドキュメントチェックで確認）。
+
 ```
 JootoGrabber/
-├── .claude-plugin/plugin.json
-├── README.md
-├── pyproject.toml                  ← GmailGrabber 準拠
+├── .claude-plugin/plugin.json      [済]
+├── README.md                       [済]
+├── pyproject.toml                  [済] ← GmailGrabber 準拠
 ├── commands/
-│   ├── jooto-auth.md               ← API key 登録・検証
-│   ├── jooto-list-boards.md        ← ボード一覧取得
-│   ├── jooto-backup.md             ← 単一ボード全タスク取得
-│   └── jooto-sync.md               ← 差分同期（updated_at ベース）
-├── skills/                         ← 必要に応じて
+│   ├── jooto-auth.md               [済] ← API key 登録・検証
+│   ├── jooto-list-boards.md        [済] ← ボード一覧取得
+│   ├── jooto-backup.md             [済] ← 単一ボード全タスク取得
+│   └── jooto-sync.md               [未] ← 差分同期（updated_at ベース、Stage 3）
+├── skills/                         [未] ← 必要に応じて
 ├── scripts/
-│   ├── domain/
-│   │   ├── board.py                ← Board, List, Task 値オブジェクト
-│   │   └── sync_state.py           ← 差分判定ロジック
+│   ├── domain/                     [済] ※現状 __init__.py のみ
+│   │   ├── board.py                [未] ← Board, List, Task 値オブジェクト
+│   │   └── sync_state.py           [未] ← 差分判定ロジック（Stage 3）
 │   ├── application/
-│   │   ├── fetch_boards.py
-│   │   ├── fetch_tasks.py
-│   │   └── sync_usecase.py
-│   ├── infrastructure/
-│   │   ├── jooto_client.py         ← HTTP クライアント（認証・retry・rate limit）
-│   │   └── storage.py              ← data/jooto/ への JSON 書き出し
-│   ├── interfaces/
-│   │   └── cli.py
-│   └── test/
+│   │   ├── boards.py               [済] ← ボード一覧取得（計画名 fetch_boards.py）
+│   │   ├── backup.py               [済] ← 単一ボード全タスク取得（計画名 fetch_tasks.py）
+│   │   └── sync_usecase.py         [未] ← 差分同期（Stage 3）
+│   ├── infrastructure/             [済] ※現状 __init__.py のみ
+│   │   ├── jooto_client.py         [未] ← HTTP クライアント（認証・retry・rate limit）
+│   │   └── storage.py              [未] ← data/jooto/ への JSON 書き出し
+│   ├── interfaces/                 [済] ← cli.py 単体ではなくコマンド別に分割
+│   │   ├── auth_cli.py             [済]
+│   │   ├── backup_cli.py           [済]
+│   │   └── list_boards_cli.py      [済]
+│   └── test/                       [済]
 └── docs/
-    └── API_NOTES.md                ← Jooto API の癖・ページング・レート制限メモ
+    └── API_NOTES.md                [未] ← Jooto API の癖・ページング・レート制限メモ
 ```
 
 ---
@@ -85,7 +89,7 @@ JootoGrabber/
 **Tests**:
 - unit: sync_state の読み書き・破損時の再構築
 - integration: 2段階フェッチで差分のみ更新されることを確認
-**Status**: Complete
+**Status**: Not Started（2026-07-26 のドキュメントチェックで実体なしを確認。`commands/jooto-sync.md`・`scripts/domain/sync_state.py`・`scripts/application/sync_usecase.py` はいずれも未作成。全件取得の `/jooto-backup` のみで運用中のため、差分同期が実際に要るかの判断も未了）
 
 ## Stage 4: Rate Limit & Reliability
 

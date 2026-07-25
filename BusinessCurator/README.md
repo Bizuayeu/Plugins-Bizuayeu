@@ -97,6 +97,7 @@ BusinessCurator/
     interfaces/                               ← CLI (Composition Root)
     test/                                     ← 645 tests
 
+  ── 以下は wiki インスタンス側（実行時に plugin_root 起点で生成、配布物ではない）──
   data/                                       ← 生メール (.eml/.mbox、変更不可)
   inbox/
     raw-entries/                              ← ingest 出力
@@ -109,6 +110,8 @@ BusinessCurator/
   archive/projects/{CompletedName}/
   triage_logs/_triage_log_YYYYMMDD.json
 ```
+
+> wiki インスタンス側の実体は運用環境にのみ存在する。本リポジトリ（DEV チェックアウト）に置かれるのは配布物層（`skills/` / `commands/` / `scripts/` / `docs/`）だけである。
 
 ---
 
