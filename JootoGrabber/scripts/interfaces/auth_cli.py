@@ -15,7 +15,6 @@ from infrastructure.jooto_client import (
 )
 from infrastructure.urllib_transport import UrllibTransport
 
-
 _AUTH_PROBE_PATH = "/v1/boards?per_page=1"
 
 

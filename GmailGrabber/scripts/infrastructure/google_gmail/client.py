@@ -57,9 +57,7 @@ def _to_google_service_account_credentials(
     from google.oauth2 import service_account  # lazy import
 
     sa_dict = {k: v for k, v in creds.items() if k != "subject"}
-    base = service_account.Credentials.from_service_account_info(
-        sa_dict, scopes=scopes
-    )
+    base = service_account.Credentials.from_service_account_info(sa_dict, scopes=scopes)
     subject = creds.get("subject")
     if subject:
         return base.with_subject(subject)
@@ -91,13 +89,9 @@ class GoogleGmailClient:
                 または両方 None
         """
         if credentials is None and service_account_credentials is None:
-            raise ValueError(
-                "either credentials or service_account_credentials is required"
-            )
+            raise ValueError("either credentials or service_account_credentials is required")
         if credentials is not None and service_account_credentials is not None:
-            raise ValueError(
-                "credentials and service_account_credentials are mutually exclusive"
-            )
+            raise ValueError("credentials and service_account_credentials are mutually exclusive")
 
         self._credentials = credentials
         self._service_account_credentials = service_account_credentials
@@ -106,9 +100,7 @@ class GoogleGmailClient:
         self._scopes = scopes if scopes is not None else list(DEFAULT_SCOPES)
         self._service = self._build_service()
 
-    def list_message_ids(
-        self, query: str, max_results: Optional[int] = None
-    ) -> Iterator[str]:
+    def list_message_ids(self, query: str, max_results: Optional[int] = None) -> Iterator[str]:
         """
         検索クエリに一致するメッセージIDをページング付きで列挙。
 
@@ -128,12 +120,7 @@ class GoogleGmailClient:
                 if page_token:
                     request_kwargs["pageToken"] = page_token
 
-                response = (
-                    self._service.users()
-                    .messages()
-                    .list(**request_kwargs)
-                    .execute()
-                )
+                response = self._service.users().messages().list(**request_kwargs).execute()
                 messages = response.get("messages", [])
                 for m in messages:
                     if max_results is not None and yielded >= max_results:
@@ -183,9 +170,7 @@ class GoogleGmailClient:
     def list_labels(self) -> List[dict]:
         """全ラベル一覧を取得"""
         try:
-            response = (
-                self._service.users().labels().list(userId=self._user_id).execute()
-            )
+            response = self._service.users().labels().list(userId=self._user_id).execute()
             return list(response.get("labels", []))
         except Exception as e:
             raise GmailApiError(f"list_labels failed: {e}") from e

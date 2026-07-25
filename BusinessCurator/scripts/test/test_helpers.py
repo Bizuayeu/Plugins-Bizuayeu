@@ -221,7 +221,9 @@ def build_email_message(
     return {
         "message_id": message_id,
         "from_addr": {"name": from_name, "address": from_address},
-        "to_addrs": [{"name": "", "address": a} for a in (to_addresses or ["recipient@example.com"])],
+        "to_addrs": [
+            {"name": "", "address": a} for a in (to_addresses or ["recipient@example.com"])
+        ],
         "cc_addrs": [{"name": "", "address": a} for a in (cc_addresses or [])],
         "subject": subject,
         "date": date or datetime(2026, 4, 7, 14, 30, 22),

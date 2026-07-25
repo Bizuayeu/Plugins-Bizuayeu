@@ -143,9 +143,7 @@ class TestFetchBatch:
     def test_uses_gmail_query_string(self) -> None:
         """Gmail client.list_message_ids がクエリ文字列で呼ばれる"""
         client = FakeGmailClient(messages=[])
-        uc = FetchBatchUseCase(
-            client, FakeMessageWriter(), FakeStateRepository(), FakeClock()
-        )
+        uc = FetchBatchUseCase(client, FakeMessageWriter(), FakeStateRepository(), FakeClock())
 
         uc.execute(_sample_plan(), state_dir="/tmp/state")
 
@@ -156,9 +154,7 @@ class TestFetchBatch:
     @pytest.mark.unit
     def test_writer_finalize_called(self) -> None:
         writer = FakeMessageWriter()
-        uc = FetchBatchUseCase(
-            FakeGmailClient(), writer, FakeStateRepository(), FakeClock()
-        )
+        uc = FetchBatchUseCase(FakeGmailClient(), writer, FakeStateRepository(), FakeClock())
 
         uc.execute(_sample_plan(), state_dir="/tmp/state")
 
@@ -233,9 +229,7 @@ class TestFailures:
         messages = [make_gmail_message(f"id{i}") for i in range(3)]
         client = FakeGmailClient(messages=messages, fetch_failures={"id1"})
         writer = FakeMessageWriter()
-        uc = FetchBatchUseCase(
-            client, writer, FakeStateRepository(), FakeClock()
-        )
+        uc = FetchBatchUseCase(client, writer, FakeStateRepository(), FakeClock())
 
         result = uc.execute(_sample_plan(), state_dir="/tmp/state")
 
@@ -247,9 +241,7 @@ class TestFailures:
         messages = [make_gmail_message(f"id{i}") for i in range(3)]
         client = FakeGmailClient(messages=messages)
         writer = FakeMessageWriter(fail_on={"id2"})
-        uc = FetchBatchUseCase(
-            client, writer, FakeStateRepository(), FakeClock()
-        )
+        uc = FetchBatchUseCase(client, writer, FakeStateRepository(), FakeClock())
 
         result = uc.execute(_sample_plan(), state_dir="/tmp/state")
 
@@ -261,9 +253,7 @@ class TestFailures:
         messages = [make_gmail_message(f"id{i}") for i in range(3)]
         client = FakeGmailClient(messages=messages, fetch_failures={"id1"})
         state_repo = FakeStateRepository()
-        uc = FetchBatchUseCase(
-            client, FakeMessageWriter(), state_repo, FakeClock()
-        )
+        uc = FetchBatchUseCase(client, FakeMessageWriter(), state_repo, FakeClock())
 
         uc.execute(_sample_plan(), state_dir="/tmp/state")
 
@@ -283,9 +273,7 @@ class TestMaxMessages:
         messages = [make_gmail_message(f"id{i}") for i in range(20)]
         client = FakeGmailClient(messages=messages)
         writer = FakeMessageWriter()
-        uc = FetchBatchUseCase(
-            client, writer, FakeStateRepository(), FakeClock()
-        )
+        uc = FetchBatchUseCase(client, writer, FakeStateRepository(), FakeClock())
 
         result = uc.execute(_sample_plan(), state_dir="/tmp/state", max_messages=5)
 
@@ -304,9 +292,7 @@ class TestStatePersistence:
         messages = [make_gmail_message(f"id{i}") for i in range(3)]
         client = FakeGmailClient(messages=messages)
         state_repo = FakeStateRepository()
-        uc = FetchBatchUseCase(
-            client, FakeMessageWriter(), state_repo, FakeClock()
-        )
+        uc = FetchBatchUseCase(client, FakeMessageWriter(), state_repo, FakeClock())
 
         uc.execute(_sample_plan(), state_dir="/tmp/state")
 
@@ -322,9 +308,7 @@ class TestStatePersistence:
         messages = [make_gmail_message(f"id{i}") for i in range(count)]
         client = FakeGmailClient(messages=messages)
         state_repo = FakeStateRepository()
-        uc = FetchBatchUseCase(
-            client, FakeMessageWriter(), state_repo, FakeClock()
-        )
+        uc = FetchBatchUseCase(client, FakeMessageWriter(), state_repo, FakeClock())
 
         uc.execute(_sample_plan(), state_dir="/tmp/state")
 

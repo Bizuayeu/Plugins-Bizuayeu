@@ -71,9 +71,7 @@ class ArchiveOrchestrator:
         try:
             record = self._resolver.find(record_id)
         except EntityNotFoundError:
-            raise EntityNotFoundError(
-                f"project not found in resolver: {record_id}"
-            )
+            raise EntityNotFoundError(f"project not found in resolver: {record_id}")
 
         if record["archive_status"] == "completed":
             raise ArchiveError(f"project already archived: {record_id}")

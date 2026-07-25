@@ -53,13 +53,9 @@ class GoogleGmailClientFactory:
             GoogleGmailClient (subject=user_email で構築済み)
         """
         if self._base_credentials is None:
-            self._base_credentials = self._provider.load_service_account(
-                self._key_path
-            )
+            self._base_credentials = self._provider.load_service_account(self._key_path)
 
-        impersonated = self._provider.impersonate(
-            self._base_credentials, user_email, self._scopes
-        )
+        impersonated = self._provider.impersonate(self._base_credentials, user_email, self._scopes)
         return GoogleGmailClient(
             service_account_credentials=impersonated,
             user_id="me",

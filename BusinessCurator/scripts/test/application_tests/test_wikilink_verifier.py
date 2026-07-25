@@ -72,19 +72,19 @@ class TestWikilinkVerifier:
     @pytest.mark.unit
     def test_removed_record_is_not_valid_target(self) -> None:
         """removed レコードへの wikilink は broken"""
-        v = _make_verifier(
-            [build_alias_record(slug="E", archive_status="removed")]
-        )
+        v = _make_verifier([build_alias_record(slug="E", archive_status="removed")])
         result = v.verify_links([("file.md", "projects/E")])
         assert len(result.broken) == 1
 
     @pytest.mark.unit
     def test_total_links_counted(self) -> None:
         v = _make_verifier([build_alias_record(slug="X")])
-        result = v.verify_links([
-            ("a.md", "projects/X"),
-            ("b.md", "projects/Missing"),
-        ])
+        result = v.verify_links(
+            [
+                ("a.md", "projects/X"),
+                ("b.md", "projects/Missing"),
+            ]
+        )
         assert result.total_links == 2
 
     @pytest.mark.unit

@@ -49,9 +49,7 @@ def make_service(plugin_root: Path) -> IndexGeneratorService:
     resolver_cli など他 CLI からの自動トリガーでも再利用する公開関数。
     """
     resolver_paths = PathResolver(plugin_root)
-    alias_repo = MarkdownAliasResolverRepository(
-        file_path=resolver_paths.alias_resolver_path
-    )
+    alias_repo = MarkdownAliasResolverRepository(file_path=resolver_paths.alias_resolver_path)
     resolver_svc = ResolverService(alias_repo)
     file_repo = IndexFileRepository(plugin_root)
     formatter = IndexMarkdownFormatter()
@@ -121,10 +119,8 @@ def main(argv: Optional[List[str]] = None) -> int:
             _handle_rebuild(service, args)
         else:  # pragma: no cover - argparse で弾かれる
             output_error(f"unknown command: {args.command}")
-            return 2
     except BusinessCuratorError as e:
         output_error(f"failed: {e}")
-        return 1
     return 0
 
 

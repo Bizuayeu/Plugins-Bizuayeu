@@ -24,7 +24,9 @@ import pytest
 # Constants
 # =============================================================================
 
-REPO_ROOT = Path(__file__).parent.parent.parent.parent  # scripts/test/skill_structure_tests/ → BusinessCurator/
+REPO_ROOT = Path(
+    __file__
+).parent.parent.parent.parent  # scripts/test/skill_structure_tests/ → BusinessCurator/
 SKILLS_DIR = REPO_ROOT / "skills" / "wiki"
 COMMANDS_DIR = REPO_ROOT / "commands"
 
@@ -32,6 +34,7 @@ REQUIRED_SKILLS: List[str] = [
     "SKILL.md",
     "triage.md",
     "archive.md",
+    "jooto-absorb.md",
     "project-manager.md",
     "client-manager.md",
     "vendor-manager.md",
@@ -58,6 +61,7 @@ REQUIRED_COMMANDS: List[str] = [
     "wiki-ingest.md",
     "wiki-triage.md",
     "wiki-absorb.md",
+    "wiki-jooto-absorb.md",
     "wiki-query.md",
     "wiki-status.md",
     "wiki-rebuild-resolver.md",
@@ -238,15 +242,11 @@ class TestCrossReferences:
     def test_command_references_cli(self, command_filename: str, cli_module: str) -> None:
         """command md は対応する CLI モジュール名を本文に含む"""
         content = _read_md(COMMANDS_DIR / command_filename)
-        assert cli_module in content, (
-            f"{command_filename}: must reference '{cli_module}' in body"
-        )
+        assert cli_module in content, f"{command_filename}: must reference '{cli_module}' in body"
 
     @pytest.mark.unit
     @pytest.mark.parametrize("command_filename, skill_filename", list(COMMAND_TO_SKILL.items()))
-    def test_command_references_skill(
-        self, command_filename: str, skill_filename: str
-    ) -> None:
+    def test_command_references_skill(self, command_filename: str, skill_filename: str) -> None:
         """command md は対応する skill ファイル名を本文に含む（フルパス or ファイル名）"""
         content = _read_md(COMMANDS_DIR / command_filename)
         skill_name = skill_filename[:-3]  # without .md
@@ -259,9 +259,7 @@ class TestCrossReferences:
     def test_skill_references_cli(self, skill_filename: str, cli_module: str) -> None:
         """操作系 skill は対応する CLI モジュール名を含む"""
         content = _read_md(SKILLS_DIR / skill_filename)
-        assert cli_module in content, (
-            f"{skill_filename}: must reference '{cli_module}' in body"
-        )
+        assert cli_module in content, f"{skill_filename}: must reference '{cli_module}' in body"
 
     @pytest.mark.unit
     def test_main_skill_lists_all_commands(self) -> None:

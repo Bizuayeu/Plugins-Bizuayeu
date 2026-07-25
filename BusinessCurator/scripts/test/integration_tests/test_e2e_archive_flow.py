@@ -48,11 +48,16 @@ def _setup_project(
     resolver_cli.main(
         [
             "add",
-            "--plugin-root", str(plugin_root),
-            "--kind", "projects",
-            "--slug", slug,
-            "--canonical", canonical,
-            "--target-path", f"shards/projects/{slug}/_project.md",
+            "--plugin-root",
+            str(plugin_root),
+            "--kind",
+            "projects",
+            "--slug",
+            slug,
+            "--canonical",
+            canonical,
+            "--target-path",
+            f"shards/projects/{slug}/_project.md",
         ]
     )
     capsys.readouterr()
@@ -71,9 +76,7 @@ def _setup_project(
 
 @pytest.mark.integration
 class TestArchiveFlowHappyPathE2E:
-    def test_full_archive_flow(
-        self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
-    ) -> None:
+    def test_full_archive_flow(self, plugin_root: Path, capsys: pytest.CaptureFixture[str]) -> None:
         # ----- Step 1: project を準備 -----
         _setup_project(plugin_root, capsys, "MaruMaru", "○○マンション")
 
@@ -86,9 +89,12 @@ class TestArchiveFlowHappyPathE2E:
         archive_cli.main(
             [
                 "plan",
-                "--plugin-root", str(plugin_root),
-                "--project", "MaruMaru",
-                "--reason", "completed",
+                "--plugin-root",
+                str(plugin_root),
+                "--project",
+                "MaruMaru",
+                "--reason",
+                "completed",
             ]
         )
         result = _capture_json(capsys)
@@ -110,9 +116,12 @@ class TestArchiveFlowHappyPathE2E:
         archive_cli.main(
             [
                 "execute",
-                "--plugin-root", str(plugin_root),
-                "--project", "MaruMaru",
-                "--reason", "completed",
+                "--plugin-root",
+                str(plugin_root),
+                "--project",
+                "MaruMaru",
+                "--reason",
+                "completed",
             ]
         )
         result = _capture_json(capsys)
@@ -133,9 +142,7 @@ class TestArchiveFlowHappyPathE2E:
         assert result["metrics"]["alias_records_completed"] == 1
 
         # find で target_path が archive/ に切り替わっていることを確認
-        resolver_cli.main(
-            ["find", "--plugin-root", str(plugin_root), "--id", "projects/MaruMaru"]
-        )
+        resolver_cli.main(["find", "--plugin-root", str(plugin_root), "--id", "projects/MaruMaru"])
         result = _capture_json(capsys)
         assert result["record"]["archive_status"] == "completed"
         assert "archive/projects/MaruMaru" in result["record"]["target_path"]
@@ -145,8 +152,10 @@ class TestArchiveFlowHappyPathE2E:
             archive_cli.main(
                 [
                     "execute",
-                    "--plugin-root", str(plugin_root),
-                    "--project", "MaruMaru",
+                    "--plugin-root",
+                    str(plugin_root),
+                    "--project",
+                    "MaruMaru",
                 ]
             )
         assert excinfo.value.code == 1
@@ -172,8 +181,10 @@ class TestArchiveNoMoveE2E:
         archive_cli.main(
             [
                 "execute",
-                "--plugin-root", str(plugin_root),
-                "--project", "X",
+                "--plugin-root",
+                str(plugin_root),
+                "--project",
+                "X",
                 "--no-move",
             ]
         )
@@ -185,9 +196,7 @@ class TestArchiveNoMoveE2E:
         assert (src_dir / "_project.md").exists()
 
         # resolver の archive_status は completed
-        resolver_cli.main(
-            ["find", "--plugin-root", str(plugin_root), "--id", "projects/X"]
-        )
+        resolver_cli.main(["find", "--plugin-root", str(plugin_root), "--id", "projects/X"])
         result = _capture_json(capsys)
         assert result["record"]["archive_status"] == "completed"
 
@@ -212,8 +221,10 @@ class TestArchiveDestinationExistsE2E:
             archive_cli.main(
                 [
                     "execute",
-                    "--plugin-root", str(plugin_root),
-                    "--project", "Y",
+                    "--plugin-root",
+                    str(plugin_root),
+                    "--project",
+                    "Y",
                 ]
             )
         assert excinfo.value.code == 1
@@ -241,8 +252,10 @@ class TestMultiProjectArchiveE2E:
             archive_cli.main(
                 [
                     "execute",
-                    "--plugin-root", str(plugin_root),
-                    "--project", slug,
+                    "--plugin-root",
+                    str(plugin_root),
+                    "--project",
+                    slug,
                 ]
             )
             capsys.readouterr()

@@ -51,8 +51,9 @@ class _FakeProvider:
 
 def _mock_gmail_build(monkeypatch: pytest.MonkeyPatch) -> None:
     """googleapiclient.discovery.build と SA credentials 変換をモック化"""
-    from infrastructure.google_gmail import client as client_module
     import googleapiclient.discovery
+
+    from infrastructure.google_gmail import client as client_module
 
     monkeypatch.setattr(
         client_module,
@@ -95,9 +96,7 @@ class TestCreateForUser:
         assert len(provider.impersonate_calls) == 3  # user ごとに impersonate
 
     @pytest.mark.unit
-    def test_impersonate_called_with_each_user(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_impersonate_called_with_each_user(self, monkeypatch: pytest.MonkeyPatch) -> None:
         _mock_gmail_build(monkeypatch)
         provider = _FakeProvider()
         factory = GoogleGmailClientFactory(
@@ -111,9 +110,7 @@ class TestCreateForUser:
         assert provider.impersonate_calls == ["alice@m.com", "bob@m.com"]
 
     @pytest.mark.unit
-    def test_different_users_get_different_clients(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_different_users_get_different_clients(self, monkeypatch: pytest.MonkeyPatch) -> None:
         _mock_gmail_build(monkeypatch)
         provider = _FakeProvider()
         factory = GoogleGmailClientFactory(
@@ -133,9 +130,7 @@ class TestCreateForUser:
         )
 
     @pytest.mark.unit
-    def test_uses_default_scopes_when_not_specified(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_uses_default_scopes_when_not_specified(self, monkeypatch: pytest.MonkeyPatch) -> None:
         from domain.constants import DEFAULT_SCOPES
 
         _mock_gmail_build(monkeypatch)

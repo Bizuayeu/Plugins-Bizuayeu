@@ -14,7 +14,6 @@ LLMTriageProtocol の `claude -p` subprocess 実装。
 """
 
 import subprocess
-from typing import cast
 
 from domain.exceptions import TriageError
 from domain.types.entry import RawEntry
@@ -95,8 +94,7 @@ class ClaudeCliTriageClient:
         normalized = raw_response.lower()
         if normalized not in SHARD_KINDS:
             raise TriageError(
-                f"invalid shard from claude: {raw_response!r} "
-                f"(expected one of {SHARD_KINDS})"
+                f"invalid shard from claude: {raw_response!r} (expected one of {SHARD_KINDS})"
             )
 
-        return cast(ShardKind, normalized)
+        return normalized

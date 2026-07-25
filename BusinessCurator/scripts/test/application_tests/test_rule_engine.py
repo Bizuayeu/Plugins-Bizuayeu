@@ -28,7 +28,9 @@ from test.test_helpers import build_raw_entry
 # =============================================================================
 
 
-def make_subject_rule(pattern: str, target_kind: str = "projects", target_slug: str = "X") -> TriageRule:
+def make_subject_rule(
+    pattern: str, target_kind: str = "projects", target_slug: str = "X"
+) -> TriageRule:
     return {
         "pattern": pattern,
         "target_kind": target_kind,  # type: ignore[typeddict-item]
@@ -37,7 +39,9 @@ def make_subject_rule(pattern: str, target_kind: str = "projects", target_slug: 
     }
 
 
-def make_from_rule(pattern: str, target_kind: str = "clients", target_slug: str = "Y") -> TriageRule:
+def make_from_rule(
+    pattern: str, target_kind: str = "clients", target_slug: str = "Y"
+) -> TriageRule:
     return {
         "pattern": pattern,
         "target_kind": target_kind,  # type: ignore[typeddict-item]
@@ -46,7 +50,9 @@ def make_from_rule(pattern: str, target_kind: str = "clients", target_slug: str 
     }
 
 
-def make_body_rule(pattern: str, target_kind: str = "knowledge", target_slug: str = "Z") -> TriageRule:
+def make_body_rule(
+    pattern: str, target_kind: str = "knowledge", target_slug: str = "Z"
+) -> TriageRule:
     return {
         "pattern": pattern,
         "target_kind": target_kind,  # type: ignore[typeddict-item]

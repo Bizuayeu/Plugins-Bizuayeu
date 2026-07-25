@@ -68,7 +68,10 @@ class TestMultiUserValidation:
     @pytest.mark.unit
     def test_empty_accounts_raises(self) -> None:
         uc = MultiUserFetchBatchUseCase(
-            FakeGmailClientFactory(), FakeMessageWriter(), FakeMultiUserStateRepository(), FakeClock()
+            FakeGmailClientFactory(),
+            FakeMessageWriter(),
+            FakeMultiUserStateRepository(),
+            FakeClock(),
         )
         plan = _plan([])
         with pytest.raises(InvalidBackupPlanError, match="accounts"):
@@ -77,7 +80,10 @@ class TestMultiUserValidation:
     @pytest.mark.unit
     def test_empty_multi_plan_id_raises(self) -> None:
         uc = MultiUserFetchBatchUseCase(
-            FakeGmailClientFactory(), FakeMessageWriter(), FakeMultiUserStateRepository(), FakeClock()
+            FakeGmailClientFactory(),
+            FakeMessageWriter(),
+            FakeMultiUserStateRepository(),
+            FakeClock(),
         )
         plan = _plan([_account("a@m.com")])
         plan["multi_plan_id"] = ""
@@ -87,7 +93,10 @@ class TestMultiUserValidation:
     @pytest.mark.unit
     def test_duplicate_emails_raises(self) -> None:
         uc = MultiUserFetchBatchUseCase(
-            FakeGmailClientFactory(), FakeMessageWriter(), FakeMultiUserStateRepository(), FakeClock()
+            FakeGmailClientFactory(),
+            FakeMessageWriter(),
+            FakeMultiUserStateRepository(),
+            FakeClock(),
         )
         plan = _plan([_account("a@m.com"), _account("a@m.com")])
         with pytest.raises(InvalidBackupPlanError, match="duplicate"):
@@ -96,7 +105,10 @@ class TestMultiUserValidation:
     @pytest.mark.unit
     def test_invalid_format_raises(self) -> None:
         uc = MultiUserFetchBatchUseCase(
-            FakeGmailClientFactory(), FakeMessageWriter(), FakeMultiUserStateRepository(), FakeClock()
+            FakeGmailClientFactory(),
+            FakeMessageWriter(),
+            FakeMultiUserStateRepository(),
+            FakeClock(),
         )
         plan = _plan([_account("a@m.com")])
         plan["output_format"] = "txt"  # type: ignore[typeddict-item]
@@ -112,9 +124,7 @@ class TestMultiUserValidation:
 class TestMultiUserHappyPath:
     @pytest.mark.unit
     def test_single_user_no_dedup(self) -> None:
-        msgs = [
-            make_message_with_id(f"id{i}", f"<m{i}@ex.com>") for i in range(3)
-        ]
+        msgs = [make_message_with_id(f"id{i}", f"<m{i}@ex.com>") for i in range(3)]
         client = FakeGmailClient(messages=msgs)
         factory = FakeGmailClientFactory({"alice@m.com": client})
         writer = FakeMessageWriter()
@@ -122,9 +132,7 @@ class TestMultiUserHappyPath:
             factory, writer, FakeMultiUserStateRepository(), FakeClock()
         )
 
-        result = uc.execute(
-            _plan([_account("alice@m.com")]), state_dir="/tmp/state"
-        )
+        result = uc.execute(_plan([_account("alice@m.com")]), state_dir="/tmp/state")
 
         assert result["per_user_success"] == {"alice@m.com": 3}
         assert result["per_user_deduped"] == {"alice@m.com": 0}
@@ -137,8 +145,10 @@ class TestMultiUserHappyPath:
         alice_msgs = [make_message_with_id(f"a{i}", f"<a{i}@ex.com>") for i in range(3)]
         bob_msgs = [make_message_with_id(f"b{i}", f"<b{i}@ex.com>") for i in range(2)]
         factory = FakeGmailClientFactory(
-            {"alice@m.com": FakeGmailClient(messages=alice_msgs),
-             "bob@m.com": FakeGmailClient(messages=bob_msgs)}
+            {
+                "alice@m.com": FakeGmailClient(messages=alice_msgs),
+                "bob@m.com": FakeGmailClient(messages=bob_msgs),
+            }
         )
         writer = FakeMessageWriter()
         uc = MultiUserFetchBatchUseCase(
@@ -164,8 +174,10 @@ class TestMultiUserHappyPath:
         msg2_bob = make_message_with_id("bob_id2", "<shared2@ex.com>")
 
         factory = FakeGmailClientFactory(
-            {"alice@m.com": FakeGmailClient(messages=[msg1, msg2]),
-             "bob@m.com": FakeGmailClient(messages=[msg1_bob, msg2_bob])}
+            {
+                "alice@m.com": FakeGmailClient(messages=[msg1, msg2]),
+                "bob@m.com": FakeGmailClient(messages=[msg1_bob, msg2_bob]),
+            }
         )
         writer = FakeMessageWriter()
         uc = MultiUserFetchBatchUseCase(
@@ -277,8 +289,10 @@ class TestMultiUserResume:
         alice_msgs = [make_message_with_id(f"a{i}", f"<a{i}@ex.com>") for i in range(3)]
         bob_msgs = [make_message_with_id(f"b{i}", f"<b{i}@ex.com>") for i in range(2)]
         factory = FakeGmailClientFactory(
-            {"alice@m.com": FakeGmailClient(messages=alice_msgs),
-             "bob@m.com": FakeGmailClient(messages=bob_msgs)}
+            {
+                "alice@m.com": FakeGmailClient(messages=alice_msgs),
+                "bob@m.com": FakeGmailClient(messages=bob_msgs),
+            }
         )
         writer = FakeMessageWriter()
         state_repo = FakeMultiUserStateRepository()
@@ -352,9 +366,7 @@ class TestMultiUserResume:
     @pytest.mark.unit
     def test_resume_false_ignores_existing_state(self) -> None:
         msgs = [make_message_with_id(f"a{i}", f"<a{i}@ex.com>") for i in range(2)]
-        factory = FakeGmailClientFactory(
-            {"alice@m.com": FakeGmailClient(messages=msgs)}
-        )
+        factory = FakeGmailClientFactory({"alice@m.com": FakeGmailClient(messages=msgs)})
         writer = FakeMessageWriter()
         state_repo = FakeMultiUserStateRepository()
 
@@ -409,8 +421,10 @@ class TestMultiUserFailures:
         alice_msgs = [make_message_with_id(f"a{i}", f"<a{i}@ex.com>") for i in range(3)]
         bob_msgs = [make_message_with_id("b1", "<b1@ex.com>")]
         factory = FakeGmailClientFactory(
-            {"alice@m.com": FakeGmailClient(messages=alice_msgs, fetch_failures={"a1"}),
-             "bob@m.com": FakeGmailClient(messages=bob_msgs)}
+            {
+                "alice@m.com": FakeGmailClient(messages=alice_msgs, fetch_failures={"a1"}),
+                "bob@m.com": FakeGmailClient(messages=bob_msgs),
+            }
         )
         uc = MultiUserFetchBatchUseCase(
             factory, FakeMessageWriter(), FakeMultiUserStateRepository(), FakeClock()
@@ -432,9 +446,7 @@ class TestMultiUserFailures:
             "nomid_id",
             raw_mime=b"From: test@ex.com\r\nSubject: no id\r\n\r\nbody",
         )
-        factory = FakeGmailClientFactory(
-            {"alice@m.com": FakeGmailClient(messages=[no_mid_msg])}
-        )
+        factory = FakeGmailClientFactory({"alice@m.com": FakeGmailClient(messages=[no_mid_msg])})
         writer = FakeMessageWriter()
         uc = MultiUserFetchBatchUseCase(
             factory, writer, FakeMultiUserStateRepository(), FakeClock()
@@ -462,8 +474,10 @@ class TestDedupCorrectness:
         msg1 = make_message_with_id("a1", "<ABC@Example.COM>")
         msg2 = make_message_with_id("b1", "<ABC@example.com>")
         factory = FakeGmailClientFactory(
-            {"alice@m.com": FakeGmailClient(messages=[msg1]),
-             "bob@m.com": FakeGmailClient(messages=[msg2])}
+            {
+                "alice@m.com": FakeGmailClient(messages=[msg1]),
+                "bob@m.com": FakeGmailClient(messages=[msg2]),
+            }
         )
         writer = FakeMessageWriter()
         uc = MultiUserFetchBatchUseCase(
@@ -485,8 +499,10 @@ class TestDedupCorrectness:
         msg1 = make_message_with_id("a1", "<ABC@example.com>")
         msg2 = make_message_with_id("b1", "<abc@example.com>")
         factory = FakeGmailClientFactory(
-            {"alice@m.com": FakeGmailClient(messages=[msg1]),
-             "bob@m.com": FakeGmailClient(messages=[msg2])}
+            {
+                "alice@m.com": FakeGmailClient(messages=[msg1]),
+                "bob@m.com": FakeGmailClient(messages=[msg2]),
+            }
         )
         writer = FakeMessageWriter()
         uc = MultiUserFetchBatchUseCase(
@@ -506,13 +522,9 @@ class TestDedupCorrectness:
     def test_message_id_index_tracks_owner(self) -> None:
         """index には「誰が最初にとったか」が記録される"""
         msg = make_message_with_id("a1", "<shared@ex.com>")
-        factory = FakeGmailClientFactory(
-            {"alice@m.com": FakeGmailClient(messages=[msg])}
-        )
+        factory = FakeGmailClientFactory({"alice@m.com": FakeGmailClient(messages=[msg])})
         state_repo = FakeMultiUserStateRepository()
-        uc = MultiUserFetchBatchUseCase(
-            factory, FakeMessageWriter(), state_repo, FakeClock()
-        )
+        uc = MultiUserFetchBatchUseCase(factory, FakeMessageWriter(), state_repo, FakeClock())
 
         uc.execute(
             _plan([_account("alice@m.com")]),
@@ -530,13 +542,13 @@ class TestDedupCorrectness:
         msg_alice = make_message_with_id("alice_id", "<shared@ex.com>")
         msg_bob = make_message_with_id("bob_id", "<shared@ex.com>")
         factory = FakeGmailClientFactory(
-            {"alice@m.com": FakeGmailClient(messages=[msg_alice]),
-             "bob@m.com": FakeGmailClient(messages=[msg_bob])}
+            {
+                "alice@m.com": FakeGmailClient(messages=[msg_alice]),
+                "bob@m.com": FakeGmailClient(messages=[msg_bob]),
+            }
         )
         state_repo = FakeMultiUserStateRepository()
-        uc = MultiUserFetchBatchUseCase(
-            factory, FakeMessageWriter(), state_repo, FakeClock()
-        )
+        uc = MultiUserFetchBatchUseCase(factory, FakeMessageWriter(), state_repo, FakeClock())
 
         uc.execute(
             _plan([_account("alice@m.com"), _account("bob@m.com")]),

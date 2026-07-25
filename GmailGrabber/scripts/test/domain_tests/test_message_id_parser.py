@@ -10,7 +10,6 @@ from hypothesis import strategies as st
 
 from domain.message_id_parser import extract_message_id, normalize_message_id
 
-
 # =============================================================================
 # extract_message_id
 # =============================================================================

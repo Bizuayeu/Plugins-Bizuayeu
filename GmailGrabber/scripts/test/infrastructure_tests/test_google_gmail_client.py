@@ -15,6 +15,7 @@ import pytest
 
 from domain.exceptions import GmailApiError, MessageNotFoundError
 from domain.types.credentials import OAuthCredentials
+from domain.types.service_account import ServiceAccountCredentials
 from infrastructure.google_gmail.client import GoogleGmailClient
 
 
@@ -229,9 +230,7 @@ class TestEstimateCount:
 # =============================================================================
 
 
-def _fake_sa_credentials() -> "ServiceAccountCredentials":
-    from domain.types.service_account import ServiceAccountCredentials
-
+def _fake_sa_credentials() -> ServiceAccountCredentials:
     return {
         "type": "service_account",
         "project_id": "p",
@@ -287,9 +286,7 @@ class TestServiceAccountBuild:
         def fake_build(*args: Any, **kwargs: Any) -> MagicMock:
             return MagicMock(name="Service")
 
-        monkeypatch.setattr(
-            client_module, "_to_google_service_account_credentials", fake_to_sa
-        )
+        monkeypatch.setattr(client_module, "_to_google_service_account_credentials", fake_to_sa)
         monkeypatch.setattr(client_module, "_to_google_credentials", fake_to_oauth)
 
         # googleapiclient.discovery.build をモック
@@ -323,9 +320,7 @@ class TestServiceAccountBuild:
         def fake_build(*args: Any, **kwargs: Any) -> MagicMock:
             return MagicMock(name="Service")
 
-        monkeypatch.setattr(
-            client_module, "_to_google_service_account_credentials", fake_to_sa
-        )
+        monkeypatch.setattr(client_module, "_to_google_service_account_credentials", fake_to_sa)
         monkeypatch.setattr(client_module, "_to_google_credentials", fake_to_oauth)
 
         import googleapiclient.discovery

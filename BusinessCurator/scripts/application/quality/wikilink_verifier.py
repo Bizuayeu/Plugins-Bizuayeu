@@ -39,8 +39,8 @@ class VerifyResult:
             "valid": self.valid,
             "broken_count": len(self.broken),
             "stale_count": len(self.stale),
-            "broken": [{"file": f, "link": l} for f, l in self.broken],
-            "stale": [{"file": f, "link": l} for f, l in self.stale],
+            "broken": [{"file": f, "link": link} for f, link in self.broken],
+            "stale": [{"file": f, "link": link} for f, link in self.stale],
         }
 
 

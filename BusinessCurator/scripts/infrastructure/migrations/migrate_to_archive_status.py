@@ -14,7 +14,6 @@ v3 の `## archive/ [archived]` セクションを v4 の
 """
 
 import re
-import sys
 from pathlib import Path
 from typing import List, Tuple
 
@@ -36,7 +35,6 @@ _ENTRY_RE = re.compile(
 def _parse_old_format(content: str) -> List[AliasRecord]:
     """v3 旧フォーマットをパースして AliasRecord リストを返す"""
     records: List[AliasRecord] = []
-    current_kind: ShardKind | None = None
     in_old_archive = False
 
     for raw_line in content.split("\n"):
@@ -46,14 +44,12 @@ def _parse_old_format(content: str) -> List[AliasRecord]:
 
         if _OLD_ARCHIVE_SECTION_RE.match(line):
             in_old_archive = True
-            current_kind = None
             continue
 
         active_match = _ACTIVE_SECTION_RE.match(line)
         if active_match:
             kind_str = active_match.group("kind")
             if kind_str in SHARD_KINDS:
-                current_kind = kind_str  # type: ignore[assignment]
                 in_old_archive = False
             continue
 
@@ -94,7 +90,7 @@ def _derive_kind_and_slug(target_path: str) -> Tuple[ShardKind, str]:
     kind_str = parts[1]
     if kind_str not in SHARD_KINDS:
         raise ValueError(f"unknown shard kind in path: {target_path}")
-    kind: ShardKind = kind_str  # type: ignore[assignment]
+    kind: ShardKind = kind_str
     third = parts[2]
     slug = third[:-3] if third.endswith(".md") else third
     return kind, slug
@@ -161,7 +157,9 @@ def migrate(plugin_root: Path, *, dry_run: bool = False) -> str:
 def main() -> None:
     import argparse
 
-    parser = argparse.ArgumentParser(description="Migrate _alias_resolver.md to archive_status format")
+    parser = argparse.ArgumentParser(
+        description="Migrate _alias_resolver.md to archive_status format"
+    )
     parser.add_argument("--plugin-root", required=True, help="BusinessWiki root directory")
     parser.add_argument("--dry-run", action="store_true", help="Preview without writing")
     args = parser.parse_args()

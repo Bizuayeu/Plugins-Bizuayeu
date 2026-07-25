@@ -40,11 +40,16 @@ def _seed_project(
     resolver_cli.main(
         [
             "add",
-            "--plugin-root", str(plugin_root),
-            "--kind", "projects",
-            "--slug", slug,
-            "--canonical", canonical,
-            "--target-path", f"shards/projects/{slug}/_project.md",
+            "--plugin-root",
+            str(plugin_root),
+            "--kind",
+            "projects",
+            "--slug",
+            slug,
+            "--canonical",
+            canonical,
+            "--target-path",
+            f"shards/projects/{slug}/_project.md",
         ]
     )
     capsys.readouterr()
@@ -78,14 +83,10 @@ class TestArchiveCliPlan:
         self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
     ) -> None:
         _seed_project(plugin_root, capsys)
-        archive_cli.main(
-            ["plan", "--plugin-root", str(plugin_root), "--project", "MaruMaru"]
-        )
+        archive_cli.main(["plan", "--plugin-root", str(plugin_root), "--project", "MaruMaru"])
         capsys.readouterr()
         # resolver は変更されていない
-        resolver_cli.main(
-            ["list", "--plugin-root", str(plugin_root)]
-        )
+        resolver_cli.main(["list", "--plugin-root", str(plugin_root)])
         result = _read_stdout(capsys)
         assert result["count"] == 1  # active のまま
 
@@ -93,9 +94,7 @@ class TestArchiveCliPlan:
         self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
     ) -> None:
         with pytest.raises(SystemExit) as excinfo:
-            archive_cli.main(
-                ["plan", "--plugin-root", str(plugin_root), "--project", "Unknown"]
-            )
+            archive_cli.main(["plan", "--plugin-root", str(plugin_root), "--project", "Unknown"])
         assert excinfo.value.code == 1
 
 
@@ -138,8 +137,10 @@ class TestArchiveCliExecute:
         archive_cli.main(
             [
                 "execute",
-                "--plugin-root", str(plugin_root),
-                "--project", "MaruMaru",
+                "--plugin-root",
+                str(plugin_root),
+                "--project",
+                "MaruMaru",
                 "--no-move",
             ]
         )
@@ -156,9 +157,7 @@ class TestArchiveCliExecute:
         src_dir.mkdir(parents=True)
         (src_dir / "_project.md").write_text("# project", encoding="utf-8")
 
-        archive_cli.main(
-            ["execute", "--plugin-root", str(plugin_root), "--project", "MaruMaru"]
-        )
+        archive_cli.main(["execute", "--plugin-root", str(plugin_root), "--project", "MaruMaru"])
         capsys.readouterr()
 
         with pytest.raises(SystemExit) as excinfo:
@@ -174,9 +173,12 @@ class TestArchiveCliExecute:
         archive_cli.main(
             [
                 "execute",
-                "--plugin-root", str(plugin_root),
-                "--project", "MaruMaru",
-                "--reason", "完工",
+                "--plugin-root",
+                str(plugin_root),
+                "--project",
+                "MaruMaru",
+                "--reason",
+                "完工",
                 "--no-move",
             ]
         )

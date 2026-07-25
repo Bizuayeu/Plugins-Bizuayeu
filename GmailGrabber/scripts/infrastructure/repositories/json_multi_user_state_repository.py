@@ -24,9 +24,7 @@ from domain.types.multi_backup import MultiUserBackupState
 class JsonMultiUserStateRepository:
     """MultiUserBackupState を JSON ファイルで永続化"""
 
-    def load(
-        self, multi_plan_id: str, state_dir: str
-    ) -> Optional[MultiUserBackupState]:
+    def load(self, multi_plan_id: str, state_dir: str) -> Optional[MultiUserBackupState]:
         try:
             path = self._state_path(multi_plan_id, state_dir)
             if not path.exists():

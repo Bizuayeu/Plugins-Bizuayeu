@@ -44,7 +44,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         }
         for b in boards
     ]
-    print(json.dumps({"status": "ok", "count": len(summary), "boards": summary}, ensure_ascii=False))
+    print(
+        json.dumps({"status": "ok", "count": len(summary), "boards": summary}, ensure_ascii=False)
+    )
     return 0
 
 

@@ -55,12 +55,8 @@ _ENTRY_RE = re.compile(
 _ACTIVE_SECTION_RE = re.compile(r"^## (?P<kind>[a-z]+)/\s*$")
 
 # アーカイブセクション: ## archive/projects/ [completed], ## archive/vendors/ [removed]
-_ARCHIVE_COMPLETED_RE = re.compile(
-    r"^## archive/(?P<kind>[a-z]+)/\s*\[completed\]\s*$"
-)
-_ARCHIVE_REMOVED_RE = re.compile(
-    r"^## archive/(?P<kind>[a-z]+)/\s*\[removed\]\s*$"
-)
+_ARCHIVE_COMPLETED_RE = re.compile(r"^## archive/(?P<kind>[a-z]+)/\s*\[completed\]\s*$")
+_ARCHIVE_REMOVED_RE = re.compile(r"^## archive/(?P<kind>[a-z]+)/\s*\[removed\]\s*$")
 
 _SectionMode = Literal["active", "completed", "removed"]
 
@@ -176,7 +172,7 @@ class MarkdownAliasResolverRepository:
             if completed_match:
                 kind_str = completed_match.group("kind")
                 if kind_str in SHARD_KINDS:
-                    current_kind = kind_str  # type: ignore[assignment]
+                    current_kind = kind_str
                     current_mode = "completed"
                 else:
                     current_kind = None
@@ -187,7 +183,7 @@ class MarkdownAliasResolverRepository:
             if removed_match:
                 kind_str = removed_match.group("kind")
                 if kind_str in SHARD_KINDS:
-                    current_kind = kind_str  # type: ignore[assignment]
+                    current_kind = kind_str
                     current_mode = "removed"
                 else:
                     current_kind = None
@@ -198,7 +194,7 @@ class MarkdownAliasResolverRepository:
             if active_match:
                 kind_str = active_match.group("kind")
                 if kind_str in SHARD_KINDS:
-                    current_kind = kind_str  # type: ignore[assignment]
+                    current_kind = kind_str
                     current_mode = "active"
                 else:
                     current_kind = None
@@ -212,9 +208,7 @@ class MarkdownAliasResolverRepository:
             canonical = entry_match.group("canonical").strip()
             target = entry_match.group("target").strip()
             aliases_str = entry_match.group("aliases")
-            aliases = (
-                [a.strip() for a in aliases_str.split(",")] if aliases_str else []
-            )
+            aliases = [a.strip() for a in aliases_str.split(",")] if aliases_str else []
 
             kind, slug = cls._derive_kind_and_slug(target, current_kind)
             status: ArchiveStatus = current_mode
@@ -248,7 +242,7 @@ class MarkdownAliasResolverRepository:
         kind_str = parts[1]
         if kind_str not in SHARD_KINDS:
             raise ResolverError(f"unknown shard kind in path: {target_path}")
-        kind: ShardKind = kind_str  # type: ignore[assignment]
+        kind: ShardKind = kind_str
 
         third = parts[2]
         if third.endswith(".md"):

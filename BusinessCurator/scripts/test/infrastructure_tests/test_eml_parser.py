@@ -95,9 +95,7 @@ class TestEmlEmailParserMultipart:
         assert "本文" in result["body_text"]
 
     @pytest.mark.integration
-    def test_parse_multipart_attachment_filename(
-        self, parser: EmlEmailParser
-    ) -> None:
+    def test_parse_multipart_attachment_filename(self, parser: EmlEmailParser) -> None:
         result = parser.parse(FIXTURE_DIR / "sample_multipart.eml")
         filenames = [a["filename"] for a in result["attachments"]]
         assert "report.pdf" in filenames

@@ -56,9 +56,7 @@ class GoogleOAuthCredentialsProvider:
     ) -> OAuthCredentials:
         """ブラウザベース InstalledAppFlow を実行して新規認証"""
         if not Path(client_secret_path).exists():
-            raise CredentialsNotFoundError(
-                f"client_secret file not found: {client_secret_path}"
-            )
+            raise CredentialsNotFoundError(f"client_secret file not found: {client_secret_path}")
         try:
             from google_auth_oauthlib.flow import InstalledAppFlow  # lazy import
 

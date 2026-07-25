@@ -37,17 +37,13 @@ class FakeGmailClient:
         labels: Optional[List[dict]] = None,
         fetch_failures: Optional[set[str]] = None,
     ) -> None:
-        self._messages: Dict[str, GmailMessage] = {
-            m["gmail_id"]: m for m in (messages or [])
-        }
+        self._messages: Dict[str, GmailMessage] = {m["gmail_id"]: m for m in (messages or [])}
         self._labels = labels or []
         self._fetch_failures = fetch_failures or set()
         self.list_calls: List[str] = []
         self.fetch_calls: List[str] = []
 
-    def list_message_ids(
-        self, query: str, max_results: Optional[int] = None
-    ) -> Iterator[str]:
+    def list_message_ids(self, query: str, max_results: Optional[int] = None) -> Iterator[str]:
         self.list_calls.append(query)
         ids = list(self._messages.keys())
         if max_results is not None:
@@ -273,9 +269,7 @@ class FakeMultiUserStateRepository:
         self._store: Dict[str, MultiUserBackupState] = {}
         self.save_count = 0
 
-    def load(
-        self, multi_plan_id: str, state_dir: str
-    ) -> Optional[MultiUserBackupState]:
+    def load(self, multi_plan_id: str, state_dir: str) -> Optional[MultiUserBackupState]:
         key = f"{state_dir}::{multi_plan_id}"
         stored = self._store.get(key)
         if stored is None:

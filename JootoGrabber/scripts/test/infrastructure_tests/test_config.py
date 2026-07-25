@@ -9,9 +9,7 @@ class TestLoadConfig:
         assert cfg == Config(api_key="abc", base_url="https://api.jooto.com")
 
     def test_base_url_override(self) -> None:
-        cfg = load_config(
-            {"JOOTO_API_KEY": "abc", "JOOTO_BASE_URL": "https://staging.jooto.com/"}
-        )
+        cfg = load_config({"JOOTO_API_KEY": "abc", "JOOTO_BASE_URL": "https://staging.jooto.com/"})
         assert cfg.base_url == "https://staging.jooto.com"  # trailing slash stripped
 
     def test_missing_api_key_raises(self) -> None:

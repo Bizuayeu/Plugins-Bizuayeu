@@ -157,9 +157,7 @@ class FetchBatchUseCase:
                 f"output_format must be 'eml' or 'mbox', got {plan.get('output_format')}"
             )
 
-    def _load_or_init_state(
-        self, plan: BackupPlan, resume: bool, state_dir: str
-    ) -> BackupState:
+    def _load_or_init_state(self, plan: BackupPlan, resume: bool, state_dir: str) -> BackupState:
         if resume:
             existing = self._state_repo.load(plan["plan_id"], state_dir)
             if existing is not None:

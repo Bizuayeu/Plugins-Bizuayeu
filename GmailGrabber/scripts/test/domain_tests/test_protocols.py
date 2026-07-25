@@ -28,7 +28,6 @@ from domain.types.message import GmailMessage
 from domain.types.multi_backup import MultiUserBackupState
 from domain.types.service_account import ServiceAccountCredentials
 
-
 # =============================================================================
 # Fakes
 # =============================================================================
@@ -64,9 +63,7 @@ class _FakeCredentialsProvider:
 
 
 class _FakeGmailClient:
-    def list_message_ids(
-        self, query: str, max_results: Optional[int] = None
-    ) -> Iterator[str]:
+    def list_message_ids(self, query: str, max_results: Optional[int] = None) -> Iterator[str]:
         yield from []
 
     def fetch_message(self, message_id: str) -> GmailMessage:
@@ -182,9 +179,7 @@ class _FakeGmailClientFactory:
 
 
 class _FakeMultiUserStateRepository:
-    def load(
-        self, multi_plan_id: str, state_dir: str
-    ) -> Optional[MultiUserBackupState]:
+    def load(self, multi_plan_id: str, state_dir: str) -> Optional[MultiUserBackupState]:
         return None
 
     def save(self, state: MultiUserBackupState, state_dir: str) -> None:

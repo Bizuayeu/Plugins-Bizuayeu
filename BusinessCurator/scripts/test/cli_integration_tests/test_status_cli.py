@@ -70,11 +70,16 @@ class TestStatusCli:
             resolver_cli.main(
                 [
                     "add",
-                    "--plugin-root", str(plugin_root),
-                    "--kind", "projects",
-                    "--slug", slug,
-                    "--canonical", slug,
-                    "--target-path", f"shards/projects/{slug}/_project.md",
+                    "--plugin-root",
+                    str(plugin_root),
+                    "--kind",
+                    "projects",
+                    "--slug",
+                    slug,
+                    "--canonical",
+                    slug,
+                    "--target-path",
+                    f"shards/projects/{slug}/_project.md",
                 ]
             )
             capsys.readouterr()

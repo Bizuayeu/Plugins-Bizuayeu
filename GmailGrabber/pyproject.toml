@@ -158,6 +158,12 @@ module = "infrastructure.*"
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
 
+# google-auth / google-api-python-client は untyped のため、
+# それらを直接呼ぶ境界モジュールだけ untyped call 検査を外す（型注釈義務は維持）
+[[tool.mypy.overrides]]
+module = "infrastructure.google_gmail.*"
+disallow_untyped_calls = false
+
 [[tool.mypy.overrides]]
 module = "interfaces.*"
 disallow_untyped_defs = true

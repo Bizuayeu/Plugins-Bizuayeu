@@ -149,7 +149,10 @@ class TestMultiUserBackupState:
             "started_user_emails": ["alice@meguru.com"],
             "completed_user_emails": [],
         }
-        assert state["per_user_states"]["alice@meguru.com"]["plan_id"] == "multi_plan_20260411_abcd__alice"
+        assert (
+            state["per_user_states"]["alice@meguru.com"]["plan_id"]
+            == "multi_plan_20260411_abcd__alice"
+        )
 
 
 # =============================================================================

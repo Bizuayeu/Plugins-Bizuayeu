@@ -12,7 +12,6 @@ from hypothesis import strategies as st
 
 from domain.file_naming import build_plan_id, eml_filename, mbox_filename, sanitize_filename
 
-
 # =============================================================================
 # sanitize_filename
 # =============================================================================

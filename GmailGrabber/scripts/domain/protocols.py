@@ -157,9 +157,7 @@ class GmailClientFactoryProtocol(Protocol):
 class MultiUserStateRepositoryProtocol(Protocol):
     """MultiUserBackupState の永続化 Protocol"""
 
-    def load(
-        self, multi_plan_id: str, state_dir: str
-    ) -> Optional[MultiUserBackupState]:
+    def load(self, multi_plan_id: str, state_dir: str) -> Optional[MultiUserBackupState]:
         """multi_plan_id に対応する state をロード"""
         ...
 

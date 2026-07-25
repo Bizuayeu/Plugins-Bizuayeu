@@ -46,11 +46,16 @@ def _add_entity(
 ) -> None:
     args = [
         "add",
-        "--plugin-root", str(plugin_root),
-        "--kind", kind,
-        "--slug", slug,
-        "--canonical", canonical,
-        "--target-path", f"shards/{kind}/{slug}/_project.md",
+        "--plugin-root",
+        str(plugin_root),
+        "--kind",
+        kind,
+        "--slug",
+        slug,
+        "--canonical",
+        canonical,
+        "--target-path",
+        f"shards/{kind}/{slug}/_project.md",
     ]
     if aliases:
         args.extend(["--aliases", aliases])
@@ -65,13 +70,15 @@ def _add_entity(
 
 @pytest.mark.integration
 class TestIngestToTriagePipelineE2E:
-    def test_full_pipeline(
-        self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
-    ) -> None:
+    def test_full_pipeline(self, plugin_root: Path, capsys: pytest.CaptureFixture[str]) -> None:
         # ----- Step 1: マスタデータ登録 -----
         _add_entity(plugin_root, capsys, "projects", "MaruMaru", "MaruMaruMansion")
-        _add_entity(plugin_root, capsys, "clients", "Shikaku", "ShikakuFudosan", "shikaku.example.jp")
-        _add_entity(plugin_root, capsys, "vendors", "Sankaku", "SankakuSetsubi", "sankaku.example.jp")
+        _add_entity(
+            plugin_root, capsys, "clients", "Shikaku", "ShikakuFudosan", "shikaku.example.jp"
+        )
+        _add_entity(
+            plugin_root, capsys, "vendors", "Sankaku", "SankakuSetsubi", "sankaku.example.jp"
+        )
 
         # ----- Step 2: ingest -----
         src = FIXTURE_DIR / "sample_mixed_meguru.mbox"
@@ -79,9 +86,7 @@ class TestIngestToTriagePipelineE2E:
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(src, dst)
 
-        exit_code = ingest_cli.main(
-            ["--source", str(dst), "--plugin-root", str(plugin_root)]
-        )
+        exit_code = ingest_cli.main(["--source", str(dst), "--plugin-root", str(plugin_root)])
         assert exit_code == 0
         result = _capture_json(capsys)
         assert result["saved"] == 5
@@ -92,9 +97,7 @@ class TestIngestToTriagePipelineE2E:
         assert len(raw_files) == 5
 
         # ----- Step 3: triage --no-llm -----
-        exit_code = triage_cli.main(
-            ["--plugin-root", str(plugin_root), "--no-llm"]
-        )
+        exit_code = triage_cli.main(["--plugin-root", str(plugin_root), "--no-llm"])
         assert exit_code == 0
         result = _capture_json(capsys)
         assert result["total"] == 5
@@ -124,9 +127,7 @@ class TestIngestToTriagePipelineE2E:
         assert m["alias_records_active"] == 3
 
         # ----- Step 6: 2回目 ingest で冪等性確認 -----
-        ingest_cli.main(
-            ["--source", str(dst), "--plugin-root", str(plugin_root)]
-        )
+        ingest_cli.main(["--source", str(dst), "--plugin-root", str(plugin_root)])
         result = _capture_json(capsys)
         assert result["saved"] == 0
         assert result["skipped"] == 5
@@ -174,9 +175,12 @@ class TestTriageRuleUpdateE2E:
         resolver_cli.main(
             [
                 "edit",
-                "--plugin-root", str(plugin_root),
-                "--id", "projects/X",
-                "--add-aliases", "ProjectY",
+                "--plugin-root",
+                str(plugin_root),
+                "--id",
+                "projects/X",
+                "--add-aliases",
+                "ProjectY",
             ]
         )
         capsys.readouterr()

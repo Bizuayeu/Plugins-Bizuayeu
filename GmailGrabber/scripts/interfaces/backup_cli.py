@@ -124,14 +124,10 @@ def _make_writer(output_format: str, plan_id: str) -> MessageWriterProtocol:
 def main() -> None:
     args = _build_parser().parse_args()
 
-    config_dir = (
-        Path(args.config_dir).expanduser() if args.config_dir else default_config_dir()
-    )
+    config_dir = Path(args.config_dir).expanduser() if args.config_dir else default_config_dir()
     config_dir.mkdir(parents=True, exist_ok=True)
 
-    state_dir = (
-        Path(args.state_dir).expanduser() if args.state_dir else config_dir / "state"
-    )
+    state_dir = Path(args.state_dir).expanduser() if args.state_dir else config_dir / "state"
     state_dir.mkdir(parents=True, exist_ok=True)
 
     output_dir = Path(args.output_dir).expanduser().resolve()
@@ -169,7 +165,7 @@ def main() -> None:
         "account": account,
         "query": query,
         "output_dir": str(output_dir),
-        "output_format": args.format,  # type: ignore[typeddict-item]
+        "output_format": args.format,
     }
 
     # Gmail client + writer + state_repo で UseCase 組み立て

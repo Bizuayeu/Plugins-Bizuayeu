@@ -40,9 +40,7 @@ class JsonStateRepository:
                 encoding="utf-8",
             )
         except OSError as e:
-            raise StateRepositoryError(
-                f"failed to save state for {state['plan_id']}: {e}"
-            ) from e
+            raise StateRepositoryError(f"failed to save state for {state['plan_id']}: {e}") from e
 
     def delete(self, plan_id: str, state_dir: str) -> None:
         try:
@@ -50,9 +48,7 @@ class JsonStateRepository:
             if path.exists():
                 path.unlink()
         except OSError as e:
-            raise StateRepositoryError(
-                f"failed to delete state for {plan_id}: {e}"
-            ) from e
+            raise StateRepositoryError(f"failed to delete state for {plan_id}: {e}") from e
 
     # =========================================================================
     # helpers

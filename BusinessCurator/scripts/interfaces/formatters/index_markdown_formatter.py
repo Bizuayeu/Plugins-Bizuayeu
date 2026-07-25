@@ -34,10 +34,7 @@ _SHARD_DIRECTORY_INDEX_FILE = {
 }
 
 _AUTO_GEN_FOOTER = (
-    "\n"
-    "---\n"
-    "\n"
-    "**自動生成**: `/wiki-index-rebuild` で再生成されます。手動編集しないでください。\n"
+    "\n---\n\n**自動生成**: `/wiki-index-rebuild` で再生成されます。手動編集しないでください。\n"
 )
 
 

@@ -41,7 +41,7 @@ from infrastructure.repositories.json_multi_user_state_repository import (
 )
 from infrastructure.writers.eml_writer import EmlFileWriter
 from infrastructure.writers.mbox_writer import MboxFileWriter
-from interfaces.backup_cli import _build_search_query, _parse_date  # type: ignore[attr-defined]
+from interfaces.backup_cli import _build_search_query, _parse_date
 from interfaces.cli_helpers import default_config_dir, fail, print_success
 
 # Re-export to silence "unused import" linters while keeping referential docs:
@@ -119,16 +119,10 @@ def _make_writer(output_format: str, multi_plan_id: str) -> MessageWriterProtoco
 def main(argv: Optional[List[str]] = None) -> None:
     args = _build_parser().parse_args(argv)
 
-    config_dir = (
-        Path(args.config_dir).expanduser() if args.config_dir else default_config_dir()
-    )
+    config_dir = Path(args.config_dir).expanduser() if args.config_dir else default_config_dir()
     config_dir.mkdir(parents=True, exist_ok=True)
 
-    state_dir = (
-        Path(args.state_dir).expanduser()
-        if args.state_dir
-        else config_dir / "multi_state"
-    )
+    state_dir = Path(args.state_dir).expanduser() if args.state_dir else config_dir / "multi_state"
     state_dir.mkdir(parents=True, exist_ok=True)
 
     sa_key_path = Path(args.service_account_key).expanduser().resolve()
@@ -163,7 +157,7 @@ def main(argv: Optional[List[str]] = None) -> None:
         "accounts": accounts,
         "query": query,
         "output_dir": str(output_dir),
-        "output_format": args.format,  # type: ignore[typeddict-item]
+        "output_format": args.format,
     }
 
     # DI 組み立て
@@ -203,9 +197,7 @@ def main(argv: Optional[List[str]] = None) -> None:
             "per_user_deduped": result["per_user_deduped"],
             "total_unique_messages": result["total_unique_messages"],
             "total_dedup_skipped": result["total_dedup_skipped"],
-            "total_messages_without_message_id": result[
-                "total_messages_without_message_id"
-            ],
+            "total_messages_without_message_id": result["total_messages_without_message_id"],
             "output_files_count": len(result["output_files"]),
             "started_at": result["started_at"],
             "finished_at": result["finished_at"],

@@ -41,16 +41,13 @@ class CLIResult:
 
     def assert_success(self) -> None:
         assert self.exit_code == 0, (
-            f"Command failed (exit {self.exit_code})\n"
-            f"stdout: {self.stdout}\n"
-            f"stderr: {self.stderr}"
+            f"Command failed (exit {self.exit_code})\nstdout: {self.stdout}\nstderr: {self.stderr}"
         )
 
     def assert_failure(self, expected_code: Optional[int] = None) -> None:
         if expected_code is not None:
             assert self.exit_code == expected_code, (
-                f"Expected exit {expected_code}, got {self.exit_code}\n"
-                f"stdout: {self.stdout}"
+                f"Expected exit {expected_code}, got {self.exit_code}\nstdout: {self.stdout}"
             )
         else:
             assert self.exit_code != 0, (
@@ -86,9 +83,7 @@ class CLIRunner:
 
     def _run(self, args: List[str], cwd: Optional[Path] = None) -> CLIResult:
         env = os.environ.copy()
-        env["PYTHONPATH"] = (
-            f"{self.scripts_dir}{os.pathsep}{env.get('PYTHONPATH', '')}"
-        )
+        env["PYTHONPATH"] = f"{self.scripts_dir}{os.pathsep}{env.get('PYTHONPATH', '')}"
         env["PYTHONIOENCODING"] = "utf-8"
 
         try:
@@ -123,9 +118,7 @@ class CLIRunner:
             command=args,
         )
 
-    def _build_module_args(
-        self, module: str, *args: str, **kwargs: Union[str, bool]
-    ) -> List[str]:
+    def _build_module_args(self, module: str, *args: str, **kwargs: Union[str, bool]) -> List[str]:
         cmd = [self.python, "-m", module]
         cmd.extend(args)
         for key, value in kwargs.items():

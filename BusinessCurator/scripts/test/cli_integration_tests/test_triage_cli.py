@@ -45,11 +45,16 @@ def _add_resolver_record(
     resolver_cli.main(
         [
             "add",
-            "--plugin-root", str(plugin_root),
-            "--kind", kind,
-            "--slug", slug,
-            "--canonical", canonical,
-            "--target-path", f"shards/{kind}/{slug}/_project.md",
+            "--plugin-root",
+            str(plugin_root),
+            "--kind",
+            kind,
+            "--slug",
+            slug,
+            "--canonical",
+            canonical,
+            "--target-path",
+            f"shards/{kind}/{slug}/_project.md",
             *(["--aliases", aliases] if aliases else []),
         ]
     )
@@ -78,9 +83,7 @@ class TestTriageCli:
         self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
     ) -> None:
         (plugin_root / "inbox" / "raw-entries").mkdir(parents=True)
-        exit_code = triage_cli.main(
-            ["--plugin-root", str(plugin_root), "--no-llm"]
-        )
+        exit_code = triage_cli.main(["--plugin-root", str(plugin_root), "--no-llm"])
         assert exit_code == 0
         result = _read_stdout(capsys)
         assert result["status"] == "ok"
@@ -91,8 +94,11 @@ class TestTriageCli:
     ) -> None:
         """resolver の canonical が subject にあれば rule_match"""
         _add_resolver_record(
-            plugin_root, capsys,
-            kind="projects", slug="MaruMaru", canonical="MaruMaruMansion",
+            plugin_root,
+            capsys,
+            kind="projects",
+            slug="MaruMaru",
+            canonical="MaruMaruMansion",
         )
         _seed_raw_entry(
             plugin_root,
@@ -100,9 +106,7 @@ class TestTriageCli:
             subject="MaruMaruMansion ventilation",
         )
 
-        exit_code = triage_cli.main(
-            ["--plugin-root", str(plugin_root), "--no-llm"]
-        )
+        exit_code = triage_cli.main(["--plugin-root", str(plugin_root), "--no-llm"])
         assert exit_code == 0
         result = _read_stdout(capsys)
         assert result["rule_match"] == 1
@@ -112,8 +116,12 @@ class TestTriageCli:
         self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
     ) -> None:
         _add_resolver_record(
-            plugin_root, capsys,
-            kind="projects", slug="P1", canonical="ProjectOne", aliases="P1,proj-001",
+            plugin_root,
+            capsys,
+            kind="projects",
+            slug="P1",
+            canonical="ProjectOne",
+            aliases="P1,proj-001",
         )
         _seed_raw_entry(
             plugin_root,
@@ -138,12 +146,13 @@ class TestTriageCli:
         assert result["unclassified"] == 1
         assert result["rule_match"] == 0
 
-    def test_writes_triage_log(
-        self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
-    ) -> None:
+    def test_writes_triage_log(self, plugin_root: Path, capsys: pytest.CaptureFixture[str]) -> None:
         _add_resolver_record(
-            plugin_root, capsys,
-            kind="projects", slug="X", canonical="Xproject",
+            plugin_root,
+            capsys,
+            kind="projects",
+            slug="X",
+            canonical="Xproject",
         )
         _seed_raw_entry(
             plugin_root,
@@ -155,12 +164,13 @@ class TestTriageCli:
         log_files = list((plugin_root / "triage_logs").glob("_triage_log_*.json"))
         assert len(log_files) >= 1
 
-    def test_mixed_results(
-        self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
-    ) -> None:
+    def test_mixed_results(self, plugin_root: Path, capsys: pytest.CaptureFixture[str]) -> None:
         _add_resolver_record(
-            plugin_root, capsys,
-            kind="projects", slug="A", canonical="Alpha",
+            plugin_root,
+            capsys,
+            kind="projects",
+            slug="A",
+            canonical="Alpha",
         )
         _seed_raw_entry(
             plugin_root,
@@ -191,9 +201,7 @@ class TestTriageCliErrors:
         self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
     ) -> None:
         """raw-entries/ がなくても 0 件として正常終了"""
-        exit_code = triage_cli.main(
-            ["--plugin-root", str(plugin_root), "--no-llm"]
-        )
+        exit_code = triage_cli.main(["--plugin-root", str(plugin_root), "--no-llm"])
         assert exit_code == 0
         result = _read_stdout(capsys)
         assert result["total"] == 0
@@ -244,9 +252,7 @@ class TestTriageCliLLMPath:
             subject="needs LLM",
         )
 
-        with patch.object(
-            ClaudeCliTriageClient, "classify", side_effect=TriageError("simulated")
-        ):
+        with patch.object(ClaudeCliTriageClient, "classify", side_effect=TriageError("simulated")):
             with pytest.raises(SystemExit) as excinfo:
                 triage_cli.main(["--plugin-root", str(plugin_root)])
             assert excinfo.value.code == 1
@@ -258,8 +264,11 @@ class TestTriageCliLLMPath:
     ) -> None:
         """canonical/aliases は re.escape されるので regex メタ文字も安全（Markdown 制約のため [ ] は不可）"""
         _add_resolver_record(
-            plugin_root, capsys,
-            kind="projects", slug="X", canonical="Proj.X+",
+            plugin_root,
+            capsys,
+            kind="projects",
+            slug="X",
+            canonical="Proj.X+",
         )
         _seed_raw_entry(
             plugin_root,
@@ -278,8 +287,11 @@ class TestTriageCliLLMPath:
         # canonical は必須なので、aliases に空要素を混ぜるシナリオを構築
         # （resolver_cli は empty alias を split で除外するので、ここでは正常系の確認）
         _add_resolver_record(
-            plugin_root, capsys,
-            kind="projects", slug="X", canonical="ProjX",
+            plugin_root,
+            capsys,
+            kind="projects",
+            slug="X",
+            canonical="ProjX",
         )
         _seed_raw_entry(
             plugin_root,

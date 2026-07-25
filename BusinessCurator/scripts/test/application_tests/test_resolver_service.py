@@ -51,9 +51,7 @@ class TestResolverServiceAdd:
 
     @pytest.mark.unit
     def test_add_duplicate_id_raises(self) -> None:
-        repo = FakeAliasResolverRepository(
-            initial=[build_alias_record(slug="MaruMaru")]
-        )
+        repo = FakeAliasResolverRepository(initial=[build_alias_record(slug="MaruMaru")])
         svc = ResolverService(repo)
         with pytest.raises(ResolverError, match="duplicate"):
             svc.add(build_alias_record(slug="MaruMaru"))
@@ -94,9 +92,7 @@ class TestResolverServiceEdit:
 
     @pytest.mark.unit
     def test_edit_canonical(self) -> None:
-        repo = FakeAliasResolverRepository(
-            initial=[build_alias_record(slug="A", canonical="旧名")]
-        )
+        repo = FakeAliasResolverRepository(initial=[build_alias_record(slug="A", canonical="旧名")])
         svc = ResolverService(repo)
         svc.edit("projects/A", canonical="新名")
         rec = repo.load_all()[0]
@@ -132,9 +128,7 @@ class TestResolverServiceEdit:
 
     @pytest.mark.unit
     def test_edit_persists(self) -> None:
-        repo = FakeAliasResolverRepository(
-            initial=[build_alias_record(slug="A")]
-        )
+        repo = FakeAliasResolverRepository(initial=[build_alias_record(slug="A")])
         svc = ResolverService(repo)
         before = repo.save_count
         svc.edit("projects/A", canonical="改")
@@ -143,9 +137,7 @@ class TestResolverServiceEdit:
     @pytest.mark.unit
     def test_edit_target_path(self) -> None:
         """target_path 更新（active 同士での更新）"""
-        repo = FakeAliasResolverRepository(
-            initial=[build_alias_record(slug="A")]
-        )
+        repo = FakeAliasResolverRepository(initial=[build_alias_record(slug="A")])
         svc = ResolverService(repo)
         svc.edit("projects/A", target_path="shards/projects/A_renamed/_project.md")
         rec = repo.load_all()[0]
@@ -173,9 +165,7 @@ class TestResolverServiceRemove:
     @pytest.mark.unit
     def test_remove_does_not_delete(self) -> None:
         """論理削除なので物理的に消えない"""
-        repo = FakeAliasResolverRepository(
-            initial=[build_alias_record(slug="A")]
-        )
+        repo = FakeAliasResolverRepository(initial=[build_alias_record(slug="A")])
         svc = ResolverService(repo)
         svc.remove("projects/A")
         assert len(repo.load_all()) == 1
@@ -234,9 +224,7 @@ class TestResolverServiceCompleteArchive:
     @pytest.mark.unit
     def test_complete_archive_rejects_non_archive_target_path(self) -> None:
         """target_path が archive/ 接頭辞でない場合 ResolverError"""
-        repo = FakeAliasResolverRepository(
-            initial=[build_alias_record(slug="A")]
-        )
+        repo = FakeAliasResolverRepository(initial=[build_alias_record(slug="A")])
         svc = ResolverService(repo)
         with pytest.raises(ResolverError):
             svc.complete_archive(
@@ -246,9 +234,7 @@ class TestResolverServiceCompleteArchive:
 
     @pytest.mark.unit
     def test_complete_archive_persists(self) -> None:
-        repo = FakeAliasResolverRepository(
-            initial=[build_alias_record(slug="A")]
-        )
+        repo = FakeAliasResolverRepository(initial=[build_alias_record(slug="A")])
         svc = ResolverService(repo)
         before = repo.save_count
         svc.complete_archive(
@@ -335,9 +321,7 @@ class TestResolverServiceRebuild:
 
     @pytest.mark.unit
     def test_rebuild_with_empty_list(self) -> None:
-        repo = FakeAliasResolverRepository(
-            initial=[build_alias_record(slug="X")]
-        )
+        repo = FakeAliasResolverRepository(initial=[build_alias_record(slug="X")])
         svc = ResolverService(repo)
         svc.rebuild([])
         assert repo.load_all() == []

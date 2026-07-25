@@ -45,11 +45,16 @@ def _add(
 ) -> None:
     args = [
         "add",
-        "--plugin-root", str(plugin_root),
-        "--kind", kind,
-        "--slug", slug,
-        "--canonical", canonical,
-        "--target-path", f"shards/{kind}/{slug}/_project.md",
+        "--plugin-root",
+        str(plugin_root),
+        "--kind",
+        kind,
+        "--slug",
+        slug,
+        "--canonical",
+        canonical,
+        "--target-path",
+        f"shards/{kind}/{slug}/_project.md",
     ]
     if aliases:
         args.extend(["--aliases", aliases])
@@ -64,9 +69,7 @@ def _add(
 
 @pytest.mark.integration
 class TestResolverLifecycleE2E:
-    def test_full_lifecycle(
-        self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
-    ) -> None:
+    def test_full_lifecycle(self, plugin_root: Path, capsys: pytest.CaptureFixture[str]) -> None:
         # ----- Step 1: 4 entities を add -----
         _add(plugin_root, capsys, "projects", "MaruMaru", "○○マンション", "MM,2026-003")
         _add(plugin_root, capsys, "clients", "Shikaku", "□□不動産", "shikaku.co.jp")
@@ -90,17 +93,18 @@ class TestResolverLifecycleE2E:
         resolver_cli.main(
             [
                 "edit",
-                "--plugin-root", str(plugin_root),
-                "--id", "projects/MaruMaru",
-                "--add-aliases", "○○MS,maru",
+                "--plugin-root",
+                str(plugin_root),
+                "--id",
+                "projects/MaruMaru",
+                "--add-aliases",
+                "○○MS,maru",
             ]
         )
         capsys.readouterr()
 
         # ----- Step 4: find で更新確認 -----
-        resolver_cli.main(
-            ["find", "--plugin-root", str(plugin_root), "--id", "projects/MaruMaru"]
-        )
+        resolver_cli.main(["find", "--plugin-root", str(plugin_root), "--id", "projects/MaruMaru"])
         result = _capture_json(capsys)
         aliases = set(result["record"]["aliases"])
         assert "MM" in aliases
@@ -109,9 +113,7 @@ class TestResolverLifecycleE2E:
         assert "maru" in aliases
 
         # ----- Step 5: 1件 remove -----
-        resolver_cli.main(
-            ["remove", "--plugin-root", str(plugin_root), "--id", "vendors/Sankaku"]
-        )
+        resolver_cli.main(["remove", "--plugin-root", str(plugin_root), "--id", "vendors/Sankaku"])
         capsys.readouterr()
 
         # ----- Step 6a: list (デフォルト = active のみ) -----
@@ -123,9 +125,7 @@ class TestResolverLifecycleE2E:
         assert "projects/MaruMaru" in active_ids
 
         # ----- Step 6b: list --include-archived -----
-        resolver_cli.main(
-            ["list", "--plugin-root", str(plugin_root), "--include-archived"]
-        )
+        resolver_cli.main(["list", "--plugin-root", str(plugin_root), "--include-archived"])
         result = _capture_json(capsys)
         assert result["count"] == 4
 
@@ -163,16 +163,12 @@ class TestResolverShardFilterE2E:
         for slug in ["C1", "C2"]:
             _add(plugin_root, capsys, "clients", slug, slug)
 
-        resolver_cli.main(
-            ["list", "--plugin-root", str(plugin_root), "--shard", "projects"]
-        )
+        resolver_cli.main(["list", "--plugin-root", str(plugin_root), "--shard", "projects"])
         result = _capture_json(capsys)
         assert result["count"] == 3
         assert all(r["shard"] == "projects" for r in result["records"])
 
-        resolver_cli.main(
-            ["list", "--plugin-root", str(plugin_root), "--shard", "clients"]
-        )
+        resolver_cli.main(["list", "--plugin-root", str(plugin_root), "--shard", "clients"])
         result = _capture_json(capsys)
         assert result["count"] == 2
 
@@ -189,9 +185,7 @@ class TestResolverDuplicateE2E:
     ) -> None:
         """論理削除でも id 衝突は防ぐ"""
         _add(plugin_root, capsys, "projects", "X", "X")
-        resolver_cli.main(
-            ["remove", "--plugin-root", str(plugin_root), "--id", "projects/X"]
-        )
+        resolver_cli.main(["remove", "--plugin-root", str(plugin_root), "--id", "projects/X"])
         capsys.readouterr()
 
         with pytest.raises(SystemExit) as excinfo:

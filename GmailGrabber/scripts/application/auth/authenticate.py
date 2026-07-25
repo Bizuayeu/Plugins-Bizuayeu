@@ -32,9 +32,7 @@ class AuthenticateUseCase:
         self._provider = credentials_provider
         self._clock = clock
 
-    def execute(
-        self, account: GmailAccount, scopes: List[str] | None = None
-    ) -> OAuthCredentials:
+    def execute(self, account: GmailAccount, scopes: List[str] | None = None) -> OAuthCredentials:
         """
         アカウントの認証情報を取得する。
 
