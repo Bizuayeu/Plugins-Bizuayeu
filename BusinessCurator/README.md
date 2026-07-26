@@ -149,7 +149,7 @@ interfaces ──→ application ──→ domain
 
 - Python 3.10+
 - Claude Code (CLI、`claude` コマンド)
-- pip install されるテスト依存: `pytest~=8.0`, `pytest-cov~=6.0`, `mypy~=2.3.0`, `ruff~=0.11`, `hypothesis~=6.122`
+- pip install されるテスト依存: `pytest~=8.0`, `pytest-cov~=6.0`, `mypy~=2.3.0`, `ruff~=0.16.0`, `hypothesis~=6.122`
 
 ### テスト実行
 
