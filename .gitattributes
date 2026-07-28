@@ -1,0 +1,5 @@
+# Windows のスクリプトは CRLF を要求する（cmd は LF 終端行を解釈できず、
+# PowerShell は LF の try/catch を構文解析に失敗する）
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
