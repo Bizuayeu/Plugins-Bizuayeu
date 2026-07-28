@@ -104,8 +104,8 @@ class TestEmlEmailParserMultipart:
     def test_parse_cc_addresses(self, parser: EmlEmailParser) -> None:
         result = parser.parse(FIXTURE_DIR / "sample_multipart.eml")
         cc_addresses = [a["address"] for a in result["cc_addrs"]]
-        assert "honma@meguru.example.jp" in cc_addresses
-        assert "mori@meguru.example.jp" in cc_addresses
+        assert "suzuki@meguru.example.jp" in cc_addresses
+        assert "sato@meguru.example.jp" in cc_addresses
 
 
 # =============================================================================

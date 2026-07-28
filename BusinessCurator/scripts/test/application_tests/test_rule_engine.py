@@ -88,9 +88,9 @@ class TestRuleBasedTriageEngineBasic:
 
     @pytest.mark.unit
     def test_from_match(self) -> None:
-        rule = make_from_rule(r"@meguru\.co\.jp", target_kind="clients", target_slug="Meguru")
+        rule = make_from_rule(r"@meguru\.example\.jp", target_kind="clients", target_slug="Meguru")
         engine = RuleBasedTriageEngine(rules=[rule])
-        entry = build_raw_entry(from_addr="ichikawa@meguru.co.jp")
+        entry = build_raw_entry(from_addr="yamada@meguru.example.jp")
         decision = engine.classify(entry)
         assert decision["confidence"] == "rule_match"
         assert decision["primary_shard"] == "clients"
@@ -125,7 +125,7 @@ class TestRuleBasedTriageEnginePriority:
         r1 = make_subject_rule(r"○○マンション", target_kind="projects", target_slug="P1")
         r2 = make_from_rule(r"@meguru", target_kind="clients", target_slug="C1")
         engine = RuleBasedTriageEngine(rules=[r1, r2])
-        entry = build_raw_entry(subject="○○マンション", from_addr="ichikawa@meguru.co.jp")
+        entry = build_raw_entry(subject="○○マンション", from_addr="yamada@meguru.example.jp")
         decision = engine.classify(entry)
         assert decision["primary_shard"] == "projects"
         assert decision["primary_slug"] == "P1"
@@ -135,7 +135,7 @@ class TestRuleBasedTriageEnginePriority:
         r1 = make_subject_rule(r"○○マンション", target_kind="projects", target_slug="P1")
         r2 = make_from_rule(r"@meguru", target_kind="clients", target_slug="C1")
         engine = RuleBasedTriageEngine(rules=[r1, r2])
-        entry = build_raw_entry(subject="○○マンション", from_addr="x@meguru.co.jp")
+        entry = build_raw_entry(subject="○○マンション", from_addr="x@meguru.example.jp")
         decision = engine.classify(entry)
         assert "clients/C1" in decision["secondary_tags"]
 
@@ -165,7 +165,7 @@ class TestRuleBasedTriageEnginePriority:
             "match_field": "to",
         }
         engine = RuleBasedTriageEngine(rules=[rule])
-        entry = build_raw_entry(to_addrs=["a@meguru.co.jp", "b@other.com"])
+        entry = build_raw_entry(to_addrs=["a@meguru.example.jp", "b@other.com"])
         decision = engine.classify(entry)
         assert decision["confidence"] == "rule_match"
 

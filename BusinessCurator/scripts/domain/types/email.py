@@ -15,7 +15,7 @@ Usage:
 
     msg: EmailMessage = {
         "message_id": "<abc@example.com>",
-        "from_addr": {"name": "市川", "address": "ichikawa@meguru.co.jp"},
+        "from_addr": {"name": "山田", "address": "yamada@meguru.example.jp"},
         ...
     }
 """
@@ -33,7 +33,7 @@ class EmailAddress(TypedDict):
         address: メールアドレス文字列（RFC5322準拠を期待するが検証はパーサー側）
 
     Example:
-        >>> addr: EmailAddress = {"name": "市川", "address": "ichikawa@meguru.co.jp"}
+        >>> addr: EmailAddress = {"name": "山田", "address": "yamada@meguru.example.jp"}
     """
 
     name: str

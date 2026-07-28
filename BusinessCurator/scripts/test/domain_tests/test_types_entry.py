@@ -117,14 +117,14 @@ class TestRawEntry:
             "date": "2026-04-07",
             "time": "14:30:22",
             "source_type": "email",
-            "from_addr": "ichikawa@meguru.co.jp",
-            "to_addrs": ["oowanushi@meguru.co.jp"],
-            "cc_addrs": ["honma@meguru.co.jp"],
+            "from_addr": "yamada@meguru.example.jp",
+            "to_addrs": ["oowanushi@meguru.example.jp"],
+            "cc_addrs": ["suzuki@meguru.example.jp"],
             "subject": "○○マンション新築工事 排煙設備について",
             "thread_id": "thread_xyz789",
             "attachments": ["排煙計算書.pdf"],
             "tags": [],
-            "body": "市川です。お疲れ様です。",
+            "body": "山田です。お疲れ様です。",
         }
         assert entry["id"] == "email_20260407_143022_abc123"
         assert entry["thread_id"] == "thread_xyz789"
@@ -139,7 +139,7 @@ class TestRawEntry:
             "time": "10:00:00",
             "source_type": "email",
             "from_addr": "noreply@example.com",
-            "to_addrs": ["info@meguru.co.jp"],
+            "to_addrs": ["info@meguru.example.jp"],
             "cc_addrs": [],
             "subject": "通知",
             "thread_id": None,

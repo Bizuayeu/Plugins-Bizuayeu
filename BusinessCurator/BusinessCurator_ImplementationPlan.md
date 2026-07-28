@@ -370,16 +370,16 @@ id: "email_20260407_143022_abc123"
 date: 2026-04-07
 time: "14:30:22"
 source_type: email
-from: "ichikawa@meguru.co.jp"
-to: ["oowanushi@meguru.co.jp"]
-cc: ["honma@meguru.co.jp"]
+from: "yamada@meguru.example.jp"
+to: ["oowanushi@meguru.example.jp"]
+cc: ["suzuki@meguru.example.jp"]
 subject: "○○マンション新築工事　排煙設備について"
 thread_id: "thread_xyz789"
 attachments: ["排煙計算書.pdf"]
 tags: []
 ---
 
-市川です。お疲れ様です。
+山田です。お疲れ様です。
 ○○マンションの排煙設備について...
 ```
 

@@ -43,9 +43,9 @@ class TestEmailAddress:
     @pytest.mark.unit
     def test_can_construct_with_name_and_address(self) -> None:
         """name と address だけで構築可能"""
-        addr: EmailAddress = {"name": "市川", "address": "ichikawa@meguru.co.jp"}
-        assert addr["name"] == "市川"
-        assert addr["address"] == "ichikawa@meguru.co.jp"
+        addr: EmailAddress = {"name": "山田", "address": "yamada@meguru.example.jp"}
+        assert addr["name"] == "山田"
+        assert addr["address"] == "yamada@meguru.example.jp"
 
     @pytest.mark.unit
     def test_empty_name_is_allowed(self) -> None:
@@ -191,20 +191,20 @@ class TestEmailMessage:
     def test_can_construct_minimal(self) -> None:
         """最小構成で構築可能"""
         msg: EmailMessage = {
-            "message_id": "<abc123@meguru.co.jp>",
-            "from_addr": {"name": "市川", "address": "ichikawa@meguru.co.jp"},
-            "to_addrs": [{"name": "大環主", "address": "oowanushi@meguru.co.jp"}],
+            "message_id": "<abc123@meguru.example.jp>",
+            "from_addr": {"name": "山田", "address": "yamada@meguru.example.jp"},
+            "to_addrs": [{"name": "大環主", "address": "oowanushi@meguru.example.jp"}],
             "cc_addrs": [],
             "subject": "○○マンション排煙設備",
             "date": datetime(2026, 4, 7, 14, 30, 22),
-            "body_text": "市川です。",
+            "body_text": "山田です。",
             "body_html": None,
             "attachments": [],
             "thread_id": None,
             "in_reply_to": None,
             "references": [],
         }
-        assert msg["message_id"] == "<abc123@meguru.co.jp>"
-        assert msg["from_addr"]["address"] == "ichikawa@meguru.co.jp"
+        assert msg["message_id"] == "<abc123@meguru.example.jp>"
+        assert msg["from_addr"]["address"] == "yamada@meguru.example.jp"
         assert len(msg["to_addrs"]) == 1
         assert msg["body_html"] is None

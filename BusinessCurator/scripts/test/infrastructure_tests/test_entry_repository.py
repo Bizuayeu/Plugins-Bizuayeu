@@ -90,7 +90,7 @@ class TestFileEntryRepositoryLoad:
         entry = build_raw_entry(
             entry_id="email_20260407_143022_abc12345",
             subject="○○マンション",
-            from_addr="sender@meguru.co.jp",
+            from_addr="sender@meguru.example.jp",
             to_addrs=["a@x", "b@y"],
             cc_addrs=["c@z"],
             attachments=["排煙計算書.pdf"],
