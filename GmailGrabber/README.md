@@ -53,8 +53,10 @@ Clean Architecture × TDD で構築する Gmail バックアップツール。
 
 ```
 GmailGrabber/
+├── README.md                    # 本ファイル（入口）
 ├── commands/                    # 4 command md
-├── skills/gmail-grabber/        # 1 skill md
+├── skills/
+│   └── gmail-grabber/           # 1 skill md
 ├── docs/
 │   ├── OAuth_Setup.md           # 個人 OAuth セットアップ
 │   └── Multi_User_Setup.md     # SA + DWD セットアップ
@@ -70,7 +72,9 @@ GmailGrabber/
         ├── infrastructure_tests/
         ├── cli_integration_tests/
         ├── integration_tests/
-        └── fixtures/
+        ├── fixtures/
+        ├── conftest.py          # 共通フィクスチャ
+        └── test_helpers.py      # テストヘルパー
 ```
 
 ---
