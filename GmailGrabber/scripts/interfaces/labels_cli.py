@@ -7,7 +7,7 @@ Gmail ラベル一覧取得 CLI。
 
 Usage:
     python -m interfaces.labels_cli \
-        --email togami-log@meguru-construction.com \
+        --email togami-log@meguru-construction.example.jp \
         --client-secret /path/to/client_secret.json
 """
 

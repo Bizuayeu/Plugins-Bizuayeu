@@ -38,7 +38,7 @@ python -m interfaces.auth_cli \
 ```bash
 cd /path/to/GmailGrabber
 PYTHONPATH=scripts python -m interfaces.auth_cli \
-  --email togami-log@meguru-construction.com \
+  --email togami-log@meguru-construction.example.jp \
   --client-secret ~/.gmailgrabber/client_secret.json
 ```
 
@@ -48,7 +48,7 @@ JSON (status=ok):
 ```json
 {
   "status": "ok",
-  "email": "togami-log@meguru-construction.com",
+  "email": "togami-log@meguru-construction.example.jp",
   "label": "togami-log",
   "token_path": "/home/user/.config/gmailgrabber/token_togami-log.json",
   "scopes": ["https://www.googleapis.com/auth/gmail.readonly"],

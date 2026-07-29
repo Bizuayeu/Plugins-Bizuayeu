@@ -147,14 +147,14 @@ class TestLoadUsers:
 class TestBuildAccounts:
     @pytest.mark.unit
     def test_build_accounts_from_emails(self, tmp_path: Path) -> None:
-        emails = ["alice@meguru.com", "bob@meguru.com"]
+        emails = ["alice@meguru.example.jp", "bob@meguru.example.jp"]
         accounts = _build_accounts(emails, tmp_path)
 
         assert len(accounts) == 2
-        assert accounts[0]["email"] == "alice@meguru.com"
+        assert accounts[0]["email"] == "alice@meguru.example.jp"
         assert accounts[0]["label"] == "alice"
         assert accounts[0]["token_path"] == str(tmp_path / "token_alice.json")
-        assert accounts[1]["email"] == "bob@meguru.com"
+        assert accounts[1]["email"] == "bob@meguru.example.jp"
         assert accounts[1]["label"] == "bob"
 
     @pytest.mark.unit

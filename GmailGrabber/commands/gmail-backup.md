@@ -43,7 +43,7 @@ python -m interfaces.backup_cli \
 ```bash
 cd /path/to/GmailGrabber
 PYTHONPATH=scripts python -m interfaces.backup_cli \
-  --email togami-log@meguru-construction.com \
+  --email togami-log@meguru-construction.example.jp \
   --client-secret ~/.gmailgrabber/client_secret.json \
   --output-dir '/path/to/workspace/BusinessWiki/data/2026-04' \
   --format eml \
@@ -56,7 +56,7 @@ PYTHONPATH=scripts python -m interfaces.backup_cli \
 {
   "status": "ok",
   "plan_id": "plan_20260411_100030_abc12345",
-  "account": "togami-log@meguru-construction.com",
+  "account": "togami-log@meguru-construction.example.jp",
   "query": "after:2026/04/01 before:2026/04/12",
   "output_dir": "/path/to/workspace/BusinessWiki/data/2026-04",
   "output_format": "eml",

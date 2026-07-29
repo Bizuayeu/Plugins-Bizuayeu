@@ -7,7 +7,7 @@ Service Account + Domain-Wide Delegation (DWD) 設定手順です。
 
 - Google Workspace Business Standard 以上 (Super Admin 権限必要)
 - Google Cloud プロジェクト (既存の GmailGrabber 用プロジェクト流用可)
-- 対象ドメイン (例: `meguru-construction.com`)
+- 対象ドメイン (例: `meguru-construction.example.jp`)
 
 ## 全体の流れ
 
@@ -107,11 +107,11 @@ chmod 600 ~/.config/gmailgrabber/sa_key.json
 # Windows: %APPDATA%/GmailGrabber/users.txt
 # Unix:    ~/.config/gmailgrabber/users.txt
 
-alice@meguru-construction.com
-bob@meguru-construction.com
-carol@meguru-construction.com
+alice@meguru-construction.example.jp
+bob@meguru-construction.example.jp
+carol@meguru-construction.example.jp
 # 行頭 # でコメント行
-daisuke@meguru-construction.com
+daisuke@meguru-construction.example.jp
 ...
 ```
 
@@ -125,7 +125,7 @@ daisuke@meguru-construction.com
 cd /path/to/plugins-bizuayeu/GmailGrabber
 PYTHONPATH=scripts python -m interfaces.multi_backup_cli \
   --service-account-key "$APPDATA/GmailGrabber/sa_key.json" \
-  --impersonate-users "alice@meguru-construction.com" \
+  --impersonate-users "alice@meguru-construction.example.jp" \
   --output-dir '/tmp/gmailgrabber-dryrun' \
   --format eml \
   --max-messages-per-user 5
@@ -173,7 +173,7 @@ JSON key の `private_key` が壊れている可能性:
 ```bash
 PYTHONPATH=scripts python -m interfaces.multi_backup_cli \
   --service-account-key "$APPDATA/GmailGrabber/sa_key.json" \
-  --impersonate-users "failed-user@meguru-construction.com" \
+  --impersonate-users "failed-user@meguru-construction.example.jp" \
   --output-dir '/path/to/same/output' \
   --after 2026/04/01 --before 2026/04/12
 ```

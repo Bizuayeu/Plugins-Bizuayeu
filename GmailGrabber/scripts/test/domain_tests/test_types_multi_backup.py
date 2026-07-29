@@ -67,15 +67,15 @@ class TestMultiUserBackupPlan:
         plan: MultiUserBackupPlan = {
             "multi_plan_id": "multi_plan_20260411_abcd",
             "accounts": [
-                _sample_account("alice@meguru.com"),
-                _sample_account("bob@meguru.com"),
+                _sample_account("alice@meguru.example.jp"),
+                _sample_account("bob@meguru.example.jp"),
             ],
             "query": _sample_query(),
             "output_dir": "/path/to/output",
             "output_format": "eml",
         }
         assert len(plan["accounts"]) == 2
-        assert plan["accounts"][0]["email"] == "alice@meguru.com"
+        assert plan["accounts"][0]["email"] == "alice@meguru.example.jp"
 
     @pytest.mark.unit
     def test_supports_mbox_format(self) -> None:
@@ -128,14 +128,16 @@ class TestMultiUserBackupState:
             "multi_plan_id": "x",
             "per_user_states": {},
             "message_id_index": {
-                "<abc@example.com>": "alice@meguru.com::gmail_id_1",
-                "<def@example.com>": "bob@meguru.com::gmail_id_2",
+                "<abc@example.com>": "alice@meguru.example.jp::gmail_id_1",
+                "<def@example.com>": "bob@meguru.example.jp::gmail_id_2",
             },
             "last_updated": datetime(2026, 4, 11, tzinfo=timezone.utc),
             "started_user_emails": [],
             "completed_user_emails": [],
         }
-        assert state["message_id_index"]["<abc@example.com>"] == "alice@meguru.com::gmail_id_1"
+        assert (
+            state["message_id_index"]["<abc@example.com>"] == "alice@meguru.example.jp::gmail_id_1"
+        )
 
     @pytest.mark.unit
     def test_can_nest_single_user_states(self) -> None:
@@ -143,14 +145,14 @@ class TestMultiUserBackupState:
         single = _sample_single_state("multi_plan_20260411_abcd__alice")
         state: MultiUserBackupState = {
             "multi_plan_id": "multi_plan_20260411_abcd",
-            "per_user_states": {"alice@meguru.com": single},
+            "per_user_states": {"alice@meguru.example.jp": single},
             "message_id_index": {},
             "last_updated": datetime(2026, 4, 11, tzinfo=timezone.utc),
-            "started_user_emails": ["alice@meguru.com"],
+            "started_user_emails": ["alice@meguru.example.jp"],
             "completed_user_emails": [],
         }
         assert (
-            state["per_user_states"]["alice@meguru.com"]["plan_id"]
+            state["per_user_states"]["alice@meguru.example.jp"]["plan_id"]
             == "multi_plan_20260411_abcd__alice"
         )
 
@@ -182,9 +184,9 @@ class TestMultiUserBackupResult:
     def test_can_construct_result(self) -> None:
         result: MultiUserBackupResult = {
             "multi_plan_id": "multi_plan_20260411_abcd",
-            "per_user_success": {"alice@meguru.com": 50, "bob@meguru.com": 12},
-            "per_user_failure": {"alice@meguru.com": 0, "bob@meguru.com": 1},
-            "per_user_deduped": {"alice@meguru.com": 0, "bob@meguru.com": 38},
+            "per_user_success": {"alice@meguru.example.jp": 50, "bob@meguru.example.jp": 12},
+            "per_user_failure": {"alice@meguru.example.jp": 0, "bob@meguru.example.jp": 1},
+            "per_user_deduped": {"alice@meguru.example.jp": 0, "bob@meguru.example.jp": 38},
             "total_unique_messages": 62,
             "total_dedup_skipped": 38,
             "total_messages_without_message_id": 2,

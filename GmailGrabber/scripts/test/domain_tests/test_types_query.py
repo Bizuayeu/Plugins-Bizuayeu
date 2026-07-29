@@ -121,7 +121,7 @@ class TestSearchQuery:
     def test_typical_backup_query(self) -> None:
         """典型的な月次バックアップクエリ: from + date_range"""
         q: SearchQuery = {
-            "from_addr": "togami-log@meguru-construction.com",
+            "from_addr": "togami-log@meguru-construction.example.jp",
             "to_addr": None,
             "subject": None,
             "label": None,
@@ -129,6 +129,6 @@ class TestSearchQuery:
             "has_attachment": None,
             "raw_query": None,
         }
-        assert q["from_addr"] == "togami-log@meguru-construction.com"
+        assert q["from_addr"] == "togami-log@meguru-construction.example.jp"
         assert q["date_range"] is not None
         assert q["date_range"]["start"] == date(2026, 4, 1)

@@ -16,7 +16,7 @@ Usage:
     from domain.types.query import DateRange, SearchQuery
 
     q: SearchQuery = {
-        "from_addr": "togami-log@meguru-construction.com",
+        "from_addr": "togami-log@meguru-construction.example.jp",
         "to_addr": None,
         "subject": None,
         "label": None,

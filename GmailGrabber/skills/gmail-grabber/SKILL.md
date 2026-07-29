@@ -70,7 +70,7 @@ togami-log@ の 4月分を BusinessWiki に保存:
 
 ```bash
 PYTHONPATH=scripts python -m interfaces.backup_cli \
-  --email togami-log@meguru-construction.com \
+  --email togami-log@meguru-construction.example.jp \
   --client-secret ~/.gmailgrabber/client_secret.json \
   --output-dir '/path/to/workspace/BusinessWiki/data/2026-04' \
   --format eml \
@@ -89,14 +89,14 @@ PYTHONPATH=scripts python -m interfaces.backup_cli \
 まずラベル一覧を確認:
 ```bash
 PYTHONPATH=scripts python -m interfaces.labels_cli \
-  --email togami-log@meguru-construction.com \
+  --email togami-log@meguru-construction.example.jp \
   --client-secret ~/.gmailgrabber/client_secret.json
 ```
 
 その後、`--label` で絞り込み:
 ```bash
 PYTHONPATH=scripts python -m interfaces.backup_cli \
-  --email togami-log@meguru-construction.com \
+  --email togami-log@meguru-construction.example.jp \
   --client-secret ~/.gmailgrabber/client_secret.json \
   --output-dir /path/to/output \
   --label "案件/高尾"
@@ -120,6 +120,7 @@ python -m mypy scripts/
 
 ```
 GmailGrabber/
+├── README.md            # 入口（セットアップ・使い方）
 ├── scripts/
 │   ├── domain/          # TypedDict, Protocol, 純関数
 │   ├── application/     # UseCase
@@ -127,7 +128,8 @@ GmailGrabber/
 │   ├── interfaces/      # CLI
 │   └── test/            # pytest + hypothesis
 ├── commands/            # スラッシュコマンド定義
-├── skills/gmail-grabber/# スキル定義
+├── skills/
+│   └── gmail-grabber/   # スキル定義
 ├── docs/                # OAuth setup等
 └── pyproject.toml
 ```

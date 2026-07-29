@@ -16,7 +16,7 @@ from test.test_helpers import FakeClock, FakeCredentialsProvider
 
 def _sample_account() -> GmailAccount:
     return {
-        "email": "togami-log@meguru-construction.com",
+        "email": "togami-log@meguru-construction.example.jp",
         "label": "togami-log",
         "credentials_path": "/tmp/cs.json",
         "token_path": "/tmp/tok.json",

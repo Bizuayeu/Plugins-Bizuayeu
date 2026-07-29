@@ -18,7 +18,7 @@ from domain.types.query import SearchQuery
 
 def _sample_account() -> GmailAccount:
     return {
-        "email": "togami-log@meguru-construction.com",
+        "email": "togami-log@meguru-construction.example.jp",
         "label": "togami-log",
         "credentials_path": "/tmp/client_secret.json",
         "token_path": "/tmp/token.json",
@@ -62,7 +62,7 @@ class TestBackupPlan:
             "output_format": "eml",
         }
         assert plan["output_format"] == "eml"
-        assert plan["account"]["email"] == "togami-log@meguru-construction.com"
+        assert plan["account"]["email"] == "togami-log@meguru-construction.example.jp"
 
     @pytest.mark.unit
     def test_can_construct_mbox_plan(self) -> None:

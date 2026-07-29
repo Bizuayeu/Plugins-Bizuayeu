@@ -68,7 +68,7 @@ class TestExtractMessageId:
     @pytest.mark.unit
     def test_real_gmail_style_headers(self) -> None:
         raw = (
-            b"Delivered-To: user@meguru-construction.com\r\n"
+            b"Delivered-To: user@meguru-construction.example.jp\r\n"
             b"Received: by 2002:...\r\n"
             b"Message-ID: <CABcDeFGHi123+test@mail.gmail.com>\r\n"
             b"Date: Fri, 11 Apr 2026 10:00:00 +0900\r\n"

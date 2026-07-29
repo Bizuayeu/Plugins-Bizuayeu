@@ -65,8 +65,8 @@ PYTHONPATH=scripts python -m interfaces.multi_backup_cli \
   "query": "after:2026/04/01 before:2026/04/12",
   "output_dir": "/path/to/workspace/BusinessWiki/data/2026-04",
   "output_format": "eml",
-  "per_user_success": {"user1@meguru.com": 50, "user2@meguru.com": 12, ...},
-  "per_user_deduped": {"user1@meguru.com": 0, "user2@meguru.com": 38, ...},
+  "per_user_success": {"user1@meguru.example.jp": 50, "user2@meguru.example.jp": 12, ...},
+  "per_user_deduped": {"user1@meguru.example.jp": 0, "user2@meguru.example.jp": 38, ...},
   "total_unique_messages": 850,
   "total_dedup_skipped": 340,
   "total_messages_without_message_id": 2

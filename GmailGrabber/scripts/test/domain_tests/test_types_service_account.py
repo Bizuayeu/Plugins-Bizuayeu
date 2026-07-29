@@ -62,9 +62,9 @@ class TestServiceAccountCredentials:
             "token_uri": "",
             "auth_provider_x509_cert_url": "",
             "client_x509_cert_url": "",
-            "subject": "user@meguru-construction.com",
+            "subject": "user@meguru-construction.example.jp",
         }
-        assert creds["subject"] == "user@meguru-construction.com"
+        assert creds["subject"] == "user@meguru-construction.example.jp"
 
     @pytest.mark.unit
     def test_type_field_is_service_account(self) -> None:

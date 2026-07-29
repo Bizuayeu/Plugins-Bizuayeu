@@ -20,7 +20,7 @@ python -m interfaces.labels_cli \
 ```bash
 cd /path/to/GmailGrabber
 PYTHONPATH=scripts python -m interfaces.labels_cli \
-  --email togami-log@meguru-construction.com \
+  --email togami-log@meguru-construction.example.jp \
   --client-secret ~/.gmailgrabber/client_secret.json
 ```
 
@@ -29,7 +29,7 @@ PYTHONPATH=scripts python -m interfaces.labels_cli \
 ```json
 {
   "status": "ok",
-  "email": "togami-log@meguru-construction.com",
+  "email": "togami-log@meguru-construction.example.jp",
   "label_count": 24,
   "labels": [
     {"id": "INBOX", "name": "INBOX", "type": "system"},

@@ -75,8 +75,11 @@ class TestRawQuery:
 class TestFromAddr:
     @pytest.mark.unit
     def test_from_addr_generates_from_prefix(self) -> None:
-        q: SearchQuery = {**_empty_query(), "from_addr": "togami-log@meguru-construction.com"}
-        assert build_gmail_query(q) == "from:togami-log@meguru-construction.com"
+        q: SearchQuery = {
+            **_empty_query(),
+            "from_addr": "togami-log@meguru-construction.example.jp",
+        }
+        assert build_gmail_query(q) == "from:togami-log@meguru-construction.example.jp"
 
 
 class TestToAddr:

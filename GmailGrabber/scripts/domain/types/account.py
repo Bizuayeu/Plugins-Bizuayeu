@@ -14,7 +14,7 @@ Usage:
     from domain.types.account import GmailAccount
 
     acc: GmailAccount = {
-        "email": "togami-log@meguru-construction.com",
+        "email": "togami-log@meguru-construction.example.jp",
         "label": "togami-log",
         "credentials_path": "/path/to/client_secret.json",
         "token_path": "/path/to/token_togami-log.json",

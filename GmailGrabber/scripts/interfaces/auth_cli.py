@@ -7,7 +7,7 @@ OAuth 2.0 認証 CLI。
 
 Usage:
     python -m interfaces.auth_cli \
-        --email togami-log@meguru-construction.com \
+        --email togami-log@meguru-construction.example.jp \
         --client-secret /path/to/client_secret.json \
         [--config-dir /path/to/config_dir]
 """

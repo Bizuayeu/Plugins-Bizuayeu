@@ -44,10 +44,10 @@ class TestGmailAccount:
     def test_can_construct_togami_log_account(self) -> None:
         """実運用する togami-log@ アカウント構築ケース"""
         acc: GmailAccount = {
-            "email": "togami-log@meguru-construction.com",
+            "email": "togami-log@meguru-construction.example.jp",
             "label": "togami-log",
             "credentials_path": "/home/user/.gmailgrabber/client_secret.json",
             "token_path": "/home/user/.gmailgrabber/token_togami-log.json",
         }
-        assert acc["email"] == "togami-log@meguru-construction.com"
+        assert acc["email"] == "togami-log@meguru-construction.example.jp"
         assert acc["label"] == "togami-log"
