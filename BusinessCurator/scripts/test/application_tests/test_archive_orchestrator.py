@@ -37,7 +37,9 @@ from test.test_helpers import (
 def _make_orchestrator(initial_records=None, fixed_time=None):  # type: ignore[no-untyped-def]
     repo = FakeAliasResolverRepository(initial=initial_records or [])
     svc = ResolverService(repo)
-    clock = FakeClock(fixed=fixed_time or datetime(2026, 4, 7, 15, 0, 0, tzinfo=timezone.utc))
+    clock = FakeClock(
+        fixed=fixed_time or datetime(2026, 4, 7, 15, 0, 0, tzinfo=timezone.utc)
+    )
     return ArchiveOrchestrator(resolver_service=svc, clock=clock), repo
 
 

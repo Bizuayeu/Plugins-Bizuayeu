@@ -53,7 +53,9 @@ def _build_parser() -> argparse.ArgumentParser:
 def _count_unclassified(directory: Path) -> int:
     if not directory.exists():
         return 0
-    return sum(1 for p in directory.iterdir() if p.is_file() and not p.name.startswith("."))
+    return sum(
+        1 for p in directory.iterdir() if p.is_file() and not p.name.startswith(".")
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -67,7 +69,9 @@ def main(argv: list[str] | None = None) -> int:
     usecase = MetricsCollectorUseCase(
         entry_repository=entry_repo,
         alias_repository=alias_repo,
-        unclassified_count_provider=lambda: _count_unclassified(resolver.unclassified_dir),
+        unclassified_count_provider=lambda: _count_unclassified(
+            resolver.unclassified_dir
+        ),
     )
 
     metrics = usecase.execute()

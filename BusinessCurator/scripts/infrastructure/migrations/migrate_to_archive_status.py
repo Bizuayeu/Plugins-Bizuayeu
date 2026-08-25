@@ -108,7 +108,9 @@ def migrate(plugin_root: Path, *, dry_run: bool = False) -> str:
     """
     resolver_path = plugin_root / "_alias_resolver.md"
     if not resolver_path.exists():
-        return "## Migration Report\n\n_alias_resolver.md not found. Nothing to migrate."
+        return (
+            "## Migration Report\n\n_alias_resolver.md not found. Nothing to migrate."
+        )
 
     old_content = resolver_path.read_text(encoding="utf-8")
 
@@ -159,8 +161,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Migrate _alias_resolver.md to archive_status format"
     )
-    parser.add_argument("--plugin-root", required=True, help="BusinessWiki root directory")
-    parser.add_argument("--dry-run", action="store_true", help="Preview without writing")
+    parser.add_argument(
+        "--plugin-root", required=True, help="BusinessWiki root directory"
+    )
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Preview without writing"
+    )
     args = parser.parse_args()
 
     report = migrate(Path(args.plugin_root), dry_run=args.dry_run)

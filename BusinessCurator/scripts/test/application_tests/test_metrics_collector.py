@@ -13,7 +13,6 @@ MetricsCollectorUseCase の動作検証。
 - 不存在ディレクトリ → 0（フェイル不可）
 """
 
-
 import pytest
 
 from application.status.metrics_collector import MetricsCollectorUseCase, StatusMetrics
@@ -69,7 +68,10 @@ class TestMetricsCollectorBasic:
 
     @pytest.mark.unit
     def test_counts_raw_entries(self) -> None:
-        entries = [build_raw_entry(entry_id=f"email_20260407_14302{i}_aaaaaaaa") for i in range(3)]
+        entries = [
+            build_raw_entry(entry_id=f"email_20260407_14302{i}_aaaaaaaa")
+            for i in range(3)
+        ]
         uc = _make_uc(raw_entries=entries)
         result = uc.execute()
         assert result.raw_entries_count == 3

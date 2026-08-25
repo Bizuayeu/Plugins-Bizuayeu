@@ -72,7 +72,9 @@ class TestIngestBatchUseCaseBasic:
     @pytest.mark.unit
     def test_saves_multiple_messages(self) -> None:
         msgs = [
-            build_email_message(message_id=f"<{i}@x>", date=datetime(2026, 4, 7, 14, 30, i))
+            build_email_message(
+                message_id=f"<{i}@x>", date=datetime(2026, 4, 7, 14, 30, i)
+            )
             for i in range(5)
         ]
         usecase, _, repo = build_usecase(messages=msgs)
@@ -98,7 +100,9 @@ class TestIngestBatchUseCaseIdempotency:
     @pytest.mark.unit
     def test_re_execution_keeps_same_count(self) -> None:
         msgs = [
-            build_email_message(message_id=f"<{i}@x>", date=datetime(2026, 4, 7, 14, 30, i))
+            build_email_message(
+                message_id=f"<{i}@x>", date=datetime(2026, 4, 7, 14, 30, i)
+            )
             for i in range(3)
         ]
         usecase, _, repo = build_usecase(messages=msgs)

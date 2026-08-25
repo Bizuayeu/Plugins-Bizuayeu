@@ -239,7 +239,9 @@ def main(argv: list[str] | None = None) -> int:
     try:
         handler(svc, args)
     except EntityNotFoundError as e:
-        output_error(f"not found: {e}", details={"id": getattr(args, "record_id", None)})
+        output_error(
+            f"not found: {e}", details={"id": getattr(args, "record_id", None)}
+        )
     except ResolverError as e:
         output_error(f"resolver error: {e}")
     except BusinessCuratorError as e:

@@ -58,7 +58,10 @@ def sample_eml_path(plugin_root: Path) -> Path:
 @pytest.mark.cli
 class TestIngestCliInProcess:
     def test_eml_source_saves_one_entry(
-        self, plugin_root: Path, sample_eml_path: Path, capsys: pytest.CaptureFixture[str]
+        self,
+        plugin_root: Path,
+        sample_eml_path: Path,
+        capsys: pytest.CaptureFixture[str],
     ) -> None:
         exit_code = ingest_cli.main(
             ["--source", str(sample_eml_path), "--plugin-root", str(plugin_root)]
@@ -71,33 +74,49 @@ class TestIngestCliInProcess:
         assert result["skipped"] == 0
 
     def test_creates_md_file_in_raw_entries(
-        self, plugin_root: Path, sample_eml_path: Path, capsys: pytest.CaptureFixture[str]
+        self,
+        plugin_root: Path,
+        sample_eml_path: Path,
+        capsys: pytest.CaptureFixture[str],
     ) -> None:
-        ingest_cli.main(["--source", str(sample_eml_path), "--plugin-root", str(plugin_root)])
+        ingest_cli.main(
+            ["--source", str(sample_eml_path), "--plugin-root", str(plugin_root)]
+        )
         capsys.readouterr()
         md_files = list((plugin_root / "inbox" / "raw-entries").glob("*.md"))
         assert len(md_files) == 1
 
     def test_idempotent_re_run(
-        self, plugin_root: Path, sample_eml_path: Path, capsys: pytest.CaptureFixture[str]
+        self,
+        plugin_root: Path,
+        sample_eml_path: Path,
+        capsys: pytest.CaptureFixture[str],
     ) -> None:
         """2回目は skipped=1"""
-        ingest_cli.main(["--source", str(sample_eml_path), "--plugin-root", str(plugin_root)])
+        ingest_cli.main(
+            ["--source", str(sample_eml_path), "--plugin-root", str(plugin_root)]
+        )
         capsys.readouterr()
-        ingest_cli.main(["--source", str(sample_eml_path), "--plugin-root", str(plugin_root)])
+        ingest_cli.main(
+            ["--source", str(sample_eml_path), "--plugin-root", str(plugin_root)]
+        )
         captured = capsys.readouterr()
         result = json.loads(captured.out)
         assert result["saved"] == 0
         assert result["skipped"] == 1
 
-    def test_mbox_source(self, plugin_root: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    def test_mbox_source(
+        self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
         """5通入り mbox を ingest"""
         src = FIXTURE_DIR / "sample_5_messages.mbox"
         dst = plugin_root / "data" / "sample.mbox"
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(src, dst)
 
-        exit_code = ingest_cli.main(["--source", str(dst), "--plugin-root", str(plugin_root)])
+        exit_code = ingest_cli.main(
+            ["--source", str(dst), "--plugin-root", str(plugin_root)]
+        )
         assert exit_code == 0
         captured = capsys.readouterr()
         result = json.loads(captured.out)
@@ -112,7 +131,9 @@ class TestIngestCliInProcess:
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(src, dst)
 
-        exit_code = ingest_cli.main(["--source", str(dst), "--plugin-root", str(plugin_root)])
+        exit_code = ingest_cli.main(
+            ["--source", str(dst), "--plugin-root", str(plugin_root)]
+        )
         assert exit_code == 0
 
 

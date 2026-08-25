@@ -116,7 +116,9 @@ class ResolverService:
             "canonical": canonical if canonical is not None else existing["canonical"],
             "aliases": new_aliases,
             "shard": existing["shard"],
-            "target_path": target_path if target_path is not None else existing["target_path"],
+            "target_path": target_path
+            if target_path is not None
+            else existing["target_path"],
             "archive_status": existing["archive_status"],
         }
 

@@ -17,7 +17,6 @@ ArchiveOrchestrator
 - v4: complete_archive() atomic メソッドで edit + remove の 2 段階呼びを廃止
 """
 
-
 from application.resolver.resolver_service import ResolverService
 from domain.exceptions import ArchiveError, EntityNotFoundError
 from domain.protocols import ClockProtocol
@@ -70,7 +69,9 @@ class ArchiveOrchestrator:
         try:
             record = self._resolver.find(record_id)
         except EntityNotFoundError as e:
-            raise EntityNotFoundError(f"project not found in resolver: {record_id}") from e
+            raise EntityNotFoundError(
+                f"project not found in resolver: {record_id}"
+            ) from e
 
         if record["archive_status"] == "completed":
             raise ArchiveError(f"project already archived: {record_id}")

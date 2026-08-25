@@ -173,17 +173,25 @@ class TestRequiredFiles:
         """skills/wiki/ に予期しない .md がない（_*.md 等のサポートファイルは除外）"""
         if not SKILLS_DIR.exists():
             pytest.skip(f"{SKILLS_DIR} does not exist yet")
-        actual = sorted(p.name for p in SKILLS_DIR.glob("*.md") if not p.name.startswith("_"))
+        actual = sorted(
+            p.name for p in SKILLS_DIR.glob("*.md") if not p.name.startswith("_")
+        )
         expected = sorted(REQUIRED_SKILLS)
-        assert actual == expected, f"extra/missing skill files: {set(actual) ^ set(expected)}"
+        assert actual == expected, (
+            f"extra/missing skill files: {set(actual) ^ set(expected)}"
+        )
 
     @pytest.mark.unit
     def test_no_extra_command_files(self) -> None:
         if not COMMANDS_DIR.exists():
             pytest.skip(f"{COMMANDS_DIR} does not exist yet")
-        actual = sorted(p.name for p in COMMANDS_DIR.glob("*.md") if not p.name.startswith("_"))
+        actual = sorted(
+            p.name for p in COMMANDS_DIR.glob("*.md") if not p.name.startswith("_")
+        )
         expected = sorted(REQUIRED_COMMANDS)
-        assert actual == expected, f"extra/missing command files: {set(actual) ^ set(expected)}"
+        assert actual == expected, (
+            f"extra/missing command files: {set(actual) ^ set(expected)}"
+        )
 
 
 # =============================================================================
@@ -216,7 +224,9 @@ class TestFrontmatter:
         content = _read_md(COMMANDS_DIR / filename)
         fm = _parse_frontmatter(content) or {}
         name = fm.get("name", "")
-        assert name.startswith("wiki-"), f"{filename}: name {name!r} must start with 'wiki-'"
+        assert name.startswith("wiki-"), (
+            f"{filename}: name {name!r} must start with 'wiki-'"
+        )
 
     @pytest.mark.unit
     @pytest.mark.parametrize("filename", REQUIRED_COMMANDS)
@@ -237,15 +247,25 @@ class TestFrontmatter:
 
 class TestCrossReferences:
     @pytest.mark.unit
-    @pytest.mark.parametrize("command_filename, cli_module", list(COMMAND_TO_CLI.items()))
-    def test_command_references_cli(self, command_filename: str, cli_module: str) -> None:
+    @pytest.mark.parametrize(
+        "command_filename, cli_module", list(COMMAND_TO_CLI.items())
+    )
+    def test_command_references_cli(
+        self, command_filename: str, cli_module: str
+    ) -> None:
         """command md は対応する CLI モジュール名を本文に含む"""
         content = _read_md(COMMANDS_DIR / command_filename)
-        assert cli_module in content, f"{command_filename}: must reference '{cli_module}' in body"
+        assert cli_module in content, (
+            f"{command_filename}: must reference '{cli_module}' in body"
+        )
 
     @pytest.mark.unit
-    @pytest.mark.parametrize("command_filename, skill_filename", list(COMMAND_TO_SKILL.items()))
-    def test_command_references_skill(self, command_filename: str, skill_filename: str) -> None:
+    @pytest.mark.parametrize(
+        "command_filename, skill_filename", list(COMMAND_TO_SKILL.items())
+    )
+    def test_command_references_skill(
+        self, command_filename: str, skill_filename: str
+    ) -> None:
         """command md は対応する skill ファイル名を本文に含む（フルパス or ファイル名）"""
         content = _read_md(COMMANDS_DIR / command_filename)
         skill_name = skill_filename[:-3]  # without .md
@@ -258,7 +278,9 @@ class TestCrossReferences:
     def test_skill_references_cli(self, skill_filename: str, cli_module: str) -> None:
         """操作系 skill は対応する CLI モジュール名を含む"""
         content = _read_md(SKILLS_DIR / skill_filename)
-        assert cli_module in content, f"{skill_filename}: must reference '{cli_module}' in body"
+        assert cli_module in content, (
+            f"{skill_filename}: must reference '{cli_module}' in body"
+        )
 
     @pytest.mark.unit
     def test_main_skill_lists_all_commands(self) -> None:

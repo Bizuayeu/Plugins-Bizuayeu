@@ -93,7 +93,9 @@ class IndexGeneratorService:
         Returns:
             出力したエントリ件数
         """
-        entries = [e for e in self._load_entries(include_archived=False) if e.shard == kind]
+        entries = [
+            e for e in self._load_entries(include_archived=False) if e.shard == kind
+        ]
         entries.sort(key=lambda e: e.canonical)
         content = self._formatter.format_shard(kind, entries)
         self._file_repo.save_shard_index(kind, content)

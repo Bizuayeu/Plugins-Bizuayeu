@@ -38,7 +38,24 @@ def _yaml_escape_string(value: str) -> str:
     needs_quote = (
         value == ""
         or value.startswith(
-            ("-", ":", "?", "[", "]", "{", "}", "&", "*", "!", "|", ">", "%", "@", "`", "#")
+            (
+                "-",
+                ":",
+                "?",
+                "[",
+                "]",
+                "{",
+                "}",
+                "&",
+                "*",
+                "!",
+                "|",
+                ">",
+                "%",
+                "@",
+                "`",
+                "#",
+            )
         )
         or value.startswith(" ")
         or value.endswith(" ")

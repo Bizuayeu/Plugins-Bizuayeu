@@ -83,7 +83,9 @@ class TestArchiveCliPlan:
         self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
     ) -> None:
         _seed_project(plugin_root, capsys)
-        archive_cli.main(["plan", "--plugin-root", str(plugin_root), "--project", "MaruMaru"])
+        archive_cli.main(
+            ["plan", "--plugin-root", str(plugin_root), "--project", "MaruMaru"]
+        )
         capsys.readouterr()
         # resolver は変更されていない
         resolver_cli.main(["list", "--plugin-root", str(plugin_root)])
@@ -94,7 +96,9 @@ class TestArchiveCliPlan:
         self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
     ) -> None:
         with pytest.raises(SystemExit) as excinfo:
-            archive_cli.main(["plan", "--plugin-root", str(plugin_root), "--project", "Unknown"])
+            archive_cli.main(
+                ["plan", "--plugin-root", str(plugin_root), "--project", "Unknown"]
+            )
         assert excinfo.value.code == 1
 
 
@@ -122,7 +126,9 @@ class TestArchiveCliExecute:
         assert result["action"] == "execute"
         assert result["moved"] is True
         # 移動済み
-        assert (plugin_root / "archive" / "projects" / "MaruMaru" / "_project.md").exists()
+        assert (
+            plugin_root / "archive" / "projects" / "MaruMaru" / "_project.md"
+        ).exists()
         assert not src_dir.exists()
 
     def test_execute_no_move_flag(
@@ -157,7 +163,9 @@ class TestArchiveCliExecute:
         src_dir.mkdir(parents=True)
         (src_dir / "_project.md").write_text("# project", encoding="utf-8")
 
-        archive_cli.main(["execute", "--plugin-root", str(plugin_root), "--project", "MaruMaru"])
+        archive_cli.main(
+            ["execute", "--plugin-root", str(plugin_root), "--project", "MaruMaru"]
+        )
         capsys.readouterr()
 
         with pytest.raises(SystemExit) as excinfo:

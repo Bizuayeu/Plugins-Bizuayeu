@@ -118,7 +118,9 @@ class CLIRunner:
             command=args,
         )
 
-    def _build_module_args(self, module: str, *args: str, **kwargs: str | bool) -> list[str]:
+    def _build_module_args(
+        self, module: str, *args: str, **kwargs: str | bool
+    ) -> list[str]:
         cmd = [self.python, "-m", module]
         cmd.extend(args)
         for key, value in kwargs.items():

@@ -45,7 +45,9 @@ class RuleBasedTriageEngine:
             try:
                 self._compiled.append(re.compile(rule["pattern"]))
             except re.error as e:
-                raise TriageError(f"invalid regex in rule: {rule['pattern']!r} ({e})") from e
+                raise TriageError(
+                    f"invalid regex in rule: {rule['pattern']!r} ({e})"
+                ) from e
 
     def classify(self, entry: RawEntry) -> TriageDecision:
         """

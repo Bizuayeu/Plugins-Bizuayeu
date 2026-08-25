@@ -75,7 +75,9 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
-    p_verify = sub.add_parser("verify-wikilinks", help="Verify wikilinks against resolver")
+    p_verify = sub.add_parser(
+        "verify-wikilinks", help="Verify wikilinks against resolver"
+    )
     p_verify.add_argument("--plugin-root", required=True)
 
     return parser

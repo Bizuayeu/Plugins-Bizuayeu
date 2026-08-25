@@ -109,8 +109,16 @@ class TestParseEmailUseCaseAttachments:
     def test_attachment_filenames_extracted(self) -> None:
         msg = build_email_message(
             attachments=[
-                {"filename": "排煙計算書.pdf", "content_type": "application/pdf", "size": 1024},
-                {"filename": "図面.dwg", "content_type": "application/octet-stream", "size": 2048},
+                {
+                    "filename": "排煙計算書.pdf",
+                    "content_type": "application/pdf",
+                    "size": 1024,
+                },
+                {
+                    "filename": "図面.dwg",
+                    "content_type": "application/octet-stream",
+                    "size": 2048,
+                },
             ]
         )
         result = ParseEmailUseCase().execute(msg)

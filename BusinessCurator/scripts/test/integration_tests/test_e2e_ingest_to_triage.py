@@ -70,14 +70,26 @@ def _add_entity(
 
 @pytest.mark.integration
 class TestIngestToTriagePipelineE2E:
-    def test_full_pipeline(self, plugin_root: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    def test_full_pipeline(
+        self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
         # ----- Step 1: マスタデータ登録 -----
         _add_entity(plugin_root, capsys, "projects", "MaruMaru", "MaruMaruMansion")
         _add_entity(
-            plugin_root, capsys, "clients", "Shikaku", "ShikakuFudosan", "shikaku.example.jp"
+            plugin_root,
+            capsys,
+            "clients",
+            "Shikaku",
+            "ShikakuFudosan",
+            "shikaku.example.jp",
         )
         _add_entity(
-            plugin_root, capsys, "vendors", "Sankaku", "SankakuSetsubi", "sankaku.example.jp"
+            plugin_root,
+            capsys,
+            "vendors",
+            "Sankaku",
+            "SankakuSetsubi",
+            "sankaku.example.jp",
         )
 
         # ----- Step 2: ingest -----
@@ -86,7 +98,9 @@ class TestIngestToTriagePipelineE2E:
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(src, dst)
 
-        exit_code = ingest_cli.main(["--source", str(dst), "--plugin-root", str(plugin_root)])
+        exit_code = ingest_cli.main(
+            ["--source", str(dst), "--plugin-root", str(plugin_root)]
+        )
         assert exit_code == 0
         result = _capture_json(capsys)
         assert result["saved"] == 5

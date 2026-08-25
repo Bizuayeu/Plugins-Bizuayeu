@@ -88,7 +88,9 @@ class TestResolverCliAdd:
         capsys.readouterr()
         assert (plugin_root / "_alias_resolver.md").exists()
 
-    def test_add_no_aliases(self, plugin_root: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    def test_add_no_aliases(
+        self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
         """--aliases 省略時は空"""
         exit_code = resolver_cli.main(
             [
@@ -174,7 +176,9 @@ class TestResolverCliEdit:
         )
         capsys.readouterr()
 
-    def test_edit_canonical(self, plugin_root: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    def test_edit_canonical(
+        self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
         self._seed(plugin_root, capsys)
         exit_code = resolver_cli.main(
             [
@@ -192,7 +196,9 @@ class TestResolverCliEdit:
         assert result["action"] == "edit"
         assert result["id"] == "projects/X"
 
-    def test_edit_add_aliases(self, plugin_root: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    def test_edit_add_aliases(
+        self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
         self._seed(plugin_root, capsys)
         exit_code = resolver_cli.main(
             [
@@ -269,7 +275,9 @@ class TestResolverCliRemove:
 
 @pytest.mark.cli
 class TestResolverCliList:
-    def test_list_empty(self, plugin_root: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    def test_list_empty(
+        self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
         exit_code = resolver_cli.main(["list", "--plugin-root", str(plugin_root)])
         assert exit_code == 0
         result = _read_stdout_as_json(capsys)
@@ -298,7 +306,13 @@ class TestResolverCliList:
             capsys.readouterr()
             if archive:
                 resolver_cli.main(
-                    ["remove", "--plugin-root", str(plugin_root), "--id", f"projects/{slug}"]
+                    [
+                        "remove",
+                        "--plugin-root",
+                        str(plugin_root),
+                        "--id",
+                        f"projects/{slug}",
+                    ]
                 )
                 capsys.readouterr()
 
@@ -327,9 +341,13 @@ class TestResolverCliList:
             ]
         )
         capsys.readouterr()
-        resolver_cli.main(["remove", "--plugin-root", str(plugin_root), "--id", "projects/Done"])
+        resolver_cli.main(
+            ["remove", "--plugin-root", str(plugin_root), "--id", "projects/Done"]
+        )
         capsys.readouterr()
-        resolver_cli.main(["list", "--plugin-root", str(plugin_root), "--include-archived"])
+        resolver_cli.main(
+            ["list", "--plugin-root", str(plugin_root), "--include-archived"]
+        )
         result = _read_stdout_as_json(capsys)
         assert result["count"] == 1
 
@@ -341,7 +359,9 @@ class TestResolverCliList:
 
 @pytest.mark.cli
 class TestResolverCliFind:
-    def test_find_existing(self, plugin_root: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    def test_find_existing(
+        self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
         resolver_cli.main(
             [
                 "add",

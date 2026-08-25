@@ -36,7 +36,9 @@ class TestFileEntryRepositorySave:
         assert (tmp_path / "email_20260407_143022_abc12345.md").exists()
 
     @pytest.mark.integration
-    def test_save_writes_yaml_frontmatter(self, tmp_path, repo: FileEntryRepository) -> None:  # type: ignore[no-untyped-def]
+    def test_save_writes_yaml_frontmatter(
+        self, tmp_path, repo: FileEntryRepository
+    ) -> None:  # type: ignore[no-untyped-def]
         entry = build_raw_entry(subject="○○マンション排煙設備")
         repo.save(entry)
         files = list(tmp_path.glob("*.md"))
@@ -46,7 +48,9 @@ class TestFileEntryRepositorySave:
         assert "○○マンション排煙設備" in content
 
     @pytest.mark.integration
-    def test_save_writes_body_after_frontmatter(self, tmp_path, repo: FileEntryRepository) -> None:  # type: ignore[no-untyped-def]
+    def test_save_writes_body_after_frontmatter(
+        self, tmp_path, repo: FileEntryRepository
+    ) -> None:  # type: ignore[no-untyped-def]
         entry = build_raw_entry(body="本文テキスト")
         repo.save(entry)
         files = list(tmp_path.glob("*.md"))

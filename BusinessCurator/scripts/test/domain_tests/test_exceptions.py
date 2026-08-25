@@ -206,7 +206,9 @@ class TestSpecificExceptions:
         """IngestError をパスコンテキスト付きで使用"""
         from pathlib import Path
 
-        ctx = DiagnosticContext(file_path=Path("/data/sample.eml"), operation="parse_email")
+        ctx = DiagnosticContext(
+            file_path=Path("/data/sample.eml"), operation="parse_email"
+        )
         with pytest.raises(IngestError, match="parse failed"):
             raise IngestError("parse failed", context=ctx)
 

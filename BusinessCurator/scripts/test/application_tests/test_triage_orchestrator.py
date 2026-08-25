@@ -32,7 +32,9 @@ from test.test_helpers import (
 # =============================================================================
 
 
-def make_subject_rule(pattern: str, kind: str = "projects", slug: str = "X") -> TriageRule:
+def make_subject_rule(
+    pattern: str, kind: str = "projects", slug: str = "X"
+) -> TriageRule:
     return {
         "pattern": pattern,
         "target_kind": kind,  # type: ignore[typeddict-item]
@@ -188,8 +190,12 @@ class TestTriageOrchestratorBatch:
             llm_responses={"email_20260407_143022_bbbbbbbb": "clients"},
         )
         entries = [
-            build_raw_entry(entry_id="email_20260407_143022_aaaaaaaa", subject="matched"),
-            build_raw_entry(entry_id="email_20260407_143022_bbbbbbbb", subject="not in rules"),
+            build_raw_entry(
+                entry_id="email_20260407_143022_aaaaaaaa", subject="matched"
+            ),
+            build_raw_entry(
+                entry_id="email_20260407_143022_bbbbbbbb", subject="not in rules"
+            ),
         ]
         decisions = orch.classify_many(entries)
         # LLM は1件しか呼ばれない（ルールマッチをスキップ）
@@ -208,7 +214,9 @@ class TestTriageOrchestratorClock:
 
     @pytest.mark.unit
     def test_log_timestamp_uses_clock(self) -> None:
-        orch, _, log = build_orchestrator(rules=[], fixed_time=datetime(2026, 5, 1, 12, 0, 0))
+        orch, _, log = build_orchestrator(
+            rules=[], fixed_time=datetime(2026, 5, 1, 12, 0, 0)
+        )
         entry = build_raw_entry()
         orch.classify(entry)
         log_entry = log.load_for_date("2026-05-01")[0]

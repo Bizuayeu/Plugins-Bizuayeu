@@ -89,7 +89,9 @@ def main(argv: list[str] | None = None) -> int:
     resolver = PathResolver(plugin_root)
     repo = FileEntryRepository(raw_entries_dir=resolver.raw_entries_dir)
     parse_uc = ParseEmailUseCase()
-    usecase = IngestBatchUseCase(email_parser=parser, parse_usecase=parse_uc, entry_repository=repo)
+    usecase = IngestBatchUseCase(
+        email_parser=parser, parse_usecase=parse_uc, entry_repository=repo
+    )
 
     try:
         result = usecase.execute(source)

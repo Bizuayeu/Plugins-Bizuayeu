@@ -28,7 +28,9 @@ class TestClaudeCliTriageClientHappyPath:
     def test_returns_projects_when_response_is_projects(self) -> None:
         client = ClaudeCliTriageClient()
         with patch("subprocess.run") as mock_run:
-            mock_run.return_value = MagicMock(returncode=0, stdout="projects\n", stderr="")
+            mock_run.return_value = MagicMock(
+                returncode=0, stdout="projects\n", stderr=""
+            )
             result = client.classify(build_raw_entry())
         assert result == "projects"
 
@@ -52,7 +54,9 @@ class TestClaudeCliTriageClientHappyPath:
     def test_returns_knowledge(self) -> None:
         client = ClaudeCliTriageClient()
         with patch("subprocess.run") as mock_run:
-            mock_run.return_value = MagicMock(returncode=0, stdout="knowledge", stderr="")
+            mock_run.return_value = MagicMock(
+                returncode=0, stdout="knowledge", stderr=""
+            )
             result = client.classify(build_raw_entry())
         assert result == "knowledge"
 
@@ -61,7 +65,9 @@ class TestClaudeCliTriageClientHappyPath:
         """大文字小文字を区別しない"""
         client = ClaudeCliTriageClient()
         with patch("subprocess.run") as mock_run:
-            mock_run.return_value = MagicMock(returncode=0, stdout="PROJECTS", stderr="")
+            mock_run.return_value = MagicMock(
+                returncode=0, stdout="PROJECTS", stderr=""
+            )
             result = client.classify(build_raw_entry())
         assert result == "projects"
 
@@ -69,7 +75,9 @@ class TestClaudeCliTriageClientHappyPath:
     def test_response_with_extra_whitespace_trimmed(self) -> None:
         client = ClaudeCliTriageClient()
         with patch("subprocess.run") as mock_run:
-            mock_run.return_value = MagicMock(returncode=0, stdout="  projects  \n\n", stderr="")
+            mock_run.return_value = MagicMock(
+                returncode=0, stdout="  projects  \n\n", stderr=""
+            )
             result = client.classify(build_raw_entry())
         assert result == "projects"
 
@@ -85,7 +93,9 @@ class TestClaudeCliInvocation:
         """subprocess.run が claude -p ... の形で呼ばれる"""
         client = ClaudeCliTriageClient()
         with patch("subprocess.run") as mock_run:
-            mock_run.return_value = MagicMock(returncode=0, stdout="knowledge", stderr="")
+            mock_run.return_value = MagicMock(
+                returncode=0, stdout="knowledge", stderr=""
+            )
             client.classify(build_raw_entry(subject="排煙設備"))
         assert mock_run.called
         args, _kwargs = mock_run.call_args
@@ -98,7 +108,9 @@ class TestClaudeCliInvocation:
         """プロンプトに subject が含まれる"""
         client = ClaudeCliTriageClient()
         with patch("subprocess.run") as mock_run:
-            mock_run.return_value = MagicMock(returncode=0, stdout="projects", stderr="")
+            mock_run.return_value = MagicMock(
+                returncode=0, stdout="projects", stderr=""
+            )
             client.classify(build_raw_entry(subject="○○マンション排煙"))
         cmd = mock_run.call_args[0][0]
         prompt = cmd[2]
@@ -109,7 +121,9 @@ class TestClaudeCliInvocation:
         """capture_output=True, text=True"""
         client = ClaudeCliTriageClient()
         with patch("subprocess.run") as mock_run:
-            mock_run.return_value = MagicMock(returncode=0, stdout="knowledge", stderr="")
+            mock_run.return_value = MagicMock(
+                returncode=0, stdout="knowledge", stderr=""
+            )
             client.classify(build_raw_entry())
         kwargs = mock_run.call_args[1]
         assert kwargs.get("capture_output") is True

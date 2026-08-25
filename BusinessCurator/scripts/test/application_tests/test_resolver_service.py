@@ -12,7 +12,6 @@ ResolverService の add/edit/remove/complete_archive/rebuild 動作検証。
 - property-based test で add → remove → add 安定性
 """
 
-
 import pytest
 from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
@@ -50,7 +49,9 @@ class TestResolverServiceAdd:
 
     @pytest.mark.unit
     def test_add_duplicate_id_raises(self) -> None:
-        repo = FakeAliasResolverRepository(initial=[build_alias_record(slug="MaruMaru")])
+        repo = FakeAliasResolverRepository(
+            initial=[build_alias_record(slug="MaruMaru")]
+        )
         svc = ResolverService(repo)
         with pytest.raises(ResolverError, match="duplicate"):
             svc.add(build_alias_record(slug="MaruMaru"))
@@ -91,7 +92,9 @@ class TestResolverServiceEdit:
 
     @pytest.mark.unit
     def test_edit_canonical(self) -> None:
-        repo = FakeAliasResolverRepository(initial=[build_alias_record(slug="A", canonical="旧名")])
+        repo = FakeAliasResolverRepository(
+            initial=[build_alias_record(slug="A", canonical="旧名")]
+        )
         svc = ResolverService(repo)
         svc.edit("projects/A", canonical="新名")
         rec = repo.load_all()[0]

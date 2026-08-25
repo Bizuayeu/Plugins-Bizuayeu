@@ -222,7 +222,8 @@ def build_email_message(
         "message_id": message_id,
         "from_addr": {"name": from_name, "address": from_address},
         "to_addrs": [
-            {"name": "", "address": a} for a in (to_addresses or ["recipient@example.com"])
+            {"name": "", "address": a}
+            for a in (to_addresses or ["recipient@example.com"])
         ],
         "cc_addrs": [{"name": "", "address": a} for a in (cc_addresses or [])],
         "subject": subject,

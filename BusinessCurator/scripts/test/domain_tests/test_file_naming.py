@@ -171,7 +171,7 @@ class TestSanitizeFilename:
     def test_windows_forbidden_chars_replaced(self) -> None:
         """Windows 禁止文字が置換される"""
         # < > : " / \ | ? *
-        result = sanitize_filename("a<b>c:d\"e/f\\g|h?i*j.txt")
+        result = sanitize_filename('a<b>c:d"e/f\\g|h?i*j.txt')
         for forbidden in '<>:"/\\|?*':
             assert forbidden not in result
 

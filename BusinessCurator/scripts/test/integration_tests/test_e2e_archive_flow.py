@@ -76,7 +76,9 @@ def _setup_project(
 
 @pytest.mark.integration
 class TestArchiveFlowHappyPathE2E:
-    def test_full_archive_flow(self, plugin_root: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    def test_full_archive_flow(
+        self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
         # ----- Step 1: project を準備 -----
         _setup_project(plugin_root, capsys, "MaruMaru", "○○マンション")
 
@@ -142,7 +144,9 @@ class TestArchiveFlowHappyPathE2E:
         assert result["metrics"]["alias_records_completed"] == 1
 
         # find で target_path が archive/ に切り替わっていることを確認
-        resolver_cli.main(["find", "--plugin-root", str(plugin_root), "--id", "projects/MaruMaru"])
+        resolver_cli.main(
+            ["find", "--plugin-root", str(plugin_root), "--id", "projects/MaruMaru"]
+        )
         result = _capture_json(capsys)
         assert result["record"]["archive_status"] == "completed"
         assert "archive/projects/MaruMaru" in result["record"]["target_path"]
@@ -196,7 +200,9 @@ class TestArchiveNoMoveE2E:
         assert (src_dir / "_project.md").exists()
 
         # resolver の archive_status は completed
-        resolver_cli.main(["find", "--plugin-root", str(plugin_root), "--id", "projects/X"])
+        resolver_cli.main(
+            ["find", "--plugin-root", str(plugin_root), "--id", "projects/X"]
+        )
         result = _capture_json(capsys)
         assert result["record"]["archive_status"] == "completed"
 

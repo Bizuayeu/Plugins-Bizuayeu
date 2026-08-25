@@ -13,7 +13,6 @@ RuleBasedTriageEngine の判定動作検証。
 業務計画書 §7.3 「ルールで8割、LLM で2割」設計仮説の Python 部分。
 """
 
-
 import pytest
 from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
@@ -77,7 +76,9 @@ class TestRuleBasedTriageEngineBasic:
 
     @pytest.mark.unit
     def test_subject_match_creates_rule_match(self) -> None:
-        rule = make_subject_rule(r"○○マンション", target_kind="projects", target_slug="MaruMaru")
+        rule = make_subject_rule(
+            r"○○マンション", target_kind="projects", target_slug="MaruMaru"
+        )
         engine = RuleBasedTriageEngine(rules=[rule])
         entry = build_raw_entry(subject="○○マンション排煙設備")
         decision = engine.classify(entry)
@@ -87,7 +88,9 @@ class TestRuleBasedTriageEngineBasic:
 
     @pytest.mark.unit
     def test_from_match(self) -> None:
-        rule = make_from_rule(r"@meguru\.example\.jp", target_kind="clients", target_slug="Meguru")
+        rule = make_from_rule(
+            r"@meguru\.example\.jp", target_kind="clients", target_slug="Meguru"
+        )
         engine = RuleBasedTriageEngine(rules=[rule])
         entry = build_raw_entry(from_addr="yamada@meguru.example.jp")
         decision = engine.classify(entry)
@@ -121,17 +124,23 @@ class TestRuleBasedTriageEnginePriority:
     @pytest.mark.unit
     def test_first_match_becomes_primary(self) -> None:
         """最初にマッチしたルールが primary_shard"""
-        r1 = make_subject_rule(r"○○マンション", target_kind="projects", target_slug="P1")
+        r1 = make_subject_rule(
+            r"○○マンション", target_kind="projects", target_slug="P1"
+        )
         r2 = make_from_rule(r"@meguru", target_kind="clients", target_slug="C1")
         engine = RuleBasedTriageEngine(rules=[r1, r2])
-        entry = build_raw_entry(subject="○○マンション", from_addr="yamada@meguru.example.jp")
+        entry = build_raw_entry(
+            subject="○○マンション", from_addr="yamada@meguru.example.jp"
+        )
         decision = engine.classify(entry)
         assert decision["primary_shard"] == "projects"
         assert decision["primary_slug"] == "P1"
 
     @pytest.mark.unit
     def test_secondary_matches_become_tags(self) -> None:
-        r1 = make_subject_rule(r"○○マンション", target_kind="projects", target_slug="P1")
+        r1 = make_subject_rule(
+            r"○○マンション", target_kind="projects", target_slug="P1"
+        )
         r2 = make_from_rule(r"@meguru", target_kind="clients", target_slug="C1")
         engine = RuleBasedTriageEngine(rules=[r1, r2])
         entry = build_raw_entry(subject="○○マンション", from_addr="x@meguru.example.jp")
@@ -243,13 +252,18 @@ class TestRuleBasedTriageEngineProperties:
         engine = RuleBasedTriageEngine(rules=rules)
         decision = engine.classify(entry)
         # primary_shard は単一の Optional[ShardKind]
-        assert decision["primary_shard"] is None or isinstance(decision["primary_shard"], str)
+        assert decision["primary_shard"] is None or isinstance(
+            decision["primary_shard"], str
+        )
         # primary_slug は primary_shard が None の場合 None
         if decision["primary_shard"] is None:
             assert decision["primary_slug"] is None
 
     @pytest.mark.property
-    @given(entry=_entry_strategy(), rules=st.lists(_rule_strategy(), min_size=1, max_size=5))
+    @given(
+        entry=_entry_strategy(),
+        rules=st.lists(_rule_strategy(), min_size=1, max_size=5),
+    )
     @settings(max_examples=50, suppress_health_check=[HealthCheck.too_slow])
     def test_invariant_match_implies_rule_match_confidence(self, entry, rules) -> None:  # type: ignore[no-untyped-def]
         """不変条件3: matched_rules が1件以上 → confidence == 'rule_match'"""

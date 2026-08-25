@@ -146,7 +146,9 @@ class TestTriageCli:
         assert result["unclassified"] == 1
         assert result["rule_match"] == 0
 
-    def test_writes_triage_log(self, plugin_root: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    def test_writes_triage_log(
+        self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
         _add_resolver_record(
             plugin_root,
             capsys,
@@ -164,7 +166,9 @@ class TestTriageCli:
         log_files = list((plugin_root / "triage_logs").glob("_triage_log_*.json"))
         assert len(log_files) >= 1
 
-    def test_mixed_results(self, plugin_root: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    def test_mixed_results(
+        self, plugin_root: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
         _add_resolver_record(
             plugin_root,
             capsys,
@@ -215,7 +219,10 @@ class TestTriageCliErrors:
 @pytest.mark.cli
 class TestTriageCliLLMPath:
     def test_llm_fallback_via_mock(
-        self, plugin_root: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+        self,
+        plugin_root: Path,
+        capsys: pytest.CaptureFixture[str],
+        monkeypatch: pytest.MonkeyPatch,
     ) -> None:
         """ClaudeCliTriageClient.classify を mock して LLM 経路を検証"""
         from unittest.mock import patch
@@ -252,7 +259,9 @@ class TestTriageCliLLMPath:
             subject="needs LLM",
         )
 
-        with patch.object(ClaudeCliTriageClient, "classify", side_effect=TriageError("simulated")):
+        with patch.object(
+            ClaudeCliTriageClient, "classify", side_effect=TriageError("simulated")
+        ):
             with pytest.raises(SystemExit) as excinfo:
                 triage_cli.main(["--plugin-root", str(plugin_root)])
             assert excinfo.value.code == 1

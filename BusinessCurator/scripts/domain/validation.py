@@ -68,7 +68,9 @@ def _require_list_of_str(value: Any, field: str) -> None:
         raise ValidationError(f"field {field} must be list, got {type(value).__name__}")
     for i, item in enumerate(value):
         if not isinstance(item, str):
-            raise ValidationError(f"field {field}[{i}] must be str, got {type(item).__name__}")
+            raise ValidationError(
+                f"field {field}[{i}] must be str, got {type(item).__name__}"
+            )
 
 
 # =============================================================================
@@ -89,7 +91,9 @@ def validate_shard_kind(value: Any) -> None:
     if not isinstance(value, str):
         raise ValidationError(f"shard kind must be str, got {type(value).__name__}")
     if value not in SHARD_KINDS:
-        raise ValidationError(f"invalid shard kind: {value!r} (expected one of {SHARD_KINDS})")
+        raise ValidationError(
+            f"invalid shard kind: {value!r} (expected one of {SHARD_KINDS})"
+        )
 
 
 # =============================================================================
@@ -144,7 +148,9 @@ def validate_raw_entry(data: Any) -> None:
     # thread_id は Optional[str]
     thread_id = data["thread_id"]
     if thread_id is not None and not isinstance(thread_id, str):
-        raise ValidationError(f"thread_id must be str or None, got {type(thread_id).__name__}")
+        raise ValidationError(
+            f"thread_id must be str or None, got {type(thread_id).__name__}"
+        )
 
 
 # =============================================================================
@@ -165,7 +171,14 @@ def validate_alias_record(data: Any) -> None:
     if not isinstance(data, dict):
         raise ValidationError(f"alias record must be dict, got {type(data).__name__}")
 
-    for field in ["id", "canonical", "aliases", "shard", "target_path", "archive_status"]:
+    for field in [
+        "id",
+        "canonical",
+        "aliases",
+        "shard",
+        "target_path",
+        "archive_status",
+    ]:
         if field not in data:
             raise ValidationError(f"missing required field: {field}")
 
@@ -183,7 +196,9 @@ def validate_alias_record(data: Any) -> None:
 
     # id の kind と shard の整合性
     if kind_part != data["shard"]:
-        raise ValidationError(f"id kind {kind_part!r} does not match shard {data['shard']!r}")
+        raise ValidationError(
+            f"id kind {kind_part!r} does not match shard {data['shard']!r}"
+        )
 
     # その他の文字列フィールド
     _require_type(data["canonical"], str, "canonical")
@@ -195,7 +210,9 @@ def validate_alias_record(data: Any) -> None:
     # archive_status は ARCHIVE_STATUSES のいずれか
     status = data["archive_status"]
     if not isinstance(status, str):
-        raise ValidationError(f"archive_status must be str, got {type(status).__name__}")
+        raise ValidationError(
+            f"archive_status must be str, got {type(status).__name__}"
+        )
     if status not in ARCHIVE_STATUSES:
         raise ValidationError(
             f"invalid archive_status: {status!r} (expected one of {ARCHIVE_STATUSES})"

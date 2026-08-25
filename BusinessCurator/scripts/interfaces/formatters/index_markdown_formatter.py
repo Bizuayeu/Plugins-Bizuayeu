@@ -13,7 +13,6 @@ IndexEntry を EpisodicWiki 形式の Markdown に変換する。
 - 並び順は呼び出し側（application 層）が決定する。本クラスはソートしない。
 """
 
-
 from domain.indexing.index_entry import IndexEntry
 from domain.types.shard import SHARD_KINDS, ShardKind
 
@@ -32,9 +31,7 @@ _SHARD_DIRECTORY_INDEX_FILE = {
     "knowledge": "_index.md",
 }
 
-_AUTO_GEN_FOOTER = (
-    "\n---\n\n**自動生成**: `/wiki-index-rebuild` で再生成されます。手動編集しないでください。\n"
-)
+_AUTO_GEN_FOOTER = "\n---\n\n**自動生成**: `/wiki-index-rebuild` で再生成されます。手動編集しないでください。\n"
 
 
 class IndexMarkdownFormatter:
