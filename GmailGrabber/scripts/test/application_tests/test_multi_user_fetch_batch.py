@@ -235,7 +235,13 @@ class TestMultiUserHappyPath:
         )
 
         result = uc.execute(
-            _plan([_account("alice@m.com"), _account("bob@m.com"), _account("carol@m.com")]),
+            _plan(
+                [
+                    _account("alice@m.com"),
+                    _account("bob@m.com"),
+                    _account("carol@m.com"),
+                ]
+            ),
             state_dir="/tmp/state",
         )
 
@@ -365,7 +371,9 @@ class TestMultiUserResume:
     @pytest.mark.unit
     def test_resume_false_ignores_existing_state(self) -> None:
         msgs = [make_message_with_id(f"a{i}", f"<a{i}@ex.com>") for i in range(2)]
-        factory = FakeGmailClientFactory({"alice@m.com": FakeGmailClient(messages=msgs)})
+        factory = FakeGmailClientFactory(
+            {"alice@m.com": FakeGmailClient(messages=msgs)}
+        )
         writer = FakeMessageWriter()
         state_repo = FakeMultiUserStateRepository()
 
@@ -421,7 +429,9 @@ class TestMultiUserFailures:
         bob_msgs = [make_message_with_id("b1", "<b1@ex.com>")]
         factory = FakeGmailClientFactory(
             {
-                "alice@m.com": FakeGmailClient(messages=alice_msgs, fetch_failures={"a1"}),
+                "alice@m.com": FakeGmailClient(
+                    messages=alice_msgs, fetch_failures={"a1"}
+                ),
                 "bob@m.com": FakeGmailClient(messages=bob_msgs),
             }
         )
@@ -445,7 +455,9 @@ class TestMultiUserFailures:
             "nomid_id",
             raw_mime=b"From: test@ex.com\r\nSubject: no id\r\n\r\nbody",
         )
-        factory = FakeGmailClientFactory({"alice@m.com": FakeGmailClient(messages=[no_mid_msg])})
+        factory = FakeGmailClientFactory(
+            {"alice@m.com": FakeGmailClient(messages=[no_mid_msg])}
+        )
         writer = FakeMessageWriter()
         uc = MultiUserFetchBatchUseCase(
             factory, writer, FakeMultiUserStateRepository(), FakeClock()
@@ -521,9 +533,13 @@ class TestDedupCorrectness:
     def test_message_id_index_tracks_owner(self) -> None:
         """index には「誰が最初にとったか」が記録される"""
         msg = make_message_with_id("a1", "<shared@ex.com>")
-        factory = FakeGmailClientFactory({"alice@m.com": FakeGmailClient(messages=[msg])})
+        factory = FakeGmailClientFactory(
+            {"alice@m.com": FakeGmailClient(messages=[msg])}
+        )
         state_repo = FakeMultiUserStateRepository()
-        uc = MultiUserFetchBatchUseCase(factory, FakeMessageWriter(), state_repo, FakeClock())
+        uc = MultiUserFetchBatchUseCase(
+            factory, FakeMessageWriter(), state_repo, FakeClock()
+        )
 
         uc.execute(
             _plan([_account("alice@m.com")]),
@@ -547,7 +563,9 @@ class TestDedupCorrectness:
             }
         )
         state_repo = FakeMultiUserStateRepository()
-        uc = MultiUserFetchBatchUseCase(factory, FakeMessageWriter(), state_repo, FakeClock())
+        uc = MultiUserFetchBatchUseCase(
+            factory, FakeMessageWriter(), state_repo, FakeClock()
+        )
 
         uc.execute(
             _plan([_account("alice@m.com"), _account("bob@m.com")]),

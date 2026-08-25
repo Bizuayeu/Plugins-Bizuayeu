@@ -27,7 +27,9 @@ class JsonStateRepository:
             raw = json.loads(path.read_text(encoding="utf-8"))
             return self._deserialize(raw)
         except (OSError, json.JSONDecodeError) as e:
-            raise StateRepositoryError(f"failed to load state for {plan_id}: {e}") from e
+            raise StateRepositoryError(
+                f"failed to load state for {plan_id}: {e}"
+            ) from e
 
     def save(self, state: BackupState, state_dir: str) -> None:
         try:
@@ -39,7 +41,9 @@ class JsonStateRepository:
                 encoding="utf-8",
             )
         except OSError as e:
-            raise StateRepositoryError(f"failed to save state for {state['plan_id']}: {e}") from e
+            raise StateRepositoryError(
+                f"failed to save state for {state['plan_id']}: {e}"
+            ) from e
 
     def delete(self, plan_id: str, state_dir: str) -> None:
         try:
@@ -47,7 +51,9 @@ class JsonStateRepository:
             if path.exists():
                 path.unlink()
         except OSError as e:
-            raise StateRepositoryError(f"failed to delete state for {plan_id}: {e}") from e
+            raise StateRepositoryError(
+                f"failed to delete state for {plan_id}: {e}"
+            ) from e
 
     # =========================================================================
     # helpers

@@ -89,7 +89,11 @@ def _load_users(args: argparse.Namespace) -> list[str]:
     if not path.exists():
         fail(f"users file not found: {args.impersonate_users_file}")
     lines = path.read_text(encoding="utf-8").splitlines()
-    return [line.strip() for line in lines if line.strip() and not line.strip().startswith("#")]
+    return [
+        line.strip()
+        for line in lines
+        if line.strip() and not line.strip().startswith("#")
+    ]
 
 
 def _build_accounts(user_emails: list[str], config_dir: Path) -> list[GmailAccount]:
@@ -118,10 +122,16 @@ def _make_writer(output_format: str, multi_plan_id: str) -> MessageWriterProtoco
 def main(argv: list[str] | None = None) -> None:
     args = _build_parser().parse_args(argv)
 
-    config_dir = Path(args.config_dir).expanduser() if args.config_dir else default_config_dir()
+    config_dir = (
+        Path(args.config_dir).expanduser() if args.config_dir else default_config_dir()
+    )
     config_dir.mkdir(parents=True, exist_ok=True)
 
-    state_dir = Path(args.state_dir).expanduser() if args.state_dir else config_dir / "multi_state"
+    state_dir = (
+        Path(args.state_dir).expanduser()
+        if args.state_dir
+        else config_dir / "multi_state"
+    )
     state_dir.mkdir(parents=True, exist_ok=True)
 
     sa_key_path = Path(args.service_account_key).expanduser().resolve()
@@ -196,7 +206,9 @@ def main(argv: list[str] | None = None) -> None:
             "per_user_deduped": result["per_user_deduped"],
             "total_unique_messages": result["total_unique_messages"],
             "total_dedup_skipped": result["total_dedup_skipped"],
-            "total_messages_without_message_id": result["total_messages_without_message_id"],
+            "total_messages_without_message_id": result[
+                "total_messages_without_message_id"
+            ],
             "output_files_count": len(result["output_files"]),
             "started_at": result["started_at"],
             "finished_at": result["finished_at"],

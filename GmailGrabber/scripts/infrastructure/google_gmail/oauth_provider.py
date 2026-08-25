@@ -32,7 +32,9 @@ class GoogleOAuthCredentialsProvider:
             raw = json.loads(path.read_text(encoding="utf-8"))
             return self._from_json(raw)
         except (OSError, json.JSONDecodeError) as e:
-            raise AuthenticationError(f"failed to load token from {token_path}: {e}") from e
+            raise AuthenticationError(
+                f"failed to load token from {token_path}: {e}"
+            ) from e
 
     def save(self, credentials: OAuthCredentials, token_path: str) -> None:
         """credentials を JSON 形式で保存"""
@@ -48,14 +50,18 @@ class GoogleOAuthCredentialsProvider:
             with contextlib.suppress(OSError):
                 path.chmod(0o600)
         except OSError as e:
-            raise AuthenticationError(f"failed to save token to {token_path}: {e}") from e
+            raise AuthenticationError(
+                f"failed to save token to {token_path}: {e}"
+            ) from e
 
     def authenticate_interactive(
         self, client_secret_path: str, scopes: list[str]
     ) -> OAuthCredentials:
         """ブラウザベース InstalledAppFlow を実行して新規認証"""
         if not Path(client_secret_path).exists():
-            raise CredentialsNotFoundError(f"client_secret file not found: {client_secret_path}")
+            raise CredentialsNotFoundError(
+                f"client_secret file not found: {client_secret_path}"
+            )
         try:
             from google_auth_oauthlib.flow import InstalledAppFlow  # lazy import
 

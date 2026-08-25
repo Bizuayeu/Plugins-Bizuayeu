@@ -10,7 +10,12 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from domain.file_naming import build_plan_id, eml_filename, mbox_filename, sanitize_filename
+from domain.file_naming import (
+    build_plan_id,
+    eml_filename,
+    mbox_filename,
+    sanitize_filename,
+)
 
 # =============================================================================
 # sanitize_filename
@@ -99,7 +104,9 @@ class TestMboxFilename:
 class TestBuildPlanId:
     @pytest.mark.unit
     def test_has_plan_prefix(self) -> None:
-        pid = build_plan_id("a@b.com", "from:a@b.com", "eml", datetime(2026, 4, 11, 10, 0, 0))
+        pid = build_plan_id(
+            "a@b.com", "from:a@b.com", "eml", datetime(2026, 4, 11, 10, 0, 0)
+        )
         assert pid.startswith("plan_")
 
     @pytest.mark.unit
@@ -149,7 +156,10 @@ class TestSanitizeProperties:
         assert len(result) >= 1
 
     @pytest.mark.property
-    @given(name=st.text(min_size=0, max_size=500), max_len=st.integers(min_value=1, max_value=500))
+    @given(
+        name=st.text(min_size=0, max_size=500),
+        max_len=st.integers(min_value=1, max_value=500),
+    )
     def test_respects_max_length(self, name: str, max_len: int) -> None:
         result = sanitize_filename(name, max_length=max_len)
         assert len(result) <= max_len

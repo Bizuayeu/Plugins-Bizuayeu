@@ -71,7 +71,9 @@ class CredentialsProviderProtocol(Protocol):
 class GmailClientProtocol(Protocol):
     """Gmail API クライアント Protocol"""
 
-    def list_message_ids(self, query: str, max_results: int | None = None) -> Iterator[str]:
+    def list_message_ids(
+        self, query: str, max_results: int | None = None
+    ) -> Iterator[str]:
         """検索クエリに一致するメッセージIDを列挙（ページング対応）"""
         ...
 

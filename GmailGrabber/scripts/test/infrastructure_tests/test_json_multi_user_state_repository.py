@@ -30,7 +30,9 @@ def _sample_multi_state() -> MultiUserBackupState:
     return {
         "multi_plan_id": "multi_plan_20260411_abcdefghij",
         "per_user_states": {
-            "alice@m.com": _sample_single_state("multi_plan_20260411_abcdefghij__alice"),
+            "alice@m.com": _sample_single_state(
+                "multi_plan_20260411_abcdefghij__alice"
+            ),
             "bob@m.com": _sample_single_state("multi_plan_20260411_abcdefghij__bob"),
         },
         "message_id_index": {

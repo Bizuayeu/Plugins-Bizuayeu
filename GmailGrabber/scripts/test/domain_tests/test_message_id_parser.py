@@ -133,8 +133,14 @@ class TestNormalizeMessageId:
 
 @st.composite
 def _simple_message_id(draw: st.DrawFn) -> str:
-    local = draw(st.text(alphabet="abcdefghijklmnopqrstuvwxyz0123456789+", min_size=1, max_size=20))
-    domain = draw(st.text(alphabet="abcdefghijklmnopqrstuvwxyz.", min_size=3, max_size=20))
+    local = draw(
+        st.text(
+            alphabet="abcdefghijklmnopqrstuvwxyz0123456789+", min_size=1, max_size=20
+        )
+    )
+    domain = draw(
+        st.text(alphabet="abcdefghijklmnopqrstuvwxyz.", min_size=3, max_size=20)
+    )
     # ドメインは少なくとも 1 つの . を含むようにするわけでもないがテスト側で許容
     return f"<{local}@{domain}>"
 

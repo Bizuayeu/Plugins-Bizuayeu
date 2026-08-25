@@ -136,8 +136,8 @@ class TestListMessageIds:
     @pytest.mark.unit
     def test_api_failure_raises_gmail_api_error(self) -> None:
         service = MagicMock()
-        service.users.return_value.messages.return_value.list.return_value.execute.side_effect = (
-            RuntimeError("network down")
+        service.users.return_value.messages.return_value.list.return_value.execute.side_effect = RuntimeError(
+            "network down"
         )
         client = _make_client(service)
         with pytest.raises(GmailApiError, match="network down"):
@@ -267,7 +267,9 @@ class TestConstructorValidation:
 
 class TestServiceAccountBuild:
     @pytest.mark.unit
-    def test_build_service_uses_sa_credentials(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_build_service_uses_sa_credentials(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """
         SA credentials 指定時、_build_service が
         _to_google_service_account_credentials を呼ぶ。
@@ -286,7 +288,9 @@ class TestServiceAccountBuild:
         def fake_build(*args: Any, **kwargs: Any) -> MagicMock:
             return MagicMock(name="Service")
 
-        monkeypatch.setattr(client_module, "_to_google_service_account_credentials", fake_to_sa)
+        monkeypatch.setattr(
+            client_module, "_to_google_service_account_credentials", fake_to_sa
+        )
         monkeypatch.setattr(client_module, "_to_google_credentials", fake_to_oauth)
 
         # googleapiclient.discovery.build をモック
@@ -304,7 +308,9 @@ class TestServiceAccountBuild:
         assert client._service_account_credentials is not None
 
     @pytest.mark.unit
-    def test_build_service_uses_oauth_credentials(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_build_service_uses_oauth_credentials(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """OAuth credentials 指定時、_to_google_credentials が呼ばれる。"""
         from infrastructure.google_gmail import client as client_module
 
@@ -320,7 +326,9 @@ class TestServiceAccountBuild:
         def fake_build(*args: Any, **kwargs: Any) -> MagicMock:
             return MagicMock(name="Service")
 
-        monkeypatch.setattr(client_module, "_to_google_service_account_credentials", fake_to_sa)
+        monkeypatch.setattr(
+            client_module, "_to_google_service_account_credentials", fake_to_sa
+        )
         monkeypatch.setattr(client_module, "_to_google_credentials", fake_to_oauth)
 
         import googleapiclient.discovery

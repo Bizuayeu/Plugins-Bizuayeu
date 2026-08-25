@@ -63,7 +63,9 @@ class _FakeCredentialsProvider:
 
 
 class _FakeGmailClient:
-    def list_message_ids(self, query: str, max_results: int | None = None) -> Iterator[str]:
+    def list_message_ids(
+        self, query: str, max_results: int | None = None
+    ) -> Iterator[str]:
         yield from []
 
     def fetch_message(self, message_id: str) -> GmailMessage:

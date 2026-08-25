@@ -51,15 +51,21 @@ class GoogleServiceAccountProvider:
         """
         path = Path(key_path)
         if not path.exists():
-            raise CredentialsNotFoundError(f"service account key file not found: {key_path}")
+            raise CredentialsNotFoundError(
+                f"service account key file not found: {key_path}"
+            )
         try:
             raw = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as e:
-            raise AuthenticationError(f"failed to parse service account key: {e}") from e
+            raise AuthenticationError(
+                f"failed to parse service account key: {e}"
+            ) from e
 
         missing = [f for f in _REQUIRED_FIELDS if f not in raw]
         if missing:
-            raise AuthenticationError(f"service account key missing required fields: {missing}")
+            raise AuthenticationError(
+                f"service account key missing required fields: {missing}"
+            )
 
         return {
             "type": raw["type"],

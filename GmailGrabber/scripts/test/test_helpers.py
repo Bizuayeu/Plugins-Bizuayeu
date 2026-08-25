@@ -37,13 +37,17 @@ class FakeGmailClient:
         labels: list[dict] | None = None,
         fetch_failures: set[str] | None = None,
     ) -> None:
-        self._messages: dict[str, GmailMessage] = {m["gmail_id"]: m for m in (messages or [])}
+        self._messages: dict[str, GmailMessage] = {
+            m["gmail_id"]: m for m in (messages or [])
+        }
         self._labels = labels or []
         self._fetch_failures = fetch_failures or set()
         self.list_calls: list[str] = []
         self.fetch_calls: list[str] = []
 
-    def list_message_ids(self, query: str, max_results: int | None = None) -> Iterator[str]:
+    def list_message_ids(
+        self, query: str, max_results: int | None = None
+    ) -> Iterator[str]:
         self.list_calls.append(query)
         ids = list(self._messages.keys())
         if max_results is not None:

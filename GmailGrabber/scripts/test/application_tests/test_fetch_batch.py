@@ -143,7 +143,9 @@ class TestFetchBatch:
     def test_uses_gmail_query_string(self) -> None:
         """Gmail client.list_message_ids がクエリ文字列で呼ばれる"""
         client = FakeGmailClient(messages=[])
-        uc = FetchBatchUseCase(client, FakeMessageWriter(), FakeStateRepository(), FakeClock())
+        uc = FetchBatchUseCase(
+            client, FakeMessageWriter(), FakeStateRepository(), FakeClock()
+        )
 
         uc.execute(_sample_plan(), state_dir="/tmp/state")
 
@@ -154,7 +156,9 @@ class TestFetchBatch:
     @pytest.mark.unit
     def test_writer_finalize_called(self) -> None:
         writer = FakeMessageWriter()
-        uc = FetchBatchUseCase(FakeGmailClient(), writer, FakeStateRepository(), FakeClock())
+        uc = FetchBatchUseCase(
+            FakeGmailClient(), writer, FakeStateRepository(), FakeClock()
+        )
 
         uc.execute(_sample_plan(), state_dir="/tmp/state")
 

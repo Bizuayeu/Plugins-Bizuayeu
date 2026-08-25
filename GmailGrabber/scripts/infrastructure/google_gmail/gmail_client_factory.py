@@ -9,7 +9,6 @@ Service Account JSON key から base credentials を1回ロードし、
 user email ごとに .with_subject() で impersonate した GmailClient を生成する。
 """
 
-
 from domain.constants import DEFAULT_SCOPES
 from domain.types.service_account import ServiceAccountCredentials
 from infrastructure.google_gmail.client import GoogleGmailClient
@@ -54,7 +53,9 @@ class GoogleGmailClientFactory:
         if self._base_credentials is None:
             self._base_credentials = self._provider.load_service_account(self._key_path)
 
-        impersonated = self._provider.impersonate(self._base_credentials, user_email, self._scopes)
+        impersonated = self._provider.impersonate(
+            self._base_credentials, user_email, self._scopes
+        )
         return GoogleGmailClient(
             service_account_credentials=impersonated,
             user_id="me",

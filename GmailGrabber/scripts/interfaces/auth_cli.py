@@ -65,7 +65,9 @@ def _make_account(
 
 def main() -> None:
     args = _build_parser().parse_args()
-    config_dir = Path(args.config_dir).expanduser() if args.config_dir else default_config_dir()
+    config_dir = (
+        Path(args.config_dir).expanduser() if args.config_dir else default_config_dir()
+    )
     config_dir.mkdir(parents=True, exist_ok=True)
 
     account = _make_account(args.email, args.client_secret, config_dir, args.label)

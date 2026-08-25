@@ -6,7 +6,6 @@ ListLabelsUseCase
 Gmail アカウントの全ラベル一覧を取得するユースケース。
 """
 
-
 from domain.protocols import GmailClientProtocol
 
 

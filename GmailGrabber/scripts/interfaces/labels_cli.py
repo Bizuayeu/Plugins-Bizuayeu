@@ -51,10 +51,14 @@ def _build_account(
 
 def main() -> None:
     args = _build_parser().parse_args()
-    config_dir = Path(args.config_dir).expanduser() if args.config_dir else default_config_dir()
+    config_dir = (
+        Path(args.config_dir).expanduser() if args.config_dir else default_config_dir()
+    )
     config_dir.mkdir(parents=True, exist_ok=True)
 
-    account = _build_account(args.email, args.client_secret, config_dir, args.account_label)
+    account = _build_account(
+        args.email, args.client_secret, config_dir, args.account_label
+    )
 
     if not Path(account["credentials_path"]).exists():
         fail(f"client_secret file not found: {account['credentials_path']}")

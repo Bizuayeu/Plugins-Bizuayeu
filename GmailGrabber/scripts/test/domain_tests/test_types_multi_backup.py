@@ -59,7 +59,13 @@ class TestMultiUserBackupPlan:
     @pytest.mark.unit
     def test_has_all_required_fields(self) -> None:
         hints = get_type_hints(MultiUserBackupPlan)
-        for field in ["multi_plan_id", "accounts", "query", "output_dir", "output_format"]:
+        for field in [
+            "multi_plan_id",
+            "accounts",
+            "query",
+            "output_dir",
+            "output_format",
+        ]:
             assert field in hints
 
     @pytest.mark.unit
@@ -136,7 +142,8 @@ class TestMultiUserBackupState:
             "completed_user_emails": [],
         }
         assert (
-            state["message_id_index"]["<abc@example.com>"] == "alice@meguru.example.jp::gmail_id_1"
+            state["message_id_index"]["<abc@example.com>"]
+            == "alice@meguru.example.jp::gmail_id_1"
         )
 
     @pytest.mark.unit
@@ -184,9 +191,18 @@ class TestMultiUserBackupResult:
     def test_can_construct_result(self) -> None:
         result: MultiUserBackupResult = {
             "multi_plan_id": "multi_plan_20260411_abcd",
-            "per_user_success": {"alice@meguru.example.jp": 50, "bob@meguru.example.jp": 12},
-            "per_user_failure": {"alice@meguru.example.jp": 0, "bob@meguru.example.jp": 1},
-            "per_user_deduped": {"alice@meguru.example.jp": 0, "bob@meguru.example.jp": 38},
+            "per_user_success": {
+                "alice@meguru.example.jp": 50,
+                "bob@meguru.example.jp": 12,
+            },
+            "per_user_failure": {
+                "alice@meguru.example.jp": 0,
+                "bob@meguru.example.jp": 1,
+            },
+            "per_user_deduped": {
+                "alice@meguru.example.jp": 0,
+                "bob@meguru.example.jp": 38,
+            },
             "total_unique_messages": 62,
             "total_dedup_skipped": 38,
             "total_messages_without_message_id": 2,
