@@ -29,10 +29,14 @@ def _fetch_board(client: JootoClient, board_id: int) -> dict[str, Any]:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Back up Jooto board(s) to JSON files.")
+    parser = argparse.ArgumentParser(
+        description="Back up Jooto board(s) to JSON files."
+    )
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--board", type=int, help="Specific board id to back up")
-    group.add_argument("--all-active", action="store_true", help="Back up every non-archived board")
+    group.add_argument(
+        "--all-active", action="store_true", help="Back up every non-archived board"
+    )
     parser.add_argument(
         "--output",
         type=Path,
@@ -49,7 +53,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         client = _build_client()
     except ConfigError as e:
-        print(json.dumps({"status": "error", "reason": "config_error", "message": str(e)}))
+        print(
+            json.dumps({"status": "error", "reason": "config_error", "message": str(e)})
+        )
         return 2
 
     sync_state_path = args.output / "_sync_state.json"

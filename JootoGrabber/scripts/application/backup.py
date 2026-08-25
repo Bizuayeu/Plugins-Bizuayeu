@@ -34,10 +34,16 @@ def backup_board(
     board_id = int(board["id"])
     board_dir = output_root / board_slug(board_id, str(board.get("title", "")))
 
-    tasks = list(iter_paginated(client, f"/v1/boards/{board_id}/tasks", items_key="tasks"))
-    lists_ = list(iter_paginated(client, f"/v1/boards/{board_id}/lists", items_key="lists"))
+    tasks = list(
+        iter_paginated(client, f"/v1/boards/{board_id}/tasks", items_key="tasks")
+    )
+    lists_ = list(
+        iter_paginated(client, f"/v1/boards/{board_id}/lists", items_key="lists")
+    )
     categories = list(
-        iter_paginated(client, f"/v1/boards/{board_id}/categories", items_key="categories")
+        iter_paginated(
+            client, f"/v1/boards/{board_id}/categories", items_key="categories"
+        )
     )
 
     write_json(board_dir / "board.json", board)

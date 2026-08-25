@@ -27,7 +27,9 @@ def _make_client(response: HttpResponse) -> tuple[JootoClient, _StubTransport]:
 class TestRunAuth:
     def test_ok_result_reports_boards_total(self) -> None:
         client, transport = _make_client(
-            HttpResponse(status=200, body={"boards": [{"id": 1}], "total": 30, "page": 1})
+            HttpResponse(
+                status=200, body={"boards": [{"id": 1}], "total": 30, "page": 1}
+            )
         )
         result = auth_cli.run_auth(client)
         assert result == {
@@ -64,7 +66,9 @@ class TestMainCli:
     def test_main_prints_json_and_exits_zero_on_success(
         self, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        client, _ = _make_client(HttpResponse(status=200, body={"boards": [], "total": 0}))
+        client, _ = _make_client(
+            HttpResponse(status=200, body={"boards": [], "total": 0})
+        )
         monkeypatch.setattr(auth_cli, "_build_client", lambda: client)
 
         code = auth_cli.main([])

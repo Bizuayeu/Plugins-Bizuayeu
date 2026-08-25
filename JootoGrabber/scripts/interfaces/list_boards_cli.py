@@ -19,14 +19,18 @@ def _build_client() -> JootoClient:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="List Jooto boards accessible to the API key.")
+    parser = argparse.ArgumentParser(
+        description="List Jooto boards accessible to the API key."
+    )
     parser.add_argument("--include-archived", action="store_true")
     args = parser.parse_args(argv)
 
     try:
         client = _build_client()
     except ConfigError as e:
-        print(json.dumps({"status": "error", "reason": "config_error", "message": str(e)}))
+        print(
+            json.dumps({"status": "error", "reason": "config_error", "message": str(e)})
+        )
         return 2
 
     try:
@@ -45,7 +49,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         for b in boards
     ]
     print(
-        json.dumps({"status": "ok", "count": len(summary), "boards": summary}, ensure_ascii=False)
+        json.dumps(
+            {"status": "ok", "count": len(summary), "boards": summary},
+            ensure_ascii=False,
+        )
     )
     return 0
 

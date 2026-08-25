@@ -39,7 +39,9 @@ class TestIterPaginated:
                 }
             }
         )
-        items = list(iter_paginated(client, "/v1/boards", items_key="boards", per_page=100))
+        items = list(
+            iter_paginated(client, "/v1/boards", items_key="boards", per_page=100)
+        )
         assert items == [{"id": 1}, {"id": 2}]
         assert len(t.calls) == 1
 
@@ -62,7 +64,9 @@ class TestIterPaginated:
                 },
             }
         )
-        items = list(iter_paginated(client, "/v1/boards", items_key="boards", per_page=2))
+        items = list(
+            iter_paginated(client, "/v1/boards", items_key="boards", per_page=2)
+        )
         assert [x["id"] for x in items] == [1, 2, 3]
         assert len(t.calls) == 2
 
@@ -78,7 +82,11 @@ class TestIterPaginated:
                 }
             }
         )
-        list(iter_paginated(client, "/v1/boards/7/tasks?archived=false", items_key="tasks"))
+        list(
+            iter_paginated(
+                client, "/v1/boards/7/tasks?archived=false", items_key="tasks"
+            )
+        )
         assert "archived=false" in t.calls[0]
 
     def test_stops_when_total_pages_is_zero(self) -> None:

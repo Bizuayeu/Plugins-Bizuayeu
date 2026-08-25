@@ -23,9 +23,17 @@ def run_auth(client: JootoClient) -> dict[str, Any]:
     try:
         body = client.get(_AUTH_PROBE_PATH)
     except JootoAuthError as e:
-        return {"status": "error", "reason": "unauthorized", "http_status": e.http_status}
+        return {
+            "status": "error",
+            "reason": "unauthorized",
+            "http_status": e.http_status,
+        }
     except JootoRateLimitError as e:
-        return {"status": "error", "reason": "rate_limited", "http_status": e.http_status}
+        return {
+            "status": "error",
+            "reason": "rate_limited",
+            "http_status": e.http_status,
+        }
     except JootoHttpError as e:
         return {"status": "error", "reason": "http_error", "http_status": e.http_status}
 
@@ -53,7 +61,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         client = _build_client()
     except ConfigError as e:
-        print(json.dumps({"status": "error", "reason": "config_error", "message": str(e)}))
+        print(
+            json.dumps({"status": "error", "reason": "config_error", "message": str(e)})
+        )
         return 2
 
     result = run_auth(client)
