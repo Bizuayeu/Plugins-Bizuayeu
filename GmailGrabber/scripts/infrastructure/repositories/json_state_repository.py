@@ -11,7 +11,6 @@ StateRepositoryProtocol の JSON ファイル実装。
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 from domain.exceptions import StateRepositoryError
 from domain.types.backup import BackupState
@@ -20,7 +19,7 @@ from domain.types.backup import BackupState
 class JsonStateRepository:
     """BackupState を JSON ファイルで永続化"""
 
-    def load(self, plan_id: str, state_dir: str) -> Optional[BackupState]:
+    def load(self, plan_id: str, state_dir: str) -> BackupState | None:
         try:
             path = self._state_path(plan_id, state_dir)
             if not path.exists():

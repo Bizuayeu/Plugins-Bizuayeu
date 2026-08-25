@@ -15,8 +15,9 @@ raw 形式レスポンスは Base64URL-decoded bytes として GmailMessage.raw_
 
 import base64
 import binascii
+from collections.abc import Iterator
 from datetime import datetime, timezone
-from typing import Any, Iterator, List, Optional
+from typing import Any
 
 from domain.constants import (
     DEFAULT_PAGE_SIZE,
@@ -46,7 +47,7 @@ def _to_google_credentials(creds: OAuthCredentials) -> Any:
 
 
 def _to_google_service_account_credentials(
-    creds: ServiceAccountCredentials, scopes: List[str]
+    creds: ServiceAccountCredentials, scopes: list[str]
 ) -> Any:
     """
     ドメイン中立 ServiceAccountCredentials → google.oauth2.service_account.Credentials
@@ -70,11 +71,11 @@ class GoogleGmailClient:
     def __init__(
         self,
         *,
-        credentials: Optional[OAuthCredentials] = None,
-        service_account_credentials: Optional[ServiceAccountCredentials] = None,
+        credentials: OAuthCredentials | None = None,
+        service_account_credentials: ServiceAccountCredentials | None = None,
         user_id: str = "me",
         page_size: int = DEFAULT_PAGE_SIZE,
-        scopes: Optional[List[str]] = None,
+        scopes: list[str] | None = None,
     ) -> None:
         """
         Args:
@@ -100,7 +101,7 @@ class GoogleGmailClient:
         self._scopes = scopes if scopes is not None else list(DEFAULT_SCOPES)
         self._service = self._build_service()
 
-    def list_message_ids(self, query: str, max_results: Optional[int] = None) -> Iterator[str]:
+    def list_message_ids(self, query: str, max_results: int | None = None) -> Iterator[str]:
         """
         検索クエリに一致するメッセージIDをページング付きで列挙。
 
@@ -109,7 +110,7 @@ class GoogleGmailClient:
             max_results: 取得上限 (None = 無制限)
         """
         try:
-            page_token: Optional[str] = None
+            page_token: str | None = None
             yielded = 0
             while True:
                 request_kwargs: dict = {
@@ -167,7 +168,7 @@ class GoogleGmailClient:
             "size_estimate": int(response.get("sizeEstimate", 0)),
         }
 
-    def list_labels(self) -> List[dict]:
+    def list_labels(self) -> list[dict]:
         """全ラベル一覧を取得"""
         try:
             response = self._service.users().labels().list(userId=self._user_id).execute()

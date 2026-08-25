@@ -12,8 +12,8 @@ Multi-User File Naming (Pure Functions)
 """
 
 import hashlib
+from collections.abc import Sequence
 from datetime import datetime
-from typing import Sequence
 
 
 def build_multi_plan_id(

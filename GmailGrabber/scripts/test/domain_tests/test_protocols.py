@@ -7,8 +7,8 @@ Protocol が runtime_checkable として機能すること、Fake が isinstance
 通過することを検証。
 """
 
+from collections.abc import Iterator
 from datetime import datetime
-from typing import Iterator, List, Optional
 
 import pytest
 
@@ -39,14 +39,14 @@ class _FakeClock:
 
 
 class _FakeCredentialsProvider:
-    def load(self, token_path: str) -> Optional[OAuthCredentials]:
+    def load(self, token_path: str) -> OAuthCredentials | None:
         return None
 
     def save(self, credentials: OAuthCredentials, token_path: str) -> None:
         pass
 
     def authenticate_interactive(
-        self, client_secret_path: str, scopes: List[str]
+        self, client_secret_path: str, scopes: list[str]
     ) -> OAuthCredentials:
         return {
             "access_token": "fake",
@@ -63,7 +63,7 @@ class _FakeCredentialsProvider:
 
 
 class _FakeGmailClient:
-    def list_message_ids(self, query: str, max_results: Optional[int] = None) -> Iterator[str]:
+    def list_message_ids(self, query: str, max_results: int | None = None) -> Iterator[str]:
         yield from []
 
     def fetch_message(self, message_id: str) -> GmailMessage:
@@ -77,7 +77,7 @@ class _FakeGmailClient:
             "size_estimate": 0,
         }
 
-    def list_labels(self) -> List[dict]:
+    def list_labels(self) -> list[dict]:
         return []
 
     def estimate_count(self, query: str) -> int:
@@ -88,12 +88,12 @@ class _FakeMessageWriter:
     def write(self, message: GmailMessage, output_dir: str) -> str:
         return f"{output_dir}/{message['gmail_id']}.eml"
 
-    def finalize(self, output_dir: str) -> List[str]:
+    def finalize(self, output_dir: str) -> list[str]:
         return []
 
 
 class _FakeStateRepository:
-    def load(self, plan_id: str, state_dir: str) -> Optional[BackupState]:
+    def load(self, plan_id: str, state_dir: str) -> BackupState | None:
         return None
 
     def save(self, state: BackupState, state_dir: str) -> None:
@@ -168,7 +168,7 @@ class _FakeServiceAccountProvider:
         self,
         credentials: ServiceAccountCredentials,
         subject_email: str,
-        scopes: List[str],
+        scopes: list[str],
     ) -> ServiceAccountCredentials:
         return {**credentials, "subject": subject_email}
 
@@ -179,7 +179,7 @@ class _FakeGmailClientFactory:
 
 
 class _FakeMultiUserStateRepository:
-    def load(self, multi_plan_id: str, state_dir: str) -> Optional[MultiUserBackupState]:
+    def load(self, multi_plan_id: str, state_dir: str) -> MultiUserBackupState | None:
         return None
 
     def save(self, state: MultiUserBackupState, state_dir: str) -> None:

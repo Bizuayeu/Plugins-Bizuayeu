@@ -13,12 +13,12 @@ ServiceAccountProviderProtocol の Google 実装。
 
 import json
 from pathlib import Path
-from typing import Final, List, Tuple
+from typing import Final
 
 from domain.exceptions import AuthenticationError, CredentialsNotFoundError
 from domain.types.service_account import ServiceAccountCredentials
 
-_REQUIRED_FIELDS: Final[Tuple[str, ...]] = (
+_REQUIRED_FIELDS: Final[tuple[str, ...]] = (
     "type",
     "project_id",
     "private_key_id",
@@ -79,7 +79,7 @@ class GoogleServiceAccountProvider:
         self,
         credentials: ServiceAccountCredentials,
         subject_email: str,
-        scopes: List[str],
+        scopes: list[str],
     ) -> ServiceAccountCredentials:
         """
         subject を差し替えた新 credentials を返す (immutable)。

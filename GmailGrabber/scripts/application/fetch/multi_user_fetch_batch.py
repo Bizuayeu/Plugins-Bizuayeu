@@ -22,7 +22,7 @@ MultiUserFetchBatchUseCase
 """
 
 import sys
-from typing import Final, Optional
+from typing import Final
 
 from domain.exceptions import InvalidBackupPlanError
 from domain.message_id_parser import extract_message_id, normalize_message_id
@@ -64,7 +64,7 @@ class MultiUserFetchBatchUseCase:
         plan: MultiUserBackupPlan,
         state_dir: str,
         resume: bool = True,
-        max_messages_per_user: Optional[int] = None,
+        max_messages_per_user: int | None = None,
     ) -> MultiUserBackupResult:
         """
         複数ユーザーバックアップを実行する。
@@ -194,7 +194,7 @@ class MultiUserFetchBatchUseCase:
         plan: MultiUserBackupPlan,
         state: MultiUserBackupState,
         state_dir: str,
-        max_messages: Optional[int],
+        max_messages: int | None,
     ) -> tuple[int, int, int, int]:
         """
         1ユーザー分を処理する。

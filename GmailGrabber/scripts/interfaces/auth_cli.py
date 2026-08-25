@@ -14,7 +14,6 @@ Usage:
 
 import argparse
 from pathlib import Path
-from typing import Optional
 
 from application.auth.authenticate import AuthenticateUseCase
 from domain.constants import DEFAULT_SCOPES
@@ -52,7 +51,7 @@ def _make_account(
     email: str,
     client_secret: str,
     config_dir: Path,
-    label: Optional[str],
+    label: str | None,
 ) -> GmailAccount:
     label_value = label if label else email.split("@")[0]
     token_path = config_dir / f"token_{label_value}.json"

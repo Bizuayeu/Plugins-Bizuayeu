@@ -27,7 +27,7 @@ Usage:
 """
 
 from datetime import datetime
-from typing import List, Optional, TypedDict
+from typing import TypedDict
 
 
 class OAuthCredentials(TypedDict):
@@ -45,12 +45,12 @@ class OAuthCredentials(TypedDict):
     """
 
     access_token: str
-    refresh_token: Optional[str]
+    refresh_token: str | None
     token_uri: str
     client_id: str
     client_secret: str
-    scopes: List[str]
-    expires_at: Optional[datetime]
+    scopes: list[str]
+    expires_at: datetime | None
 
 
 __all__ = ["OAuthCredentials"]

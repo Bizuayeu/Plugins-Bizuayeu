@@ -9,7 +9,6 @@ Service Account JSON key から base credentials を1回ロードし、
 user email ごとに .with_subject() で impersonate した GmailClient を生成する。
 """
 
-from typing import List, Optional
 
 from domain.constants import DEFAULT_SCOPES
 from domain.types.service_account import ServiceAccountCredentials
@@ -25,8 +24,8 @@ class GoogleGmailClientFactory:
     def __init__(
         self,
         service_account_key_path: str,
-        scopes: Optional[List[str]] = None,
-        provider: Optional[GoogleServiceAccountProvider] = None,
+        scopes: list[str] | None = None,
+        provider: GoogleServiceAccountProvider | None = None,
     ) -> None:
         """
         Args:
@@ -37,7 +36,7 @@ class GoogleGmailClientFactory:
         self._key_path = service_account_key_path
         self._scopes = scopes if scopes is not None else list(DEFAULT_SCOPES)
         self._provider = provider or GoogleServiceAccountProvider()
-        self._base_credentials: Optional[ServiceAccountCredentials] = None
+        self._base_credentials: ServiceAccountCredentials | None = None
 
     def create_for_user(self, user_email: str) -> GoogleGmailClient:
         """

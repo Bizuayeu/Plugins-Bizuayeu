@@ -21,7 +21,6 @@ Usage:
 
 import argparse
 from pathlib import Path
-from typing import List, Optional
 
 from application.fetch.multi_user_fetch_batch import MultiUserFetchBatchUseCase
 from domain.constants import (
@@ -83,7 +82,7 @@ def _build_parser() -> argparse.ArgumentParser:
     return p
 
 
-def _load_users(args: argparse.Namespace) -> List[str]:
+def _load_users(args: argparse.Namespace) -> list[str]:
     if args.impersonate_users:
         return [e.strip() for e in args.impersonate_users.split(",") if e.strip()]
     path = Path(args.impersonate_users_file)
@@ -93,8 +92,8 @@ def _load_users(args: argparse.Namespace) -> List[str]:
     return [line.strip() for line in lines if line.strip() and not line.strip().startswith("#")]
 
 
-def _build_accounts(user_emails: List[str], config_dir: Path) -> List[GmailAccount]:
-    accounts: List[GmailAccount] = []
+def _build_accounts(user_emails: list[str], config_dir: Path) -> list[GmailAccount]:
+    accounts: list[GmailAccount] = []
     for email in user_emails:
         label = email.split("@")[0]
         accounts.append(
@@ -116,7 +115,7 @@ def _make_writer(output_format: str, multi_plan_id: str) -> MessageWriterProtoco
     raise ValueError(f"unsupported format: {output_format}")
 
 
-def main(argv: Optional[List[str]] = None) -> None:
+def main(argv: list[str] | None = None) -> None:
     args = _build_parser().parse_args(argv)
 
     config_dir = Path(args.config_dir).expanduser() if args.config_dir else default_config_dir()

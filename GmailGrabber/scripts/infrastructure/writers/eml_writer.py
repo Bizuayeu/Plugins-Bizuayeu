@@ -7,7 +7,6 @@ GmailMessage を 1メール1ファイル (.eml) として書き出す MessageWri
 """
 
 from pathlib import Path
-from typing import List
 
 from domain.exceptions import ExportError
 from domain.file_naming import eml_filename
@@ -22,7 +21,7 @@ class EmlFileWriter:
     """
 
     def __init__(self) -> None:
-        self._written_paths: List[str] = []
+        self._written_paths: list[str] = []
 
     def write(self, message: GmailMessage, output_dir: str) -> str:
         """
@@ -47,7 +46,7 @@ class EmlFileWriter:
         except OSError as e:
             raise ExportError(f"failed to write eml: {e}") from e
 
-    def finalize(self, output_dir: str) -> List[str]:
+    def finalize(self, output_dir: str) -> list[str]:
         """
         個別ファイル方式なので最終化不要。
 

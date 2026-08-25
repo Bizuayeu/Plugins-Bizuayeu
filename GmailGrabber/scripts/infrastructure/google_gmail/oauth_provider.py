@@ -10,10 +10,11 @@ CredentialsProviderProtocol の Google OAuth 2.0 実装。
 - google-auth-oauthlib (InstalledAppFlow for browser-based auth)
 """
 
+import contextlib
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, List, Optional
+from typing import Any
 
 from domain.exceptions import AuthenticationError, CredentialsNotFoundError
 from domain.types.credentials import OAuthCredentials
@@ -22,7 +23,7 @@ from domain.types.credentials import OAuthCredentials
 class GoogleOAuthCredentialsProvider:
     """Google OAuth 2.0 credentials の load/save/authenticate/refresh 実装"""
 
-    def load(self, token_path: str) -> Optional[OAuthCredentials]:
+    def load(self, token_path: str) -> OAuthCredentials | None:
         """既存 token ファイル（JSON形式）をロード"""
         path = Path(token_path)
         if not path.exists():
@@ -44,15 +45,13 @@ class GoogleOAuthCredentialsProvider:
                 encoding="utf-8",
             )
             # 権限を 0600 に（Unix 系のみ。Windows では no-op）
-            try:
+            with contextlib.suppress(OSError):
                 path.chmod(0o600)
-            except OSError:
-                pass
         except OSError as e:
             raise AuthenticationError(f"failed to save token to {token_path}: {e}") from e
 
     def authenticate_interactive(
-        self, client_secret_path: str, scopes: List[str]
+        self, client_secret_path: str, scopes: list[str]
     ) -> OAuthCredentials:
         """ブラウザベース InstalledAppFlow を実行して新規認証"""
         if not Path(client_secret_path).exists():

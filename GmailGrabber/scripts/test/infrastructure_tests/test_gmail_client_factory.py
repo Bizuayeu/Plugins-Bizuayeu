@@ -4,7 +4,7 @@ infrastructure/google_gmail/gmail_client_factory.py テスト
 ==========================================================
 """
 
-from typing import Any, List
+from typing import Any
 from unittest.mock import MagicMock
 
 import pytest
@@ -43,7 +43,7 @@ class _FakeProvider:
         self,
         credentials: ServiceAccountCredentials,
         subject_email: str,
-        scopes: List[str],
+        scopes: list[str],
     ) -> ServiceAccountCredentials:
         self.impersonate_calls.append(subject_email)
         return {**credentials, "subject": subject_email}

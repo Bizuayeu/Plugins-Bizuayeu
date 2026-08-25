@@ -21,7 +21,8 @@ FetchBatchUseCase
 - 失敗したメッセージは failed_ids に追記し、処理継続
 """
 
-from typing import Final, Optional
+import contextlib
+from typing import Final
 
 from domain.exceptions import InvalidBackupPlanError
 from domain.protocols import (
@@ -56,7 +57,7 @@ class FetchBatchUseCase:
         plan: BackupPlan,
         state_dir: str,
         resume: bool = True,
-        max_messages: Optional[int] = None,
+        max_messages: int | None = None,
     ) -> BackupResult:
         """
         バックアップ計画を実行する。
@@ -88,11 +89,9 @@ class FetchBatchUseCase:
         new_failure_count = 0
         processed_since_save = 0
 
-        # 推定件数を取得（total_estimated 更新用）
-        try:
+        # 推定件数を取得（total_estimated 更新用）。推定失敗は致命的ではない
+        with contextlib.suppress(Exception):
             state["total_estimated"] = self._client.estimate_count(query_string)
-        except Exception:
-            pass  # 推定失敗は致命的ではない
 
         # メッセージID列挙 → 1件ずつ処理
         for msg_id in self._client.list_message_ids(query_string):

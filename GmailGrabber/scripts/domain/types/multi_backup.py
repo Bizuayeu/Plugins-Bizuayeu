@@ -21,7 +21,7 @@ Usage:
 """
 
 from datetime import datetime
-from typing import Dict, List, TypedDict
+from typing import TypedDict
 
 from domain.types.account import GmailAccount
 from domain.types.backup import BackupState, OutputFormat
@@ -41,7 +41,7 @@ class MultiUserBackupPlan(TypedDict):
     """
 
     multi_plan_id: str
-    accounts: List[GmailAccount]
+    accounts: list[GmailAccount]
     query: SearchQuery
     output_dir: str
     output_format: OutputFormat
@@ -62,11 +62,11 @@ class MultiUserBackupState(TypedDict):
     """
 
     multi_plan_id: str
-    per_user_states: Dict[str, BackupState]
-    message_id_index: Dict[str, str]
+    per_user_states: dict[str, BackupState]
+    message_id_index: dict[str, str]
     last_updated: datetime
-    started_user_emails: List[str]
-    completed_user_emails: List[str]
+    started_user_emails: list[str]
+    completed_user_emails: list[str]
 
 
 class MultiUserBackupResult(TypedDict):
@@ -87,13 +87,13 @@ class MultiUserBackupResult(TypedDict):
     """
 
     multi_plan_id: str
-    per_user_success: Dict[str, int]
-    per_user_failure: Dict[str, int]
-    per_user_deduped: Dict[str, int]
+    per_user_success: dict[str, int]
+    per_user_failure: dict[str, int]
+    per_user_deduped: dict[str, int]
     total_unique_messages: int
     total_dedup_skipped: int
     total_messages_without_message_id: int
-    output_files: List[str]
+    output_files: list[str]
     started_at: datetime
     finished_at: datetime
 

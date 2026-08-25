@@ -13,7 +13,6 @@ OAuth 2.0 認証フロー実行ユースケース。
 5. 結果を save
 """
 
-from typing import List
 
 from domain.constants import DEFAULT_SCOPES
 from domain.protocols import ClockProtocol, CredentialsProviderProtocol
@@ -32,7 +31,7 @@ class AuthenticateUseCase:
         self._provider = credentials_provider
         self._clock = clock
 
-    def execute(self, account: GmailAccount, scopes: List[str] | None = None) -> OAuthCredentials:
+    def execute(self, account: GmailAccount, scopes: list[str] | None = None) -> OAuthCredentials:
         """
         アカウントの認証情報を取得する。
 

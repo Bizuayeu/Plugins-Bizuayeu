@@ -27,7 +27,7 @@ Usage:
 """
 
 from datetime import date
-from typing import Optional, TypedDict
+from typing import TypedDict
 
 
 class DateRange(TypedDict):
@@ -39,8 +39,8 @@ class DateRange(TypedDict):
         end: 終了日（None = 上限なし）
     """
 
-    start: Optional[date]
-    end: Optional[date]
+    start: date | None
+    end: date | None
 
 
 class SearchQuery(TypedDict):
@@ -57,13 +57,13 @@ class SearchQuery(TypedDict):
         raw_query: 生Gmailクエリ文字列（指定時は他フィールドより優先）
     """
 
-    from_addr: Optional[str]
-    to_addr: Optional[str]
-    subject: Optional[str]
-    label: Optional[str]
-    date_range: Optional[DateRange]
-    has_attachment: Optional[bool]
-    raw_query: Optional[str]
+    from_addr: str | None
+    to_addr: str | None
+    subject: str | None
+    label: str | None
+    date_range: DateRange | None
+    has_attachment: bool | None
+    raw_query: str | None
 
 
 __all__ = ["DateRange", "SearchQuery"]

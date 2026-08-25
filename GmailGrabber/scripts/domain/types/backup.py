@@ -18,7 +18,7 @@ Usage:
 """
 
 from datetime import datetime
-from typing import List, Literal, TypedDict
+from typing import Literal, TypedDict
 
 from domain.types.account import GmailAccount
 from domain.types.query import SearchQuery
@@ -58,8 +58,8 @@ class BackupState(TypedDict):
     """
 
     plan_id: str
-    fetched_ids: List[str]
-    failed_ids: List[str]
+    fetched_ids: list[str]
+    failed_ids: list[str]
     last_updated: datetime
     total_estimated: int
 
@@ -80,7 +80,7 @@ class BackupResult(TypedDict):
     plan_id: str
     success_count: int
     failure_count: int
-    output_files: List[str]
+    output_files: list[str]
     started_at: datetime
     finished_at: datetime
 

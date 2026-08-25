@@ -28,7 +28,7 @@ Usage:
 """
 
 from datetime import datetime
-from typing import List, TypedDict
+from typing import TypedDict
 
 
 class GmailMessage(TypedDict):
@@ -47,7 +47,7 @@ class GmailMessage(TypedDict):
 
     gmail_id: str
     thread_id: str
-    label_ids: List[str]
+    label_ids: list[str]
     snippet: str
     internal_date: datetime
     raw_mime: bytes

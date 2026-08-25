@@ -8,7 +8,6 @@ GmailMessage を単一 .mbox ファイルに追記する MessageWriterProtocol �
 
 import mailbox
 from pathlib import Path
-from typing import List, Optional
 
 from domain.exceptions import ExportError
 from domain.file_naming import mbox_filename
@@ -25,8 +24,8 @@ class MboxFileWriter:
 
     def __init__(self, plan_id: str) -> None:
         self._plan_id = plan_id
-        self._mbox: Optional[mailbox.mbox] = None
-        self._mbox_path: Optional[Path] = None
+        self._mbox: mailbox.mbox | None = None
+        self._mbox_path: Path | None = None
 
     def write(self, message: GmailMessage, output_dir: str) -> str:
         """
@@ -50,7 +49,7 @@ class MboxFileWriter:
         except OSError as e:
             raise ExportError(f"failed to write mbox: {e}") from e
 
-    def finalize(self, output_dir: str) -> List[str]:
+    def finalize(self, output_dir: str) -> list[str]:
         """
         mbox をクローズし、単一ファイルパスを返す。
 

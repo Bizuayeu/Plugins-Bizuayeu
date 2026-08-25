@@ -23,7 +23,6 @@ Usage:
 import argparse
 from datetime import date, datetime
 from pathlib import Path
-from typing import Optional
 
 from application.auth.authenticate import AuthenticateUseCase
 from application.fetch.fetch_batch import FetchBatchUseCase
@@ -73,7 +72,7 @@ def _build_parser() -> argparse.ArgumentParser:
     return p
 
 
-def _parse_date(value: Optional[str]) -> Optional[date]:
+def _parse_date(value: str | None) -> date | None:
     if value is None:
         return None
     try:
@@ -85,7 +84,7 @@ def _parse_date(value: Optional[str]) -> Optional[date]:
 def _build_search_query(args: argparse.Namespace) -> SearchQuery:
     after = _parse_date(args.after)
     before = _parse_date(args.before)
-    date_range: Optional[DateRange] = None
+    date_range: DateRange | None = None
     if after is not None or before is not None:
         date_range = {"start": after, "end": before}
 
@@ -101,7 +100,7 @@ def _build_search_query(args: argparse.Namespace) -> SearchQuery:
 
 
 def _build_account(
-    email: str, client_secret: str, config_dir: Path, label: Optional[str]
+    email: str, client_secret: str, config_dir: Path, label: str | None
 ) -> GmailAccount:
     label_value = label if label else email.split("@")[0]
     token_path = config_dir / f"token_{label_value}.json"

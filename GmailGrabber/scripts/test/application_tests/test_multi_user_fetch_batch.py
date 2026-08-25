@@ -5,7 +5,6 @@ application/fetch/multi_user_fetch_batch.py テスト
 """
 
 from datetime import date, datetime, timezone
-from typing import List
 
 import pytest
 
@@ -49,7 +48,7 @@ def _query() -> SearchQuery:
     }
 
 
-def _plan(accounts: List[GmailAccount]) -> MultiUserBackupPlan:
+def _plan(accounts: list[GmailAccount]) -> MultiUserBackupPlan:
     return {
         "multi_plan_id": "multi_plan_20260411_test01",
         "accounts": accounts,

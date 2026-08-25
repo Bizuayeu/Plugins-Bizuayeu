@@ -6,7 +6,6 @@ ListLabelsUseCase
 Gmail アカウントの全ラベル一覧を取得するユースケース。
 """
 
-from typing import List
 
 from domain.protocols import GmailClientProtocol
 
@@ -17,7 +16,7 @@ class ListLabelsUseCase:
     def __init__(self, gmail_client: GmailClientProtocol) -> None:
         self._client = gmail_client
 
-    def execute(self) -> List[dict]:
+    def execute(self) -> list[dict]:
         """
         全ラベル一覧を返す。
 

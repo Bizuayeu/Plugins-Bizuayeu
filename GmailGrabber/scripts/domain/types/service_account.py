@@ -29,7 +29,7 @@ Usage:
     }
 """
 
-from typing import Optional, TypedDict
+from typing import TypedDict
 
 
 class ServiceAccountCredentials(TypedDict):
@@ -60,7 +60,7 @@ class ServiceAccountCredentials(TypedDict):
     token_uri: str
     auth_provider_x509_cert_url: str
     client_x509_cert_url: str
-    subject: Optional[str]
+    subject: str | None
 
 
 __all__ = ["ServiceAccountCredentials"]

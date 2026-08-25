@@ -16,12 +16,12 @@ import re
 from email import message_from_bytes
 from email.message import Message
 from email.policy import compat32
-from typing import Final, Optional
+from typing import Final
 
 _MESSAGE_ID_BODY: Final[re.Pattern[str]] = re.compile(r"<[^<>\s]+@[^<>\s]+>")
 
 
-def extract_message_id(raw_mime: bytes) -> Optional[str]:
+def extract_message_id(raw_mime: bytes) -> str | None:
     """
     RFC5322 MIME bytes から Message-ID ヘッダ値を抽出する。
 
@@ -70,10 +70,7 @@ def normalize_message_id(message_id: str, *, strip_brackets: bool = False) -> st
         正規化済み Message-ID
     """
     s = message_id.strip()
-    if s.startswith("<") and s.endswith(">"):
-        inner = s[1:-1]
-    else:
-        inner = s
+    inner = s[1:-1] if s.startswith("<") and s.endswith(">") else s
 
     if "@" in inner:
         local, _, domain = inner.partition("@")

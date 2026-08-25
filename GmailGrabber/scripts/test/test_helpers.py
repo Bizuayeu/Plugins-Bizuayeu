@@ -3,8 +3,8 @@
 Test helpers: Fake implementations of domain protocols.
 """
 
+from collections.abc import Iterator
 from datetime import datetime, timedelta, timezone
-from typing import Dict, Iterator, List, Optional
 
 from domain.types.backup import BackupState
 from domain.types.credentials import OAuthCredentials
@@ -16,7 +16,7 @@ from domain.types.service_account import ServiceAccountCredentials
 class FakeClock:
     """決定的時刻を返す ClockProtocol 実装"""
 
-    def __init__(self, start: Optional[datetime] = None) -> None:
+    def __init__(self, start: datetime | None = None) -> None:
         self._current = start or datetime(2026, 4, 11, 10, 0, 0, tzinfo=timezone.utc)
 
     def now(self) -> datetime:
@@ -33,17 +33,17 @@ class FakeGmailClient:
 
     def __init__(
         self,
-        messages: Optional[List[GmailMessage]] = None,
-        labels: Optional[List[dict]] = None,
-        fetch_failures: Optional[set[str]] = None,
+        messages: list[GmailMessage] | None = None,
+        labels: list[dict] | None = None,
+        fetch_failures: set[str] | None = None,
     ) -> None:
-        self._messages: Dict[str, GmailMessage] = {m["gmail_id"]: m for m in (messages or [])}
+        self._messages: dict[str, GmailMessage] = {m["gmail_id"]: m for m in (messages or [])}
         self._labels = labels or []
         self._fetch_failures = fetch_failures or set()
-        self.list_calls: List[str] = []
-        self.fetch_calls: List[str] = []
+        self.list_calls: list[str] = []
+        self.fetch_calls: list[str] = []
 
-    def list_message_ids(self, query: str, max_results: Optional[int] = None) -> Iterator[str]:
+    def list_message_ids(self, query: str, max_results: int | None = None) -> Iterator[str]:
         self.list_calls.append(query)
         ids = list(self._messages.keys())
         if max_results is not None:
@@ -56,7 +56,7 @@ class FakeGmailClient:
             raise RuntimeError(f"simulated fetch failure: {message_id}")
         return self._messages[message_id]
 
-    def list_labels(self) -> List[dict]:
+    def list_labels(self) -> list[dict]:
         return list(self._labels)
 
     def estimate_count(self, query: str) -> int:
@@ -66,8 +66,8 @@ class FakeGmailClient:
 class FakeMessageWriter:
     """メモリ上 MessageWriterProtocol 実装"""
 
-    def __init__(self, fail_on: Optional[set[str]] = None) -> None:
-        self.written: List[GmailMessage] = []
+    def __init__(self, fail_on: set[str] | None = None) -> None:
+        self.written: list[GmailMessage] = []
         self.finalized = False
         self._fail_on = fail_on or set()
 
@@ -77,7 +77,7 @@ class FakeMessageWriter:
         self.written.append(message)
         return f"{output_dir}/{message['gmail_id']}.eml"
 
-    def finalize(self, output_dir: str) -> List[str]:
+    def finalize(self, output_dir: str) -> list[str]:
         self.finalized = True
         return []
 
@@ -86,10 +86,10 @@ class FakeStateRepository:
     """メモリ上 StateRepositoryProtocol 実装"""
 
     def __init__(self) -> None:
-        self._store: Dict[str, BackupState] = {}
+        self._store: dict[str, BackupState] = {}
         self.save_count = 0
 
-    def load(self, plan_id: str, state_dir: str) -> Optional[BackupState]:
+    def load(self, plan_id: str, state_dir: str) -> BackupState | None:
         key = f"{state_dir}::{plan_id}"
         stored = self._store.get(key)
         if stored is None:
@@ -124,8 +124,8 @@ class FakeCredentialsProvider:
 
     def __init__(
         self,
-        stored: Optional[OAuthCredentials] = None,
-        interactive_result: Optional[OAuthCredentials] = None,
+        stored: OAuthCredentials | None = None,
+        interactive_result: OAuthCredentials | None = None,
     ) -> None:
         self._stored = stored
         self._interactive_result = interactive_result or {
@@ -141,7 +141,7 @@ class FakeCredentialsProvider:
         self.refresh_called = False
         self.interactive_called = False
 
-    def load(self, token_path: str) -> Optional[OAuthCredentials]:
+    def load(self, token_path: str) -> OAuthCredentials | None:
         return self._stored
 
     def save(self, credentials: OAuthCredentials, token_path: str) -> None:
@@ -149,7 +149,7 @@ class FakeCredentialsProvider:
         self._stored = credentials
 
     def authenticate_interactive(
-        self, client_secret_path: str, scopes: List[str]
+        self, client_secret_path: str, scopes: list[str]
     ) -> OAuthCredentials:
         self.interactive_called = True
         return self._interactive_result
@@ -165,7 +165,7 @@ class FakeCredentialsProvider:
 
 def make_gmail_message(
     gmail_id: str,
-    internal_date: Optional[datetime] = None,
+    internal_date: datetime | None = None,
     raw_mime: bytes = b"From: test@example.com\r\n\r\nbody",
 ) -> GmailMessage:
     """テスト用 GmailMessage ファクトリ"""
@@ -183,7 +183,7 @@ def make_gmail_message(
 def make_message_with_id(
     gmail_id: str,
     message_id_header: str,
-    internal_date: Optional[datetime] = None,
+    internal_date: datetime | None = None,
     extra_headers: str = "",
 ) -> GmailMessage:
     """
@@ -198,7 +198,7 @@ def make_message_with_id(
         f"{extra_headers}"
         f"\r\n"
         f"body text"
-    ).encode("utf-8")
+    ).encode()
     return make_gmail_message(gmail_id, internal_date=internal_date, raw_mime=raw)
 
 
@@ -210,7 +210,7 @@ def make_message_with_id(
 class FakeServiceAccountProvider:
     """メモリ上 ServiceAccountProviderProtocol 実装"""
 
-    def __init__(self, loaded: Optional[ServiceAccountCredentials] = None) -> None:
+    def __init__(self, loaded: ServiceAccountCredentials | None = None) -> None:
         self._loaded = loaded or {
             "type": "service_account",
             "project_id": "fake-project",
@@ -224,8 +224,8 @@ class FakeServiceAccountProvider:
             "client_x509_cert_url": "https://example.com/cert",
             "subject": None,
         }
-        self.load_calls: List[str] = []
-        self.impersonate_calls: List[str] = []
+        self.load_calls: list[str] = []
+        self.impersonate_calls: list[str] = []
 
     def load_service_account(self, key_path: str) -> ServiceAccountCredentials:
         self.load_calls.append(key_path)
@@ -235,7 +235,7 @@ class FakeServiceAccountProvider:
         self,
         credentials: ServiceAccountCredentials,
         subject_email: str,
-        scopes: List[str],
+        scopes: list[str],
     ) -> ServiceAccountCredentials:
         self.impersonate_calls.append(subject_email)
         return {**credentials, "subject": subject_email}
@@ -246,12 +246,12 @@ class FakeGmailClientFactory:
 
     def __init__(
         self,
-        clients_by_user: Optional[Dict[str, "FakeGmailClient"]] = None,
-        fail_on_users: Optional[set[str]] = None,
+        clients_by_user: dict[str, "FakeGmailClient"] | None = None,
+        fail_on_users: set[str] | None = None,
     ) -> None:
         self._clients = clients_by_user or {}
         self._fail_on = fail_on_users or set()
-        self.create_calls: List[str] = []
+        self.create_calls: list[str] = []
 
     def create_for_user(self, user_email: str) -> "FakeGmailClient":
         self.create_calls.append(user_email)
@@ -266,10 +266,10 @@ class FakeMultiUserStateRepository:
     """メモリ上 MultiUserStateRepositoryProtocol 実装"""
 
     def __init__(self) -> None:
-        self._store: Dict[str, MultiUserBackupState] = {}
+        self._store: dict[str, MultiUserBackupState] = {}
         self.save_count = 0
 
-    def load(self, multi_plan_id: str, state_dir: str) -> Optional[MultiUserBackupState]:
+    def load(self, multi_plan_id: str, state_dir: str) -> MultiUserBackupState | None:
         key = f"{state_dir}::{multi_plan_id}"
         stored = self._store.get(key)
         if stored is None:

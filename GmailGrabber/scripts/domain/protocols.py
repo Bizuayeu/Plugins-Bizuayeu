@@ -24,8 +24,9 @@ Domain Protocols
 - MultiUserStateRepositoryProtocol: MultiUserBackupState の永続化
 """
 
+from collections.abc import Iterator
 from datetime import datetime
-from typing import Iterator, List, Optional, Protocol, runtime_checkable
+from typing import Protocol, runtime_checkable
 
 from domain.types.backup import BackupState
 from domain.types.credentials import OAuthCredentials
@@ -47,7 +48,7 @@ class ClockProtocol(Protocol):
 class CredentialsProviderProtocol(Protocol):
     """OAuth 認証情報の取得・保存 Protocol"""
 
-    def load(self, token_path: str) -> Optional[OAuthCredentials]:
+    def load(self, token_path: str) -> OAuthCredentials | None:
         """既存 token ファイルから credentials をロード（無ければ None）"""
         ...
 
@@ -56,7 +57,7 @@ class CredentialsProviderProtocol(Protocol):
         ...
 
     def authenticate_interactive(
-        self, client_secret_path: str, scopes: List[str]
+        self, client_secret_path: str, scopes: list[str]
     ) -> OAuthCredentials:
         """ブラウザベースの対話的OAuth認証フローを実行して新規credentialsを取得"""
         ...
@@ -70,7 +71,7 @@ class CredentialsProviderProtocol(Protocol):
 class GmailClientProtocol(Protocol):
     """Gmail API クライアント Protocol"""
 
-    def list_message_ids(self, query: str, max_results: Optional[int] = None) -> Iterator[str]:
+    def list_message_ids(self, query: str, max_results: int | None = None) -> Iterator[str]:
         """検索クエリに一致するメッセージIDを列挙（ページング対応）"""
         ...
 
@@ -78,7 +79,7 @@ class GmailClientProtocol(Protocol):
         """単一メッセージを raw 形式で取得"""
         ...
 
-    def list_labels(self) -> List[dict]:
+    def list_labels(self) -> list[dict]:
         """全ラベル一覧を取得 ({id, name, type} の dict 列)"""
         ...
 
@@ -95,7 +96,7 @@ class MessageWriterProtocol(Protocol):
         """メッセージを output_dir に書き出し、生成ファイルパスを返す"""
         ...
 
-    def finalize(self, output_dir: str) -> List[str]:
+    def finalize(self, output_dir: str) -> list[str]:
         """
         バッチ完了時の最終化処理。
         .eml writer: no-op でファイルパス列を返す。
@@ -108,7 +109,7 @@ class MessageWriterProtocol(Protocol):
 class StateRepositoryProtocol(Protocol):
     """BackupState の永続化 Protocol"""
 
-    def load(self, plan_id: str, state_dir: str) -> Optional[BackupState]:
+    def load(self, plan_id: str, state_dir: str) -> BackupState | None:
         """plan_id に対応する state をロード（無ければ None）"""
         ...
 
@@ -138,7 +139,7 @@ class ServiceAccountProviderProtocol(Protocol):
         self,
         credentials: ServiceAccountCredentials,
         subject_email: str,
-        scopes: List[str],
+        scopes: list[str],
     ) -> ServiceAccountCredentials:
         """subject を差し替えた新 credentials を返す (immutable)"""
         ...
@@ -157,7 +158,7 @@ class GmailClientFactoryProtocol(Protocol):
 class MultiUserStateRepositoryProtocol(Protocol):
     """MultiUserBackupState の永続化 Protocol"""
 
-    def load(self, multi_plan_id: str, state_dir: str) -> Optional[MultiUserBackupState]:
+    def load(self, multi_plan_id: str, state_dir: str) -> MultiUserBackupState | None:
         """multi_plan_id に対応する state をロード"""
         ...
 

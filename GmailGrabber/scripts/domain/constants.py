@@ -6,7 +6,7 @@ Domain Constants
 Gmail API スコープ、デフォルト値、定数定義。
 """
 
-from typing import Final, List
+from typing import Final
 
 # Gmail API OAuth 2.0 スコープ
 # https://developers.google.com/gmail/api/auth/scopes
@@ -14,7 +14,7 @@ GMAIL_READONLY_SCOPE: Final[str] = "https://www.googleapis.com/auth/gmail.readon
 GMAIL_MODIFY_SCOPE: Final[str] = "https://www.googleapis.com/auth/gmail.modify"
 
 # デフォルトスコープ: 読み取り専用
-DEFAULT_SCOPES: Final[List[str]] = [GMAIL_READONLY_SCOPE]
+DEFAULT_SCOPES: Final[list[str]] = [GMAIL_READONLY_SCOPE]
 
 # Gmail API エンドポイント
 GMAIL_API_SERVICE_NAME: Final[str] = "gmail"
@@ -27,7 +27,7 @@ MAX_PAGE_SIZE: Final[int] = 500
 # 出力形式
 OUTPUT_FORMAT_EML: Final[str] = "eml"
 OUTPUT_FORMAT_MBOX: Final[str] = "mbox"
-VALID_OUTPUT_FORMATS: Final[List[str]] = [OUTPUT_FORMAT_EML, OUTPUT_FORMAT_MBOX]
+VALID_OUTPUT_FORMATS: Final[list[str]] = [OUTPUT_FORMAT_EML, OUTPUT_FORMAT_MBOX]
 
 # リトライ設定
 DEFAULT_MAX_RETRIES: Final[int] = 3

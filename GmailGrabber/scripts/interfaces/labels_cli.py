@@ -13,7 +13,6 @@ Usage:
 
 import argparse
 from pathlib import Path
-from typing import Optional
 
 from application.auth.authenticate import AuthenticateUseCase
 from application.labels.list_labels import ListLabelsUseCase
@@ -38,7 +37,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def _build_account(
-    email: str, client_secret: str, config_dir: Path, label: Optional[str]
+    email: str, client_secret: str, config_dir: Path, label: str | None
 ) -> GmailAccount:
     label_value = label if label else email.split("@")[0]
     token_path = config_dir / f"token_{label_value}.json"

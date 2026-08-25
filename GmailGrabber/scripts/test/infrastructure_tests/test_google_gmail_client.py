@@ -8,7 +8,7 @@ infrastructure/google_gmail/client.py テスト
 
 import base64
 from datetime import datetime, timezone
-from typing import Any, List
+from typing import Any
 from unittest.mock import MagicMock
 
 import pytest
@@ -32,9 +32,9 @@ def _fake_credentials() -> OAuthCredentials:
 
 
 def _build_fake_service(
-    list_pages: List[dict],
+    list_pages: list[dict],
     get_responses: dict | None = None,
-    labels: List[dict] | None = None,
+    labels: list[dict] | None = None,
 ) -> MagicMock:
     """
     Gmail API service のモック。

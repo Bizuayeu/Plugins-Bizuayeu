@@ -14,7 +14,7 @@ datetime は isoformat 文字列化。
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 from domain.exceptions import StateRepositoryError
 from domain.types.backup import BackupState
@@ -24,7 +24,7 @@ from domain.types.multi_backup import MultiUserBackupState
 class JsonMultiUserStateRepository:
     """MultiUserBackupState を JSON ファイルで永続化"""
 
-    def load(self, multi_plan_id: str, state_dir: str) -> Optional[MultiUserBackupState]:
+    def load(self, multi_plan_id: str, state_dir: str) -> MultiUserBackupState | None:
         try:
             path = self._state_path(multi_plan_id, state_dir)
             if not path.exists():
@@ -67,7 +67,7 @@ class JsonMultiUserStateRepository:
     def _state_path(self, multi_plan_id: str, state_dir: str) -> Path:
         return Path(state_dir) / f"multi_state_{multi_plan_id}.json"
 
-    def _serialize(self, state: MultiUserBackupState) -> Dict[str, Any]:
+    def _serialize(self, state: MultiUserBackupState) -> dict[str, Any]:
         return {
             "multi_plan_id": state["multi_plan_id"],
             "per_user_states": {
@@ -80,7 +80,7 @@ class JsonMultiUserStateRepository:
             "completed_user_emails": list(state["completed_user_emails"]),
         }
 
-    def _serialize_single_state(self, s: BackupState) -> Dict[str, Any]:
+    def _serialize_single_state(self, s: BackupState) -> dict[str, Any]:
         return {
             "plan_id": s["plan_id"],
             "fetched_ids": list(s["fetched_ids"]),
@@ -89,7 +89,7 @@ class JsonMultiUserStateRepository:
             "total_estimated": s["total_estimated"],
         }
 
-    def _deserialize(self, raw: Dict[str, Any]) -> MultiUserBackupState:
+    def _deserialize(self, raw: dict[str, Any]) -> MultiUserBackupState:
         return {
             "multi_plan_id": raw["multi_plan_id"],
             "per_user_states": {
@@ -102,7 +102,7 @@ class JsonMultiUserStateRepository:
             "completed_user_emails": list(raw.get("completed_user_emails", [])),
         }
 
-    def _deserialize_single_state(self, raw: Dict[str, Any]) -> BackupState:
+    def _deserialize_single_state(self, raw: dict[str, Any]) -> BackupState:
         return {
             "plan_id": raw["plan_id"],
             "fetched_ids": list(raw.get("fetched_ids", [])),
