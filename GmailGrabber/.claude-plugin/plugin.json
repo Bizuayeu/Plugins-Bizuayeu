@@ -1,6 +1,6 @@
 {
   "name": "GmailGrabber",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Gmail backup tool with Clean Architecture: individual OAuth & Workspace multi-user Service Account + DWD, RFC5322 Message-ID dedup, .eml/.mbox export, resume",
   "author": {
     "name": "Weave @ GmailGrabber"
