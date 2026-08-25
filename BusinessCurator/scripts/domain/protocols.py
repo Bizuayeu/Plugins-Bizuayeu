@@ -29,7 +29,7 @@ Usage:
 
 from datetime import datetime
 from pathlib import Path
-from typing import List, Protocol, runtime_checkable
+from typing import Protocol, runtime_checkable
 
 from domain.types.alias import AliasRecord
 from domain.types.email import EmailMessage
@@ -100,7 +100,7 @@ class EmailParserProtocol(Protocol):
         """
         ...
 
-    def parse_many(self, path: Path) -> List[EmailMessage]:
+    def parse_many(self, path: Path) -> list[EmailMessage]:
         """
         複数メール（mbox 等）をパース
 
@@ -166,7 +166,7 @@ class EntryRepositoryProtocol(Protocol):
         """
         ...
 
-    def list_all(self) -> List[RawEntry]:
+    def list_all(self) -> list[RawEntry]:
         """
         全エントリを返す
 
@@ -190,7 +190,7 @@ class AliasResolverRepositoryProtocol(Protocol):
     実装: MarkdownAliasResolverRepository
     """
 
-    def load_all(self) -> List[AliasRecord]:
+    def load_all(self) -> list[AliasRecord]:
         """
         全レコードを読み込む
 
@@ -202,7 +202,7 @@ class AliasResolverRepositoryProtocol(Protocol):
         """
         ...
 
-    def save_all(self, records: List[AliasRecord]) -> None:
+    def save_all(self, records: list[AliasRecord]) -> None:
         """
         全レコードを書き出す（冪等：完全置換）
 
@@ -235,7 +235,7 @@ class TriageLogRepositoryProtocol(Protocol):
         """
         ...
 
-    def load_for_date(self, date: str) -> List[TriageLogEntry]:
+    def load_for_date(self, date: str) -> list[TriageLogEntry]:
         """
         指定日のログを取得
 

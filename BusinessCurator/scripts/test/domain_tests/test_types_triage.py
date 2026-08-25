@@ -12,7 +12,7 @@ TriageRule / TriageDecision / TriageLogEntry のフィールド検証。
 - LLMフォールバック呼び出しの有無も TriageDecision に記録
 """
 
-from typing import List, Literal, Optional, get_type_hints
+from typing import Literal, get_type_hints
 
 import pytest
 
@@ -122,14 +122,14 @@ class TestTriageDecision:
         """primary_slug フィールド（主シャード内の slug、None 許容）"""
         hints = get_type_hints(TriageDecision)
         assert "primary_slug" in hints
-        assert hints["primary_slug"] == Optional[str]
+        assert hints["primary_slug"] == (str | None)
 
     @pytest.mark.unit
     def test_has_secondary_tags_field(self) -> None:
         """secondary_tags フィールド（副タグ、複数）"""
         hints = get_type_hints(TriageDecision)
         assert "secondary_tags" in hints
-        assert hints["secondary_tags"] == List[str]
+        assert hints["secondary_tags"] == list[str]
 
     @pytest.mark.unit
     def test_has_confidence_field(self) -> None:
@@ -142,7 +142,7 @@ class TestTriageDecision:
         """matched_rules フィールド（適用されたルール pattern のリスト）"""
         hints = get_type_hints(TriageDecision)
         assert "matched_rules" in hints
-        assert hints["matched_rules"] == List[str]
+        assert hints["matched_rules"] == list[str]
 
     @pytest.mark.unit
     def test_can_construct_rule_match(self) -> None:

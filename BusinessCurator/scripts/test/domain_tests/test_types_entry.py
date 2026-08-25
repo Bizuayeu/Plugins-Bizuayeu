@@ -11,7 +11,7 @@ RawEntry TypedDictのフィールド検証。
 - ParseEmailUseCase が EmailMessage から生成する
 """
 
-from typing import List, Optional, get_type_hints
+from typing import get_type_hints
 
 import pytest
 
@@ -65,14 +65,14 @@ class TestRawEntry:
         """to_addrs フィールド（宛先アドレス文字列リスト）"""
         hints = get_type_hints(RawEntry)
         assert "to_addrs" in hints
-        assert hints["to_addrs"] == List[str]
+        assert hints["to_addrs"] == list[str]
 
     @pytest.mark.unit
     def test_has_cc_addrs_field(self) -> None:
         """cc_addrs フィールド（CC アドレス文字列リスト）"""
         hints = get_type_hints(RawEntry)
         assert "cc_addrs" in hints
-        assert hints["cc_addrs"] == List[str]
+        assert hints["cc_addrs"] == list[str]
 
     @pytest.mark.unit
     def test_has_subject_field(self) -> None:
@@ -86,21 +86,21 @@ class TestRawEntry:
         """thread_id フィールド（None 許容）"""
         hints = get_type_hints(RawEntry)
         assert "thread_id" in hints
-        assert hints["thread_id"] == Optional[str]
+        assert hints["thread_id"] == (str | None)
 
     @pytest.mark.unit
     def test_has_attachments_field(self) -> None:
         """attachments フィールド（ファイル名リスト、内容は保持しない）"""
         hints = get_type_hints(RawEntry)
         assert "attachments" in hints
-        assert hints["attachments"] == List[str]
+        assert hints["attachments"] == list[str]
 
     @pytest.mark.unit
     def test_has_tags_field(self) -> None:
         """tags フィールド（triage 後に付与されるタグ）"""
         hints = get_type_hints(RawEntry)
         assert "tags" in hints
-        assert hints["tags"] == List[str]
+        assert hints["tags"] == list[str]
 
     @pytest.mark.unit
     def test_has_body_field(self) -> None:

@@ -15,7 +15,6 @@ import email
 import mailbox
 from email.policy import default as default_policy
 from pathlib import Path
-from typing import List
 
 from domain.exceptions import IngestError
 from domain.types.email import EmailMessage
@@ -45,7 +44,7 @@ class MboxEmailParser:
             raise IngestError(f"empty mbox: {path}")
         return messages[0]
 
-    def parse_many(self, path: Path) -> List[EmailMessage]:
+    def parse_many(self, path: Path) -> list[EmailMessage]:
         """
         .mbox 全メッセージをパース
 
@@ -67,7 +66,7 @@ class MboxEmailParser:
             raise IngestError(f"failed to open mbox {path}: {e}") from e
 
         try:
-            results: List[EmailMessage] = []
+            results: list[EmailMessage] = []
             for msg in mbox:
                 # mailbox は古い API の Message を返すため、bytes 経由で
                 # policy.default の EmailMessage に再パースする

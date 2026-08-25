@@ -25,7 +25,6 @@ Output (JSON):
 import argparse
 import sys
 from pathlib import Path
-from typing import List, Optional
 
 from application.ingest.ingest_batch import IngestBatchUseCase
 from application.ingest.parse_email import ParseEmailUseCase
@@ -58,7 +57,7 @@ def _build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv: Optional[List[str]] = None) -> int:
+def main(argv: list[str] | None = None) -> int:
     """
     Entry point
 
@@ -83,11 +82,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     except (ValueError, FileNotFoundError, IsADirectoryError) as e:
         output_error(f"format detection failed: {e}")
 
-    parser: EmlEmailParser | MboxEmailParser
-    if email_format == EmailFormat.EML:
-        parser = EmlEmailParser()
-    else:
-        parser = MboxEmailParser()
+    parser: EmlEmailParser | MboxEmailParser = (
+        EmlEmailParser() if email_format == EmailFormat.EML else MboxEmailParser()
+    )
 
     resolver = PathResolver(plugin_root)
     repo = FileEntryRepository(raw_entries_dir=resolver.raw_entries_dir)

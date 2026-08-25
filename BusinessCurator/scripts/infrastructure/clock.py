@@ -12,7 +12,6 @@ ClockProtocol の本番実装。
 """
 
 from datetime import datetime, timezone
-from typing import Optional
 
 __all__ = ["SystemClock"]
 
@@ -25,7 +24,7 @@ class SystemClock:
         _tz: 注入されたタイムゾーン（None ならローカル）
     """
 
-    def __init__(self, tz: Optional[timezone] = None) -> None:
+    def __init__(self, tz: timezone | None = None) -> None:
         """
         Args:
             tz: 使用するタイムゾーン（省略時はローカル TZ）

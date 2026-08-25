@@ -12,7 +12,7 @@ TriageOrchestrator
 - ClockProtocol で timestamp を決定的に注入（テスト容易）
 """
 
-from typing import List, Sequence
+from collections.abc import Sequence
 
 from application.triage.rule_engine import RuleBasedTriageEngine
 from domain.protocols import (
@@ -69,7 +69,7 @@ class TriageOrchestrator:
         self._append_log(decision, llm_invoked)
         return decision
 
-    def classify_many(self, entries: Sequence[RawEntry]) -> List[TriageDecision]:
+    def classify_many(self, entries: Sequence[RawEntry]) -> list[TriageDecision]:
         """
         複数エントリを順番に判定
 

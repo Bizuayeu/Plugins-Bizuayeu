@@ -22,7 +22,6 @@ Protocol 定義の存在とインターフェース契約のテスト。
 
 from datetime import datetime
 from pathlib import Path
-from typing import List
 
 import pytest
 
@@ -104,7 +103,7 @@ class TestEmailParserProtocol:
                     "references": [],
                 }
 
-            def parse_many(self, path: Path) -> List[EmailMessage]:
+            def parse_many(self, path: Path) -> list[EmailMessage]:
                 return [self.parse(path)]
 
         parser: EmailParserProtocol = FakeParser()
@@ -157,7 +156,7 @@ class TestEntryRepositoryProtocol:
             def load(self, entry_id: str) -> RawEntry:
                 return self._store[entry_id]
 
-            def list_all(self) -> List[RawEntry]:
+            def list_all(self) -> list[RawEntry]:
                 return list(self._store.values())
 
         repo: EntryRepositoryProtocol = FakeRepo()
@@ -184,12 +183,12 @@ class TestAliasResolverRepositoryProtocol:
     def test_fake_implementation_satisfies(self) -> None:
         class FakeResolver:
             def __init__(self) -> None:
-                self._records: List[AliasRecord] = []
+                self._records: list[AliasRecord] = []
 
-            def load_all(self) -> List[AliasRecord]:
+            def load_all(self) -> list[AliasRecord]:
                 return list(self._records)
 
-            def save_all(self, records: List[AliasRecord]) -> None:
+            def save_all(self, records: list[AliasRecord]) -> None:
                 self._records = list(records)
 
         repo: AliasResolverRepositoryProtocol = FakeResolver()
@@ -217,12 +216,12 @@ class TestTriageLogRepositoryProtocol:
     def test_fake_implementation_satisfies(self) -> None:
         class FakeLog:
             def __init__(self) -> None:
-                self._entries: List[TriageLogEntry] = []
+                self._entries: list[TriageLogEntry] = []
 
             def append(self, log_entry: TriageLogEntry) -> None:
                 self._entries.append(log_entry)
 
-            def load_for_date(self, date: str) -> List[TriageLogEntry]:
+            def load_for_date(self, date: str) -> list[TriageLogEntry]:
                 return [e for e in self._entries if e["timestamp"].startswith(date)]
 
         repo: TriageLogRepositoryProtocol = FakeLog()
@@ -249,7 +248,7 @@ class TestLLMTriageProtocol:
         class FakeLLM:
             def __init__(self, response: ShardKind = "knowledge") -> None:
                 self.response = response
-                self.calls: List[str] = []
+                self.calls: list[str] = []
 
             def classify(self, entry: RawEntry) -> ShardKind:
                 self.calls.append(entry["id"])

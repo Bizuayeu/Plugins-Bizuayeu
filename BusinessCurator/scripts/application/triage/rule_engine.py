@@ -19,7 +19,7 @@ RuleBasedTriageEngine
 """
 
 import re
-from typing import List, Sequence
+from collections.abc import Sequence
 
 from domain.exceptions import TriageError
 from domain.types.entry import RawEntry
@@ -39,8 +39,8 @@ class RuleBasedTriageEngine:
         Raises:
             TriageError: ルールの正規表現がコンパイル失敗
         """
-        self._rules: List[TriageRule] = list(rules)
-        self._compiled: List[re.Pattern[str]] = []
+        self._rules: list[TriageRule] = list(rules)
+        self._compiled: list[re.Pattern[str]] = []
         for rule in self._rules:
             try:
                 self._compiled.append(re.compile(rule["pattern"]))
@@ -59,10 +59,10 @@ class RuleBasedTriageEngine:
         """
         primary_shard = None
         primary_slug = None
-        secondary_tags: List[str] = []
-        matched_patterns: List[str] = []
+        secondary_tags: list[str] = []
+        matched_patterns: list[str] = []
 
-        for rule, pattern in zip(self._rules, self._compiled):
+        for rule, pattern in zip(self._rules, self._compiled, strict=True):
             target_text = self._extract_field(entry, rule["match_field"])
             if pattern.search(target_text):
                 matched_patterns.append(rule["pattern"])
@@ -74,11 +74,7 @@ class RuleBasedTriageEngine:
                     if tag not in secondary_tags:
                         secondary_tags.append(tag)
 
-        confidence: str
-        if matched_patterns:
-            confidence = "rule_match"
-        else:
-            confidence = "unclassified"
+        confidence: str = "rule_match" if matched_patterns else "unclassified"
 
         return {
             "entry_id": entry["id"],

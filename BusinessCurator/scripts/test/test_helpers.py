@@ -25,7 +25,7 @@ BusinessCurator用テスト共通ヘルパー。
 
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from domain.exceptions import EntityNotFoundError
 from domain.types.alias import AliasRecord
@@ -72,7 +72,7 @@ class FakeEntryRepository:
     """
 
     def __init__(self) -> None:
-        self._store: Dict[str, RawEntry] = {}
+        self._store: dict[str, RawEntry] = {}
         self.save_count = 0
 
     def save(self, entry: RawEntry) -> None:
@@ -87,7 +87,7 @@ class FakeEntryRepository:
             raise EntityNotFoundError(f"entry not found: {entry_id}")
         return self._store[entry_id]
 
-    def list_all(self) -> List[RawEntry]:
+    def list_all(self) -> list[RawEntry]:
         return list(self._store.values())
 
 
@@ -101,14 +101,14 @@ class FakeAliasResolverRepository:
     in-memory な AliasResolverRepositoryProtocol 実装
     """
 
-    def __init__(self, initial: Optional[List[AliasRecord]] = None) -> None:
-        self._records: List[AliasRecord] = list(initial) if initial else []
+    def __init__(self, initial: list[AliasRecord] | None = None) -> None:
+        self._records: list[AliasRecord] = list(initial) if initial else []
         self.save_count = 0
 
-    def load_all(self) -> List[AliasRecord]:
+    def load_all(self) -> list[AliasRecord]:
         return list(self._records)
 
-    def save_all(self, records: List[AliasRecord]) -> None:
+    def save_all(self, records: list[AliasRecord]) -> None:
         self._records = list(records)
         self.save_count += 1
 
@@ -124,12 +124,12 @@ class FakeTriageLogRepository:
     """
 
     def __init__(self) -> None:
-        self._entries: List[TriageLogEntry] = []
+        self._entries: list[TriageLogEntry] = []
 
     def append(self, log_entry: TriageLogEntry) -> None:
         self._entries.append(log_entry)
 
-    def load_for_date(self, date: str) -> List[TriageLogEntry]:
+    def load_for_date(self, date: str) -> list[TriageLogEntry]:
         return [e for e in self._entries if e["timestamp"].startswith(date)]
 
 
@@ -149,12 +149,12 @@ class FakeLLMTriageClient:
 
     def __init__(
         self,
-        responses: Optional[Dict[str, ShardKind]] = None,
+        responses: dict[str, ShardKind] | None = None,
         default: ShardKind = "knowledge",
     ) -> None:
         self.responses = responses or {}
         self.default = default
-        self.calls: List[str] = []
+        self.calls: list[str] = []
 
     def classify(self, entry: RawEntry) -> ShardKind:
         self.calls.append(entry["id"])
@@ -177,13 +177,13 @@ class FakeEmailParser:
 
     def __init__(
         self,
-        single: Optional[EmailMessage] = None,
-        many: Optional[List[EmailMessage]] = None,
+        single: EmailMessage | None = None,
+        many: list[EmailMessage] | None = None,
     ) -> None:
         self._single = single
         self._many = many or []
-        self.parse_calls: List[Path] = []
-        self.parse_many_calls: List[Path] = []
+        self.parse_calls: list[Path] = []
+        self.parse_many_calls: list[Path] = []
 
     def parse(self, path: Path) -> EmailMessage:
         self.parse_calls.append(path)
@@ -191,7 +191,7 @@ class FakeEmailParser:
             raise ValueError("FakeEmailParser: single not set")
         return self._single
 
-    def parse_many(self, path: Path) -> List[EmailMessage]:
+    def parse_many(self, path: Path) -> list[EmailMessage]:
         self.parse_many_calls.append(path)
         return list(self._many)
 
@@ -206,16 +206,16 @@ def build_email_message(
     message_id: str = "<default@example.com>",
     from_address: str = "sender@example.com",
     from_name: str = "Sender",
-    to_addresses: Optional[List[str]] = None,
-    cc_addresses: Optional[List[str]] = None,
+    to_addresses: list[str] | None = None,
+    cc_addresses: list[str] | None = None,
     subject: str = "default subject",
-    date: Optional[datetime] = None,
+    date: datetime | None = None,
     body_text: str = "default body",
-    body_html: Optional[str] = None,
-    attachments: Optional[List[Dict[str, Any]]] = None,
-    thread_id: Optional[str] = None,
-    in_reply_to: Optional[str] = None,
-    references: Optional[List[str]] = None,
+    body_html: str | None = None,
+    attachments: list[dict[str, Any]] | None = None,
+    thread_id: str | None = None,
+    in_reply_to: str | None = None,
+    references: list[str] | None = None,
 ) -> EmailMessage:
     """EmailMessage のテストデータを生成（必要分のみオーバーライド）"""
     return {
@@ -250,12 +250,12 @@ def build_raw_entry(
     time: str = "14:30:22",
     source_type: str = "email",
     from_addr: str = "sender@example.com",
-    to_addrs: Optional[List[str]] = None,
-    cc_addrs: Optional[List[str]] = None,
+    to_addrs: list[str] | None = None,
+    cc_addrs: list[str] | None = None,
     subject: str = "default subject",
-    thread_id: Optional[str] = None,
-    attachments: Optional[List[str]] = None,
-    tags: Optional[List[str]] = None,
+    thread_id: str | None = None,
+    attachments: list[str] | None = None,
+    tags: list[str] | None = None,
     body: str = "default body",
 ) -> RawEntry:
     """RawEntry のテストデータを生成"""
@@ -280,8 +280,8 @@ def build_alias_record(
     kind: ShardKind = "projects",
     slug: str = "DefaultProject",
     canonical: str = "デフォルト案件",
-    aliases: Optional[List[str]] = None,
-    target_path: Optional[str] = None,
+    aliases: list[str] | None = None,
+    target_path: str | None = None,
     archive_status: ArchiveStatus = "active",
 ) -> AliasRecord:
     """

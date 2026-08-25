@@ -13,7 +13,6 @@ IndexEntry を EpisodicWiki 形式の Markdown に変換する。
 - 並び順は呼び出し側（application 層）が決定する。本クラスはソートしない。
 """
 
-from typing import Dict, List
 
 from domain.indexing.index_entry import IndexEntry
 from domain.types.shard import SHARD_KINDS, ShardKind
@@ -41,7 +40,7 @@ _AUTO_GEN_FOOTER = (
 class IndexMarkdownFormatter:
     """IndexEntry 群を Markdown 文字列に整形する"""
 
-    def format_root(self, grouped: Dict[str, List[IndexEntry]]) -> str:
+    def format_root(self, grouped: dict[str, list[IndexEntry]]) -> str:
         """
         ルート _index.md の本文を生成
 
@@ -51,7 +50,7 @@ class IndexMarkdownFormatter:
         Returns:
             Markdown 文字列
         """
-        lines: List[str] = [
+        lines: list[str] = [
             "# BusinessWiki Index",
             "",
             "BusinessCurator で管理する 4 シャードの日本語インデックスです。",
@@ -63,7 +62,7 @@ class IndexMarkdownFormatter:
             lines.append(f"- [{kind}/](shards/{kind}/_index.md) — {count}件")
         return "\n".join(lines) + _AUTO_GEN_FOOTER
 
-    def format_shard(self, kind: ShardKind, entries: List[IndexEntry]) -> str:
+    def format_shard(self, kind: ShardKind, entries: list[IndexEntry]) -> str:
         """
         シャード別 _index.md の本文を生成
 
@@ -74,7 +73,7 @@ class IndexMarkdownFormatter:
         Returns:
             Markdown 文字列
         """
-        lines: List[str] = [f"# {kind.capitalize()} Index", ""]
+        lines: list[str] = [f"# {kind.capitalize()} Index", ""]
 
         if not entries:
             lines.append("*(まだマスタが登録されていません)*")

@@ -13,7 +13,7 @@ IndexGeneratorService
 - 戻り値は `{shard: count}` の dict（呼び出し側のログ・JSON 出力用）。
 """
 
-from typing import Dict, List, Protocol
+from typing import Protocol
 
 from application.resolver.resolver_service import ResolverService
 from domain.indexing.index_entry import IndexEntry
@@ -25,8 +25,8 @@ __all__ = ["IndexGeneratorService"]
 
 
 class _FormatterProtocol(Protocol):
-    def format_root(self, grouped: Dict[str, List[IndexEntry]]) -> str: ...
-    def format_shard(self, kind: ShardKind, entries: List[IndexEntry]) -> str: ...
+    def format_root(self, grouped: dict[str, list[IndexEntry]]) -> str: ...
+    def format_shard(self, kind: ShardKind, entries: list[IndexEntry]) -> str: ...
 
 
 class _FileRepoProtocol(Protocol):
@@ -58,7 +58,7 @@ class IndexGeneratorService:
     # public API
     # ------------------------------------------------------------------
 
-    def regenerate_all(self, include_archived: bool = False) -> Dict[str, int]:
+    def regenerate_all(self, include_archived: bool = False) -> dict[str, int]:
         """
         ルート + 全シャードの `_index.md` を再生成する
 
@@ -71,7 +71,7 @@ class IndexGeneratorService:
         entries = self._load_entries(include_archived)
         grouped = group_by_shard(entries, include_archived=include_archived)
 
-        counts: Dict[str, int] = {}
+        counts: dict[str, int] = {}
         for kind in SHARD_KINDS:
             shard_entries = grouped.get(kind, [])
             content = self._formatter.format_shard(kind, shard_entries)
@@ -103,9 +103,9 @@ class IndexGeneratorService:
     # internal
     # ------------------------------------------------------------------
 
-    def _load_entries(self, include_archived: bool) -> List[IndexEntry]:
+    def _load_entries(self, include_archived: bool) -> list[IndexEntry]:
         """Resolver から AliasRecord を取得し IndexEntry に変換する"""
-        records: List[AliasRecord]
+        records: list[AliasRecord]
         if include_archived:
             records = list(self._resolver._repo.load_all())  # noqa: SLF001
         else:

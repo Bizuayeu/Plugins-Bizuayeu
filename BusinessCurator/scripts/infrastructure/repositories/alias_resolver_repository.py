@@ -31,7 +31,7 @@ AliasResolverRepositoryProtocol の Markdown ファイル実装。
 
 import re
 from pathlib import Path
-from typing import Dict, List, Literal, Tuple
+from typing import Literal
 
 from domain.exceptions import ResolverError
 from domain.types.alias import AliasRecord
@@ -71,7 +71,7 @@ class MarkdownAliasResolverRepository:
     # save_all
     # ------------------------------------------------------------------
 
-    def save_all(self, records: List[AliasRecord]) -> None:
+    def save_all(self, records: list[AliasRecord]) -> None:
         """
         全レコードを完全置換で書き出し
 
@@ -87,9 +87,9 @@ class MarkdownAliasResolverRepository:
         self._path.parent.mkdir(parents=True, exist_ok=True)
 
         # 3 状態 × 4 シャードで振り分け
-        active: Dict[ShardKind, List[AliasRecord]] = {k: [] for k in SHARD_KINDS}
-        completed: Dict[ShardKind, List[AliasRecord]] = {k: [] for k in SHARD_KINDS}
-        removed: Dict[ShardKind, List[AliasRecord]] = {k: [] for k in SHARD_KINDS}
+        active: dict[ShardKind, list[AliasRecord]] = {k: [] for k in SHARD_KINDS}
+        completed: dict[ShardKind, list[AliasRecord]] = {k: [] for k in SHARD_KINDS}
+        removed: dict[ShardKind, list[AliasRecord]] = {k: [] for k in SHARD_KINDS}
 
         for r in records:
             status = r["archive_status"]
@@ -100,7 +100,7 @@ class MarkdownAliasResolverRepository:
             elif status == "removed":
                 removed[r["shard"]].append(r)
 
-        lines: List[str] = [_GLOBAL_INDEX_HEADER, ""]
+        lines: list[str] = [_GLOBAL_INDEX_HEADER, ""]
 
         # アクティブセクション (4 シャード)
         for kind in SHARD_KINDS:
@@ -140,7 +140,7 @@ class MarkdownAliasResolverRepository:
     # load_all
     # ------------------------------------------------------------------
 
-    def load_all(self) -> List[AliasRecord]:
+    def load_all(self) -> list[AliasRecord]:
         """
         ファイルから全レコードをロード
 
@@ -157,8 +157,8 @@ class MarkdownAliasResolverRepository:
         return self._parse(content)
 
     @classmethod
-    def _parse(cls, content: str) -> List[AliasRecord]:
-        records: List[AliasRecord] = []
+    def _parse(cls, content: str) -> list[AliasRecord]:
+        records: list[AliasRecord] = []
         current_kind: ShardKind | None = None
         current_mode: _SectionMode = "active"
 
@@ -227,7 +227,7 @@ class MarkdownAliasResolverRepository:
     @staticmethod
     def _derive_kind_and_slug(
         target_path: str, section_kind: ShardKind | None
-    ) -> Tuple[ShardKind, str]:
+    ) -> tuple[ShardKind, str]:
         """
         target_path から (kind, slug) を導出
 
@@ -245,8 +245,5 @@ class MarkdownAliasResolverRepository:
         kind: ShardKind = kind_str
 
         third = parts[2]
-        if third.endswith(".md"):
-            slug = third[:-3]
-        else:
-            slug = third
+        slug = third[:-3] if third.endswith(".md") else third
         return kind, slug

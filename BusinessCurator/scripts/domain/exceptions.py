@@ -23,7 +23,7 @@ Usage:
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 
 @dataclass
@@ -43,21 +43,21 @@ class DiagnosticContext:
         additional_info: その他の任意情報
     """
 
-    operation: Optional[str] = None
-    entry_id: Optional[str] = None
-    file_path: Optional[Path] = None
-    shard_kind: Optional[str] = None
-    file_count: Optional[int] = None
-    additional_info: Dict[str, Any] = field(default_factory=dict)
+    operation: str | None = None
+    entry_id: str | None = None
+    file_path: Path | None = None
+    shard_kind: str | None = None
+    file_count: int | None = None
+    additional_info: dict[str, Any] = field(default_factory=dict)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """
         非 None 値のみを含む辞書を返す
 
         Returns:
             キー=属性名、値=属性値の辞書（None は除外）
         """
-        result: Dict[str, Any] = {}
+        result: dict[str, Any] = {}
         if self.operation is not None:
             result["operation"] = self.operation
         if self.entry_id is not None:
@@ -88,7 +88,7 @@ class BusinessCuratorError(Exception):
     `except BusinessCuratorError` で全カスタム例外をキャッチ可能。
     """
 
-    def __init__(self, message: str, context: Optional[DiagnosticContext] = None) -> None:
+    def __init__(self, message: str, context: DiagnosticContext | None = None) -> None:
         """
         Args:
             message: エラーメッセージ

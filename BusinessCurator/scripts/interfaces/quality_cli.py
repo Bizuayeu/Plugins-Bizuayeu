@@ -27,7 +27,6 @@ import argparse
 import re
 import sys
 from pathlib import Path
-from typing import List, Optional, Tuple
 
 from application.quality.wikilink_verifier import WikilinkVerifier
 from application.resolver.resolver_service import ResolverService
@@ -49,9 +48,9 @@ def _make_verifier(plugin_root: Path) -> WikilinkVerifier:
     return WikilinkVerifier(svc)
 
 
-def _scan_wikilinks(plugin_root: Path) -> List[Tuple[str, str]]:
+def _scan_wikilinks(plugin_root: Path) -> list[tuple[str, str]]:
     """shards/ と archive/ 配下の .md ファイルから [[...]] を抽出"""
-    links: List[Tuple[str, str]] = []
+    links: list[tuple[str, str]] = []
     for search_dir in [plugin_root / "shards", plugin_root / "archive"]:
         if not search_dir.exists():
             continue
@@ -95,7 +94,7 @@ _HANDLERS = {
 }
 
 
-def main(argv: Optional[List[str]] = None) -> int:
+def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     handler = _HANDLERS[args.command]
     try:

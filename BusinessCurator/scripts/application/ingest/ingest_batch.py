@@ -14,7 +14,7 @@ IngestBatchUseCase
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from application.ingest.parse_email import ParseEmailUseCase
 from domain.exceptions import IngestError
@@ -42,7 +42,7 @@ class IngestBatchResult:
     def total(self) -> int:
         return self.saved + self.skipped + self.failed
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "saved": self.saved,
             "skipped": self.skipped,

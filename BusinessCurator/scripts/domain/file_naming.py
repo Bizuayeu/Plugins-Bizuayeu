@@ -23,7 +23,6 @@ Usage:
 import hashlib
 import re
 from datetime import datetime
-from typing import Tuple
 
 from domain.constants import ENTRY_ID_HASH_LENGTH, ENTRY_ID_PREFIX
 
@@ -71,7 +70,7 @@ def make_entry_id(dt: datetime, message_id: str) -> str:
     return f"{ENTRY_ID_PREFIX}{date_part}_{time_part}_{hash_part}"
 
 
-def parse_entry_id(entry_id: str) -> Tuple[datetime, str]:
+def parse_entry_id(entry_id: str) -> tuple[datetime, str]:
     """
     エントリID を datetime と hash サフィックスに分解
 

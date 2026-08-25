@@ -13,7 +13,7 @@ import subprocess
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 
 @dataclass
@@ -32,8 +32,8 @@ class CLIResult:
     exit_code: int
     stdout: str
     stderr: str
-    json_output: Optional[Dict[str, Any]] = None
-    command: List[str] = field(default_factory=list)
+    json_output: dict[str, Any] | None = None
+    command: list[str] = field(default_factory=list)
 
     @property
     def success(self) -> bool:
@@ -44,7 +44,7 @@ class CLIResult:
             f"Command failed (exit {self.exit_code})\nstdout: {self.stdout}\nstderr: {self.stderr}"
         )
 
-    def assert_failure(self, expected_code: Optional[int] = None) -> None:
+    def assert_failure(self, expected_code: int | None = None) -> None:
         if expected_code is not None:
             assert self.exit_code == expected_code, (
                 f"Expected exit {expected_code}, got {self.exit_code}\nstdout: {self.stdout}"
@@ -65,7 +65,7 @@ class CLIRunner:
 
     def __init__(
         self,
-        scripts_dir: Optional[Path] = None,
+        scripts_dir: Path | None = None,
         timeout: int = 30,
     ) -> None:
         self.scripts_dir = scripts_dir or self._find_scripts_dir()
@@ -81,7 +81,7 @@ class CLIRunner:
             return scripts_dir
         raise RuntimeError(f"could not find scripts dir from {current}")
 
-    def _run(self, args: List[str], cwd: Optional[Path] = None) -> CLIResult:
+    def _run(self, args: list[str], cwd: Path | None = None) -> CLIResult:
         env = os.environ.copy()
         env["PYTHONPATH"] = f"{self.scripts_dir}{os.pathsep}{env.get('PYTHONPATH', '')}"
         env["PYTHONIOENCODING"] = "utf-8"
@@ -103,7 +103,7 @@ class CLIRunner:
         except subprocess.TimeoutExpired:
             return CLIResult(exit_code=-1, stdout="", stderr="timeout", command=args)
 
-        json_output: Optional[Dict[str, Any]] = None
+        json_output: dict[str, Any] | None = None
         if stdout.strip():
             try:
                 json_output = json.loads(stdout.strip())
@@ -118,7 +118,7 @@ class CLIRunner:
             command=args,
         )
 
-    def _build_module_args(self, module: str, *args: str, **kwargs: Union[str, bool]) -> List[str]:
+    def _build_module_args(self, module: str, *args: str, **kwargs: str | bool) -> list[str]:
         cmd = [self.python, "-m", module]
         cmd.extend(args)
         for key, value in kwargs.items():

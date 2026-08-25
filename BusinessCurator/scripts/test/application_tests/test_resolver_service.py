@@ -12,7 +12,6 @@ ResolverService の add/edit/remove/complete_archive/rebuild 動作検証。
 - property-based test で add → remove → add 安定性
 """
 
-from typing import List
 
 import pytest
 from hypothesis import HealthCheck, given, settings
@@ -422,7 +421,7 @@ class TestResolverServiceProperties:
     @pytest.mark.property
     @given(slugs=st.lists(_slug_strategy, min_size=1, max_size=5, unique=True))
     @settings(max_examples=30, suppress_health_check=[HealthCheck.too_slow])
-    def test_add_then_remove_then_re_add_keeps_count(self, slugs: List[str]) -> None:
+    def test_add_then_remove_then_re_add_keeps_count(self, slugs: list[str]) -> None:
         """全 slug を add → 全 remove → 全 add しても、結果は同数（archive_status は上書き）"""
         repo = FakeAliasResolverRepository()
         svc = ResolverService(repo)
@@ -445,7 +444,7 @@ class TestResolverServiceProperties:
     @pytest.mark.property
     @given(slugs=st.lists(_slug_strategy, min_size=1, max_size=5, unique=True))
     @settings(max_examples=30, suppress_health_check=[HealthCheck.too_slow])
-    def test_rebuild_then_load_all_round_trip(self, slugs: List[str]) -> None:
+    def test_rebuild_then_load_all_round_trip(self, slugs: list[str]) -> None:
         """rebuild に渡したリストと load_all の結果が順序込みで一致"""
         repo = FakeAliasResolverRepository()
         svc = ResolverService(repo)

@@ -24,7 +24,6 @@ Composition Root:
 import argparse
 import sys
 from pathlib import Path
-from typing import List, Optional
 
 from application.resolver.resolver_service import ResolverService
 from domain.exceptions import (
@@ -153,7 +152,7 @@ def _build_parser() -> argparse.ArgumentParser:
 # =============================================================================
 
 
-def _split_csv(value: str) -> List[str]:
+def _split_csv(value: str) -> list[str]:
     if not value.strip():
         return []
     return [s.strip() for s in value.split(",") if s.strip()]
@@ -196,7 +195,7 @@ def _handle_remove(svc: ResolverService, args: argparse.Namespace) -> None:
 
 def _handle_list(svc: ResolverService, args: argparse.Namespace) -> None:
     if args.include_archived:
-        records: List[AliasRecord] = list(
+        records: list[AliasRecord] = list(
             svc._repo.load_all()  # noqa: SLF001 (CLI 経由のインスペクション)
         )
     else:
@@ -233,7 +232,7 @@ _HANDLERS = {
 # =============================================================================
 
 
-def main(argv: Optional[List[str]] = None) -> int:
+def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     svc = _make_service(Path(args.plugin_root))
     handler = _HANDLERS[args.command]

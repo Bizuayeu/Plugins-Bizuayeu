@@ -11,7 +11,7 @@ ArchiveManifest TypedDict のフィールド検証。
 - 抽出された知見記事の参照を保持
 """
 
-from typing import List, get_type_hints
+from typing import get_type_hints
 
 import pytest
 
@@ -102,7 +102,7 @@ class TestArchiveManifest:
         """extracted_knowledge フィールド（抽出された知見記事のリスト）"""
         hints = get_type_hints(ArchiveManifest)
         assert "extracted_knowledge" in hints
-        assert hints["extracted_knowledge"] == List[ExtractedKnowledge]
+        assert hints["extracted_knowledge"] == list[ExtractedKnowledge]
 
     @pytest.mark.unit
     def test_can_construct(self) -> None:

@@ -17,7 +17,6 @@ ArchiveOrchestrator
 - v4: complete_archive() atomic メソッドで edit + remove の 2 段階呼びを廃止
 """
 
-from typing import List
 
 from application.resolver.resolver_service import ResolverService
 from domain.exceptions import ArchiveError, EntityNotFoundError
@@ -50,7 +49,7 @@ class ArchiveOrchestrator:
         project_slug: str,
         *,
         reason: str = _DEFAULT_REASON,
-        extracted_knowledge: List[ExtractedKnowledge] | None = None,
+        extracted_knowledge: list[ExtractedKnowledge] | None = None,
     ) -> ArchiveManifest:
         """
         アーカイブマニフェストを構築（resolver は更新しない）
@@ -70,8 +69,8 @@ class ArchiveOrchestrator:
         record_id = f"projects/{project_slug}"
         try:
             record = self._resolver.find(record_id)
-        except EntityNotFoundError:
-            raise EntityNotFoundError(f"project not found in resolver: {record_id}")
+        except EntityNotFoundError as e:
+            raise EntityNotFoundError(f"project not found in resolver: {record_id}") from e
 
         if record["archive_status"] == "completed":
             raise ArchiveError(f"project already archived: {record_id}")
@@ -100,7 +99,7 @@ class ArchiveOrchestrator:
         project_slug: str,
         *,
         reason: str = _DEFAULT_REASON,
-        extracted_knowledge: List[ExtractedKnowledge] | None = None,
+        extracted_knowledge: list[ExtractedKnowledge] | None = None,
     ) -> ArchiveManifest:
         """
         manifest 生成 + resolver 更新（archive_status="completed", target_path → archive/）

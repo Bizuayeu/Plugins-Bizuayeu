@@ -29,7 +29,6 @@ Composition Root:
 import argparse
 import sys
 from pathlib import Path
-from typing import List, Optional
 
 from application.status.metrics_collector import MetricsCollectorUseCase
 from infrastructure.path_resolver import PathResolver
@@ -57,7 +56,7 @@ def _count_unclassified(directory: Path) -> int:
     return sum(1 for p in directory.iterdir() if p.is_file() and not p.name.startswith("."))
 
 
-def main(argv: Optional[List[str]] = None) -> int:
+def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     plugin_root = Path(args.plugin_root)
     resolver = PathResolver(plugin_root)

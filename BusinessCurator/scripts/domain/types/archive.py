@@ -11,7 +11,7 @@ archive/projects/{Name}/_archive_manifest.json のドメイン表現。
 - 業務計画書 §3.4 知見抽出フェーズの永続化
 """
 
-from typing import List, TypedDict
+from typing import TypedDict
 
 
 class ExtractedKnowledge(TypedDict):
@@ -49,7 +49,7 @@ class ArchiveManifest(TypedDict):
     reason: str
     source_path: str
     destination_path: str
-    extracted_knowledge: List[ExtractedKnowledge]
+    extracted_knowledge: list[ExtractedKnowledge]
 
 
 __all__ = ["ArchiveManifest", "ExtractedKnowledge"]

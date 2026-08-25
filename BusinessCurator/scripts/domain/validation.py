@@ -19,7 +19,7 @@ Usage:
         logger.error(f"Invalid entry: {e}")
 """
 
-from typing import Any, List
+from typing import Any
 
 from domain.constants import SHARD_KINDS
 from domain.exceptions import BusinessCuratorError
@@ -96,7 +96,7 @@ def validate_shard_kind(value: Any) -> None:
 # validate_raw_entry
 # =============================================================================
 
-_RAW_ENTRY_REQUIRED_FIELDS: List[str] = [
+_RAW_ENTRY_REQUIRED_FIELDS: list[str] = [
     "id",
     "date",
     "time",
@@ -203,13 +203,12 @@ def validate_alias_record(data: Any) -> None:
 
     # target_path と archive_status の整合性
     target_path = data["target_path"]
-    if status == "completed":
-        if not target_path.startswith("archive/"):
-            raise ValidationError(
-                f"archive_status='completed' requires target_path under 'archive/', got {target_path!r}"
-            )
-    elif status == "active":
-        if not target_path.startswith("shards/"):
-            raise ValidationError(
-                f"archive_status='active' requires target_path under 'shards/', got {target_path!r}"
-            )
+    # status は単一値ゆえ 2 つのガードは排他。入れ子を畳んでも判定は変わらない。
+    if status == "completed" and not target_path.startswith("archive/"):
+        raise ValidationError(
+            f"archive_status='completed' requires target_path under 'archive/', got {target_path!r}"
+        )
+    if status == "active" and not target_path.startswith("shards/"):
+        raise ValidationError(
+            f"archive_status='active' requires target_path under 'shards/', got {target_path!r}"
+        )

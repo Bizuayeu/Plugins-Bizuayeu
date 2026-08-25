@@ -24,7 +24,6 @@ import argparse
 import shutil
 import sys
 from pathlib import Path
-from typing import List, Optional
 
 from application.archive.archive_orchestrator import ArchiveOrchestrator
 from application.resolver.resolver_service import ResolverService
@@ -113,7 +112,7 @@ def _move_directory(source: Path, destination: Path) -> None:
 # =============================================================================
 
 
-def main(argv: Optional[List[str]] = None) -> int:
+def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     plugin_root = Path(args.plugin_root)
     orch, resolver = _make_orchestrator(plugin_root)

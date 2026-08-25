@@ -15,7 +15,7 @@ EntryRepositoryProtocol のファイルシステム実装。
 
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 from domain.exceptions import EntityNotFoundError
 from domain.types.entry import RawEntry
@@ -50,7 +50,7 @@ def _yaml_escape_string(value: str) -> str:
     return f'"{escaped}"'
 
 
-def _yaml_dump_list(items: List[str]) -> str:
+def _yaml_dump_list(items: list[str]) -> str:
     """list[str] を YAML inline list に"""
     if not items:
         return "[]"
@@ -65,7 +65,7 @@ def _serialize_entry_to_yaml(entry: RawEntry) -> str:
     Returns:
         "---\\n<key: value>\\n...\\n---" 形式の文字列
     """
-    lines: List[str] = ["---"]
+    lines: list[str] = ["---"]
     # 順序固定（再現性のため）
     lines.append(f"id: {_yaml_escape_string(entry['id'])}")
     lines.append(f"date: {_yaml_escape_string(entry['date'])}")
@@ -102,7 +102,7 @@ def _yaml_unescape_string(value: str) -> str:
     return value
 
 
-def _parse_yaml_list(value: str) -> List[str]:
+def _parse_yaml_list(value: str) -> list[str]:
     """inline list "[a, b, c]" → ["a", "b", "c"]"""
     value = value.strip()
     if value == "[]":
@@ -113,8 +113,8 @@ def _parse_yaml_list(value: str) -> List[str]:
     if not inner.strip():
         return []
     # naive split: 文字列内 , を考慮するため簡易ステートマシン
-    parts: List[str] = []
-    buf: List[str] = []
+    parts: list[str] = []
+    buf: list[str] = []
     in_string = False
     escape = False
     for ch in inner:
@@ -139,7 +139,7 @@ def _parse_yaml_list(value: str) -> List[str]:
     return [_yaml_unescape_string(p) for p in parts]
 
 
-def _parse_frontmatter(content: str) -> Tuple[Dict[str, Any], str]:
+def _parse_frontmatter(content: str) -> tuple[dict[str, Any], str]:
     """
     md 文字列を frontmatter dict + 本文 に分解
 
@@ -155,7 +155,7 @@ def _parse_frontmatter(content: str) -> Tuple[Dict[str, Any], str]:
     yaml_part = m.group(1)
     body = m.group(2)
 
-    fm: Dict[str, Any] = {}
+    fm: dict[str, Any] = {}
     for line in yaml_part.split("\n"):
         if not line.strip():
             continue
@@ -245,7 +245,7 @@ class FileEntryRepository:
             "body": body,
         }
 
-    def list_all(self) -> List[RawEntry]:
+    def list_all(self) -> list[RawEntry]:
         """
         ディレクトリ内のすべてのエントリを返す
 
@@ -254,7 +254,7 @@ class FileEntryRepository:
         """
         if not self._dir.exists():
             return []
-        results: List[RawEntry] = []
+        results: list[RawEntry] = []
         for path in sorted(self._dir.glob("*.md")):
             if path.name.startswith("."):
                 continue

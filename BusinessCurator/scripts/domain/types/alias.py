@@ -24,7 +24,7 @@ Usage:
     }
 """
 
-from typing import List, TypedDict
+from typing import TypedDict
 
 from domain.types.shard import ArchiveStatus, ShardKind
 
@@ -44,7 +44,7 @@ class AliasRecord(TypedDict):
 
     id: str
     canonical: str
-    aliases: List[str]
+    aliases: list[str]
     shard: ShardKind
     target_path: str
     archive_status: ArchiveStatus

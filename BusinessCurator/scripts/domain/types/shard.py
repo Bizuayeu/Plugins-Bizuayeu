@@ -21,7 +21,7 @@ Usage:
         return s in SHARD_KINDS
 """
 
-from typing import List, Literal, Optional, Tuple, TypedDict
+from typing import Literal, TypedDict
 
 # =============================================================================
 # Shard Kind
@@ -31,7 +31,7 @@ ShardKind = Literal["projects", "clients", "vendors", "knowledge"]
 """4つのシャード種別。業務計画書 §7.1 で固定。"""
 
 
-SHARD_KINDS: Tuple[ShardKind, ...] = ("projects", "clients", "vendors", "knowledge")
+SHARD_KINDS: tuple[ShardKind, ...] = ("projects", "clients", "vendors", "knowledge")
 """ShardKind の全値（イテレーション/バリデーション用、immutable）。"""
 
 
@@ -49,7 +49,7 @@ AliasRecord / ShardEntity のライフサイクル状態。
 """
 
 
-ARCHIVE_STATUSES: Tuple[ArchiveStatus, ...] = ("active", "completed", "removed")
+ARCHIVE_STATUSES: tuple[ArchiveStatus, ...] = ("active", "completed", "removed")
 """ArchiveStatus の全値（イテレーション/バリデーション用、immutable）。"""
 
 
@@ -74,9 +74,9 @@ class ShardEntity(TypedDict):
     kind: ShardKind
     canonical_name: str
     slug: str
-    aliases: List[str]
+    aliases: list[str]
     archive_status: ArchiveStatus
-    category: Optional[str]
+    category: str | None
 
 
 __all__ = [

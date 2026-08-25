@@ -11,7 +11,7 @@ ShardKind Literal型とShardEntity TypedDictのテスト。
 - ShardEntity は manager 層が登録するエンティティのドメイン表現
 """
 
-from typing import List, Optional, get_type_hints
+from typing import get_type_hints
 
 import pytest
 
@@ -97,7 +97,7 @@ class TestShardEntity:
         """aliases フィールド（別名リスト）"""
         hints = get_type_hints(ShardEntity)
         assert "aliases" in hints
-        assert hints["aliases"] == List[str]
+        assert hints["aliases"] == list[str]
 
     @pytest.mark.unit
     def test_has_archive_status_field(self) -> None:
@@ -110,7 +110,7 @@ class TestShardEntity:
         """category フィールド（knowledge シャードのカテゴリ、None 許容）"""
         hints = get_type_hints(ShardEntity)
         assert "category" in hints
-        assert hints["category"] == Optional[str]
+        assert hints["category"] == (str | None)
 
     @pytest.mark.unit
     def test_can_construct_project_entity(self) -> None:

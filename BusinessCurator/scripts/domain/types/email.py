@@ -21,7 +21,7 @@ Usage:
 """
 
 from datetime import datetime
-from typing import List, Optional, TypedDict
+from typing import TypedDict
 
 
 class EmailAddress(TypedDict):
@@ -81,16 +81,16 @@ class EmailMessage(TypedDict):
 
     message_id: str
     from_addr: EmailAddress
-    to_addrs: List[EmailAddress]
-    cc_addrs: List[EmailAddress]
+    to_addrs: list[EmailAddress]
+    cc_addrs: list[EmailAddress]
     subject: str
     date: datetime
     body_text: str
-    body_html: Optional[str]
-    attachments: List[EmailAttachment]
-    thread_id: Optional[str]
-    in_reply_to: Optional[str]
-    references: List[str]
+    body_html: str | None
+    attachments: list[EmailAttachment]
+    thread_id: str | None
+    in_reply_to: str | None
+    references: list[str]
 
 
 __all__ = ["EmailAddress", "EmailAttachment", "EmailMessage"]

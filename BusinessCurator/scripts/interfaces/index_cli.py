@@ -20,7 +20,6 @@ Composition Root:
 import argparse
 import sys
 from pathlib import Path
-from typing import List, Optional
 
 from application.indexing.index_generator_service import IndexGeneratorService
 from application.resolver.resolver_service import ResolverService
@@ -111,7 +110,7 @@ def _handle_rebuild(service: IndexGeneratorService, args: argparse.Namespace) ->
 # =============================================================================
 
 
-def main(argv: Optional[List[str]] = None) -> int:
+def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     service = make_service(Path(args.plugin_root))
     try:

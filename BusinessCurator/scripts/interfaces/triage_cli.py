@@ -37,7 +37,6 @@ import argparse
 import re
 import sys
 from pathlib import Path
-from typing import List, Optional
 
 from application.triage.rule_engine import RuleBasedTriageEngine
 from application.triage.triage_orchestrator import TriageOrchestrator
@@ -63,7 +62,7 @@ __all__ = ["main"]
 # =============================================================================
 
 
-def _build_rules_from_resolver(records: List[AliasRecord]) -> List[TriageRule]:
+def _build_rules_from_resolver(records: list[AliasRecord]) -> list[TriageRule]:
     """
     アクティブな AliasRecord 群からルール群を生成
 
@@ -79,7 +78,7 @@ def _build_rules_from_resolver(records: List[AliasRecord]) -> List[TriageRule]:
         - target_kind/slug は record の shard/slug
         - 非 active (completed/removed) レコードは除外
     """
-    rules: List[TriageRule] = []
+    rules: list[TriageRule] = []
     for rec in records:
         if rec["archive_status"] != "active":
             continue
@@ -124,13 +123,13 @@ def _build_parser() -> argparse.ArgumentParser:
 # =============================================================================
 
 
-def main(argv: Optional[List[str]] = None) -> int:
+def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     plugin_root = Path(args.plugin_root)
     resolver = PathResolver(plugin_root)
 
     # entries
-    entries: List[RawEntry] = []
+    entries: list[RawEntry] = []
     if resolver.raw_entries_dir.exists():
         entry_repo = FileEntryRepository(raw_entries_dir=resolver.raw_entries_dir)
         entries = entry_repo.list_all()

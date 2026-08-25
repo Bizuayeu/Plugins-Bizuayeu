@@ -11,7 +11,7 @@ AliasRecord TypedDict のフィールド検証。
 - archive_status で active/completed/removed の 3 状態を表現
 """
 
-from typing import List, get_type_hints
+from typing import get_type_hints
 
 import pytest
 
@@ -44,7 +44,7 @@ class TestAliasRecord:
         """aliases フィールド（also[] のリスト）"""
         hints = get_type_hints(AliasRecord)
         assert "aliases" in hints
-        assert hints["aliases"] == List[str]
+        assert hints["aliases"] == list[str]
 
     @pytest.mark.unit
     def test_has_shard_field(self) -> None:

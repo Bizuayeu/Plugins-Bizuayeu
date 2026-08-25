@@ -14,7 +14,7 @@ ResolverService
 - v4: archive_status enum 化（active/completed/removed の 3 状態）
 """
 
-from typing import List, Optional, Sequence
+from collections.abc import Sequence
 
 from domain.exceptions import EntityNotFoundError, ResolverError
 from domain.protocols import AliasResolverRepositoryProtocol
@@ -41,7 +41,7 @@ class ResolverService:
         except ValidationError as e:
             raise ResolverError(f"invalid alias record: {e}") from e
 
-    def _find_index(self, records: List[AliasRecord], record_id: str) -> int:
+    def _find_index(self, records: list[AliasRecord], record_id: str) -> int:
         """ID から index を逆引き。見つからなければ -1"""
         for i, r in enumerate(records):
             if r["id"] == record_id:
@@ -77,10 +77,10 @@ class ResolverService:
         self,
         record_id: str,
         *,
-        canonical: Optional[str] = None,
-        add_aliases: Optional[Sequence[str]] = None,
-        remove_aliases: Optional[Sequence[str]] = None,
-        target_path: Optional[str] = None,
+        canonical: str | None = None,
+        add_aliases: Sequence[str] | None = None,
+        remove_aliases: Sequence[str] | None = None,
+        target_path: str | None = None,
     ) -> None:
         """
         既存レコードを部分更新
@@ -254,7 +254,7 @@ class ResolverService:
             raise EntityNotFoundError(f"alias record not found: {record_id}")
         return records[idx]
 
-    def list_active(self) -> List[AliasRecord]:
+    def list_active(self) -> list[AliasRecord]:
         """
         archive_status == "active" のレコードのみを返す
 
@@ -263,7 +263,7 @@ class ResolverService:
         """
         return [r for r in self._repo.load_all() if r["archive_status"] == "active"]
 
-    def list_completed(self) -> List[AliasRecord]:
+    def list_completed(self) -> list[AliasRecord]:
         """
         archive_status == "completed" のレコードのみを返す
 

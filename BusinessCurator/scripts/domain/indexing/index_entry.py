@@ -14,7 +14,6 @@ IndexEntry Value Object
 """
 
 from dataclasses import dataclass
-from typing import Tuple
 
 from domain.types.alias import AliasRecord
 from domain.types.shard import ArchiveStatus, ShardKind
@@ -39,7 +38,7 @@ class IndexEntry:
     shard: ShardKind
     slug: str
     canonical: str
-    aliases: Tuple[str, ...]
+    aliases: tuple[str, ...]
     target_path: str
     archive_status: ArchiveStatus
 

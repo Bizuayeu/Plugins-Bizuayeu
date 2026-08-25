@@ -21,7 +21,7 @@ Usage:
     }
 """
 
-from typing import List, Optional, TypedDict
+from typing import TypedDict
 
 
 class RawEntry(TypedDict):
@@ -51,12 +51,12 @@ class RawEntry(TypedDict):
     time: str
     source_type: str
     from_addr: str
-    to_addrs: List[str]
-    cc_addrs: List[str]
+    to_addrs: list[str]
+    cc_addrs: list[str]
     subject: str
-    thread_id: Optional[str]
-    attachments: List[str]
-    tags: List[str]
+    thread_id: str | None
+    attachments: list[str]
+    tags: list[str]
     body: str
 
 

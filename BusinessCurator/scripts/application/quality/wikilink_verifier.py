@@ -17,7 +17,6 @@ Markdown ファイル内の `[[kind/Slug]]` wikilink を resolver と突合検�
 """
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Set, Tuple
 
 from application.resolver.resolver_service import ResolverService
 
@@ -30,10 +29,10 @@ class VerifyResult:
 
     total_links: int = 0
     valid: int = 0
-    broken: List[Tuple[str, str]] = field(default_factory=list)
-    stale: List[Tuple[str, str]] = field(default_factory=list)
+    broken: list[tuple[str, str]] = field(default_factory=list)
+    stale: list[tuple[str, str]] = field(default_factory=list)
 
-    def to_dict(self) -> Dict[str, object]:
+    def to_dict(self) -> dict[str, object]:
         return {
             "total_links": self.total_links,
             "valid": self.valid,
@@ -49,8 +48,8 @@ class WikilinkVerifier:
 
     def __init__(self, resolver_service: ResolverService) -> None:
         self._resolver = resolver_service
-        self._active_ids: Set[str] = set()
-        self._completed_ids: Set[str] = set()
+        self._active_ids: set[str] = set()
+        self._completed_ids: set[str] = set()
         self._loaded = False
 
     def _ensure_loaded(self) -> None:
@@ -60,7 +59,7 @@ class WikilinkVerifier:
         self._completed_ids = {r["id"] for r in self._resolver.list_completed()}
         self._loaded = True
 
-    def verify_links(self, links: List[Tuple[str, str]]) -> VerifyResult:
+    def verify_links(self, links: list[tuple[str, str]]) -> VerifyResult:
         """
         wikilink のリストを検証する
 

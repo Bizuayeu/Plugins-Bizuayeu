@@ -13,7 +13,6 @@ RuleBasedTriageEngine の判定動作検証。
 業務計画書 §7.3 「ルールで8割、LLM で2割」設計仮説の Python 部分。
 """
 
-from typing import List
 
 import pytest
 from hypothesis import HealthCheck, given, settings

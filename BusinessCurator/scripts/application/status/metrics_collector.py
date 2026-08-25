@@ -18,8 +18,9 @@ MetricsCollectorUseCase
 - unclassified_count_provider: () -> int
 """
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict
+from typing import Any
 
 from domain.protocols import (
     AliasResolverRepositoryProtocol,
@@ -52,10 +53,10 @@ class StatusMetrics:
     alias_records_completed: int = 0
     alias_records_removed: int = 0
     alias_records_archived: int = 0
-    alias_per_shard: Dict[str, int] = field(default_factory=dict)
+    alias_per_shard: dict[str, int] = field(default_factory=dict)
     unclassified_count: int = 0
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "raw_entries_count": self.raw_entries_count,
             "alias_records_total": self.alias_records_total,
@@ -95,7 +96,7 @@ class MetricsCollectorUseCase:
         completed_records = [r for r in records if r["archive_status"] == "completed"]
         removed_records = [r for r in records if r["archive_status"] == "removed"]
 
-        per_shard: Dict[str, int] = {k: 0 for k in SHARD_KINDS}
+        per_shard: dict[str, int] = {k: 0 for k in SHARD_KINDS}
         for r in active_records:
             per_shard[r["shard"]] += 1
 

@@ -12,7 +12,7 @@ EmailMessage / EmailAddress / EmailAttachment TypedDictのフィールド検証�
 """
 
 from datetime import datetime
-from typing import List, Optional, get_type_hints
+from typing import get_type_hints
 
 import pytest
 
@@ -122,14 +122,14 @@ class TestEmailMessage:
         """to_addrs フィールド（複数宛先）"""
         hints = get_type_hints(EmailMessage)
         assert "to_addrs" in hints
-        assert hints["to_addrs"] == List[EmailAddress]
+        assert hints["to_addrs"] == list[EmailAddress]
 
     @pytest.mark.unit
     def test_has_cc_addrs_field(self) -> None:
         """cc_addrs フィールド（複数CC）"""
         hints = get_type_hints(EmailMessage)
         assert "cc_addrs" in hints
-        assert hints["cc_addrs"] == List[EmailAddress]
+        assert hints["cc_addrs"] == list[EmailAddress]
 
     @pytest.mark.unit
     def test_has_subject_field(self) -> None:
@@ -157,35 +157,35 @@ class TestEmailMessage:
         """body_html フィールド（HTML本文、None許容）"""
         hints = get_type_hints(EmailMessage)
         assert "body_html" in hints
-        assert hints["body_html"] == Optional[str]
+        assert hints["body_html"] == (str | None)
 
     @pytest.mark.unit
     def test_has_attachments_field(self) -> None:
         """attachments フィールド"""
         hints = get_type_hints(EmailMessage)
         assert "attachments" in hints
-        assert hints["attachments"] == List[EmailAttachment]
+        assert hints["attachments"] == list[EmailAttachment]
 
     @pytest.mark.unit
     def test_has_thread_id_field(self) -> None:
         """thread_id フィールド（None許容、後段でスレッド推定）"""
         hints = get_type_hints(EmailMessage)
         assert "thread_id" in hints
-        assert hints["thread_id"] == Optional[str]
+        assert hints["thread_id"] == (str | None)
 
     @pytest.mark.unit
     def test_has_in_reply_to_field(self) -> None:
         """in_reply_to フィールド（RFC5322 In-Reply-To、None許容）"""
         hints = get_type_hints(EmailMessage)
         assert "in_reply_to" in hints
-        assert hints["in_reply_to"] == Optional[str]
+        assert hints["in_reply_to"] == (str | None)
 
     @pytest.mark.unit
     def test_has_references_field(self) -> None:
         """references フィールド（RFC5322 References、空list許容）"""
         hints = get_type_hints(EmailMessage)
         assert "references" in hints
-        assert hints["references"] == List[str]
+        assert hints["references"] == list[str]
 
     @pytest.mark.unit
     def test_can_construct_minimal(self) -> None:

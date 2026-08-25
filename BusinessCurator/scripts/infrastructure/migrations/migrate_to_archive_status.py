@@ -15,7 +15,6 @@ v3 の `## archive/ [archived]` セクションを v4 の
 
 import re
 from pathlib import Path
-from typing import List, Tuple
 
 from domain.types.alias import AliasRecord
 from domain.types.shard import SHARD_KINDS, ArchiveStatus, ShardKind
@@ -32,9 +31,9 @@ _ENTRY_RE = re.compile(
 )
 
 
-def _parse_old_format(content: str) -> List[AliasRecord]:
+def _parse_old_format(content: str) -> list[AliasRecord]:
     """v3 旧フォーマットをパースして AliasRecord リストを返す"""
-    records: List[AliasRecord] = []
+    records: list[AliasRecord] = []
     in_old_archive = False
 
     for raw_line in content.split("\n"):
@@ -83,7 +82,7 @@ def _parse_old_format(content: str) -> List[AliasRecord]:
     return records
 
 
-def _derive_kind_and_slug(target_path: str) -> Tuple[ShardKind, str]:
+def _derive_kind_and_slug(target_path: str) -> tuple[ShardKind, str]:
     parts = target_path.replace("\\", "/").split("/")
     if len(parts) < 3:
         raise ValueError(f"cannot derive kind/slug from path: {target_path}")

@@ -12,7 +12,7 @@ IndexEntry のリストをシャードごとにグルーピング & canonical �
 - Python の sort は stable なので、同じ canonical のエントリ間は入力順保持
 """
 
-from typing import Dict, Iterable, List
+from collections.abc import Iterable
 
 from domain.indexing.index_entry import IndexEntry
 
@@ -22,7 +22,7 @@ __all__ = ["group_by_shard"]
 def group_by_shard(
     entries: Iterable[IndexEntry],
     include_archived: bool = False,
-) -> Dict[str, List[IndexEntry]]:
+) -> dict[str, list[IndexEntry]]:
     """
     IndexEntry をシャード種別ごとにグルーピングし canonical 昇順でソートする
 
@@ -34,7 +34,7 @@ def group_by_shard(
         `{shard: [entry, ...], ...}` の辞書。シャードごとに canonical 昇順。
         空入力や全除外の場合は空 dict。
     """
-    grouped: Dict[str, List[IndexEntry]] = {}
+    grouped: dict[str, list[IndexEntry]] = {}
     for entry in entries:
         if entry.archive_status != "active" and not include_archived:
             continue

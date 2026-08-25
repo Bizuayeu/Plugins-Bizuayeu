@@ -15,7 +15,7 @@ TriageLogRepositoryProtocol の JSON ファイル実装。
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Any, List
+from typing import Any
 
 from domain.exceptions import TriageError
 from domain.types.triage import TriageLogEntry
@@ -73,7 +73,7 @@ class JsonTriageLogRepository:
         self._dir.mkdir(parents=True, exist_ok=True)
         path = self._path_for_date(date_compact)
 
-        existing: List[Any] = []
+        existing: list[Any] = []
         if path.exists():
             existing = json.loads(path.read_text(encoding="utf-8"))
 
@@ -87,7 +87,7 @@ class JsonTriageLogRepository:
     # load
     # ------------------------------------------------------------------
 
-    def load_for_date(self, date: str) -> List[TriageLogEntry]:
+    def load_for_date(self, date: str) -> list[TriageLogEntry]:
         """
         指定日のログを取得
 

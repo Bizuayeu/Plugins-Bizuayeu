@@ -13,7 +13,6 @@ MetricsCollectorUseCase の動作検証。
 - 不存在ディレクトリ → 0（フェイル不可）
 """
 
-from typing import List
 
 import pytest
 

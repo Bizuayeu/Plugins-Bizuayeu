@@ -18,7 +18,6 @@ from email.message import Message
 from email.policy import default as default_policy
 from email.utils import getaddresses, parseaddr, parsedate_to_datetime
 from pathlib import Path
-from typing import List, Optional
 
 from domain.exceptions import IngestError
 from domain.types.email import EmailAddress, EmailAttachment, EmailMessage
@@ -52,7 +51,7 @@ class EmlEmailParser:
 
         return self._convert(msg)
 
-    def parse_many(self, path: Path) -> List[EmailMessage]:
+    def parse_many(self, path: Path) -> list[EmailMessage]:
         """
         単体 .eml は要素1のリストとして返す
 
@@ -81,7 +80,7 @@ class EmlEmailParser:
         body_text, body_html = cls._extract_bodies(msg)
         attachments = cls._extract_attachments(msg)
 
-        in_reply_to: Optional[str] = msg.get("In-Reply-To")
+        in_reply_to: str | None = msg.get("In-Reply-To")
         if in_reply_to is not None:
             in_reply_to = in_reply_to.strip()
         references_raw = msg.get("References") or ""
@@ -107,17 +106,17 @@ class EmlEmailParser:
     # ------------------------------------------------------------------
 
     @staticmethod
-    def _parse_single_address(raw: Optional[str]) -> EmailAddress:
+    def _parse_single_address(raw: str | None) -> EmailAddress:
         if not raw:
             return {"name": "", "address": ""}
         name, addr = parseaddr(raw)
         return {"name": name or "", "address": addr or ""}
 
     @staticmethod
-    def _parse_address_list(values: Optional[List[str]]) -> List[EmailAddress]:
+    def _parse_address_list(values: list[str] | None) -> list[EmailAddress]:
         if not values:
             return []
-        results: List[EmailAddress] = []
+        results: list[EmailAddress] = []
         for name, addr in getaddresses(values):
             if not addr:
                 continue
@@ -125,7 +124,7 @@ class EmlEmailParser:
         return results
 
     @staticmethod
-    def _parse_date(raw: Optional[str]) -> datetime:
+    def _parse_date(raw: str | None) -> datetime:
         if not raw:
             # 不在時はエポックを返す（呼び出し側でハンドリング可能）
             return datetime.fromtimestamp(0, tz=timezone.utc)
@@ -138,10 +137,10 @@ class EmlEmailParser:
         return dt
 
     @classmethod
-    def _extract_bodies(cls, msg: Message) -> tuple[str, Optional[str]]:
+    def _extract_bodies(cls, msg: Message) -> tuple[str, str | None]:
         """text/plain 本文と text/html 本文を取得"""
-        text_part: Optional[str] = None
-        html_part: Optional[str] = None
+        text_part: str | None = None
+        html_part: str | None = None
 
         if msg.is_multipart():
             for part in msg.walk():
@@ -179,8 +178,8 @@ class EmlEmailParser:
             return payload.decode("utf-8", errors="replace")
 
     @staticmethod
-    def _extract_attachments(msg: Message) -> List[EmailAttachment]:
-        results: List[EmailAttachment] = []
+    def _extract_attachments(msg: Message) -> list[EmailAttachment]:
+        results: list[EmailAttachment] = []
         if not msg.is_multipart():
             return results
         for part in msg.walk():

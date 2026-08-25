@@ -16,7 +16,6 @@ skills/wiki/ と commands/ の md ファイルが満たすべき構造制約を�
 
 import re
 from pathlib import Path
-from typing import Dict, List, Optional
 
 import pytest
 
@@ -30,7 +29,7 @@ REPO_ROOT = Path(
 SKILLS_DIR = REPO_ROOT / "skills" / "wiki"
 COMMANDS_DIR = REPO_ROOT / "commands"
 
-REQUIRED_SKILLS: List[str] = [
+REQUIRED_SKILLS: list[str] = [
     "SKILL.md",
     "triage.md",
     "archive.md",
@@ -45,7 +44,7 @@ REQUIRED_SKILLS: List[str] = [
     "knowledge-curator.md",
 ]
 
-REQUIRED_COMMANDS: List[str] = [
+REQUIRED_COMMANDS: list[str] = [
     "wiki-project-add.md",
     "wiki-project-edit.md",
     "wiki-project-close.md",
@@ -72,7 +71,7 @@ REQUIRED_COMMANDS: List[str] = [
 ]
 
 # CLI が呼ばれる command → CLI モジュール名 のマップ
-COMMAND_TO_CLI: Dict[str, str] = {
+COMMAND_TO_CLI: dict[str, str] = {
     "wiki-ingest.md": "interfaces.ingest_cli",
     "wiki-triage.md": "interfaces.triage_cli",
     "wiki-status.md": "interfaces.status_cli",
@@ -94,7 +93,7 @@ COMMAND_TO_CLI: Dict[str, str] = {
 }
 
 # command → 参照すべき skill ファイル
-COMMAND_TO_SKILL: Dict[str, str] = {
+COMMAND_TO_SKILL: dict[str, str] = {
     "wiki-project-add.md": "project-manager.md",
     "wiki-project-edit.md": "project-manager.md",
     "wiki-project-close.md": "project-manager.md",
@@ -113,7 +112,7 @@ COMMAND_TO_SKILL: Dict[str, str] = {
 }
 
 # 操作系 skill → 参照すべき CLI モジュール
-SKILL_TO_CLI: Dict[str, str] = {
+SKILL_TO_CLI: dict[str, str] = {
     "triage.md": "interfaces.triage_cli",
     "archive.md": "interfaces.archive_cli",
     "project-manager.md": "interfaces.resolver_cli",
@@ -131,12 +130,12 @@ SKILL_TO_CLI: Dict[str, str] = {
 _FRONTMATTER_RE = re.compile(r"^---\n(.*?)\n---\n", re.DOTALL)
 
 
-def _parse_frontmatter(content: str) -> Optional[Dict[str, str]]:
+def _parse_frontmatter(content: str) -> dict[str, str] | None:
     """簡易 YAML frontmatter パーサ（key: value のみ対応）"""
     m = _FRONTMATTER_RE.match(content)
     if not m:
         return None
-    fm: Dict[str, str] = {}
+    fm: dict[str, str] = {}
     for line in m.group(1).split("\n"):
         if ":" not in line:
             continue

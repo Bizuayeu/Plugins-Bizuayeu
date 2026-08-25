@@ -20,7 +20,7 @@ Usage:
 
 import json
 import sys
-from typing import Any, Dict, NoReturn, Optional
+from typing import Any, NoReturn
 
 __all__ = ["output_error", "output_json"]
 
@@ -38,7 +38,7 @@ def output_json(data: Any) -> None:
     print(json.dumps(data, ensure_ascii=False, indent=2))
 
 
-def output_error(error: str, details: Optional[Dict[str, Any]] = None) -> NoReturn:
+def output_error(error: str, details: dict[str, Any] | None = None) -> NoReturn:
     """
     エラー JSON を出力し、exit code 1 で終了
 
@@ -49,7 +49,7 @@ def output_error(error: str, details: Optional[Dict[str, Any]] = None) -> NoRetu
     Raises:
         SystemExit: 終了コード 1
     """
-    result: Dict[str, Any] = {"status": "error", "error": error}
+    result: dict[str, Any] = {"status": "error", "error": error}
     if details:
         result["details"] = details
     print(json.dumps(result, ensure_ascii=False, indent=2))

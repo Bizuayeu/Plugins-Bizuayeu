@@ -12,7 +12,7 @@ Triage Domain Types
 - 業務計画書 §7.3 「ルールで8割、LLM で2割」設計仮説の検証用
 """
 
-from typing import List, Literal, Optional, TypedDict
+from typing import Literal, TypedDict
 
 from domain.types.shard import ShardKind
 
@@ -73,11 +73,11 @@ class TriageDecision(TypedDict):
     """
 
     entry_id: str
-    primary_shard: Optional[ShardKind]
-    primary_slug: Optional[str]
-    secondary_tags: List[str]
+    primary_shard: ShardKind | None
+    primary_slug: str | None
+    secondary_tags: list[str]
     confidence: TriageConfidence
-    matched_rules: List[str]
+    matched_rules: list[str]
 
 
 # =============================================================================
