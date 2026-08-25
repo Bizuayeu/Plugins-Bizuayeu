@@ -1,6 +1,6 @@
 {
   "name": "JootoGrabber",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Jooto API backup tool with Clean Architecture: API key auth, board/task fetching, incremental sync, JSON export for BusinessCurator ingestion",
   "author": {
     "name": "Weave @ JootoGrabber"
