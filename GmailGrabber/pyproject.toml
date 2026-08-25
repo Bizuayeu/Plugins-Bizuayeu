@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gmailgrabber"
-version = "0.2.0"
+version = "0.3.0"
 description = "GmailGrabber - Clean Architecture Gmail backup with multi-user Workspace support (Service Account + DWD), RFC5322 Message-ID deduplication, and .eml/.mbox export"
 requires-python = ">=3.10"
 license = {text = "MIT"}
