@@ -3,8 +3,9 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any
 
 from application.backup import backup_board, should_skip
 from application.boards import list_boards

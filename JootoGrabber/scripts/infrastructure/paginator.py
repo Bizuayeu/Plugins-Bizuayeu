@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, Iterator
+from collections.abc import Iterator
+from typing import Any
 
 from infrastructure.jooto_client import JootoClient
 
@@ -27,8 +28,7 @@ def iter_paginated(
         if not isinstance(body, dict):
             return
 
-        for item in body.get(items_key, []):
-            yield item
+        yield from body.get(items_key, [])
 
         total_pages = int(body.get("total_pages", 0))
         if page >= total_pages:

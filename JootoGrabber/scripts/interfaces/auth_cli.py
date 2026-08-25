@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import json
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any
 
 from infrastructure.config import ConfigError, load_config
 from infrastructure.env_loader import load_env
