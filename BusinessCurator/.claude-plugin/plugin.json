@@ -1,6 +1,6 @@
 {
   "name": "BusinessCurator",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Enterprise business email knowledge management with 4-shard wiki (projects / clients / vendors / knowledge)",
   "author": {
     "name": "Weave @ BusinessCurator"
