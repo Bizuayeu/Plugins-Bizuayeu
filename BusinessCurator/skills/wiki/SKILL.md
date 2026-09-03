@@ -132,7 +132,7 @@ python -m interfaces.resolver_cli list --plugin-root <plugin_root> --include-arc
 - CLI が exit 1 を返した場合、JSON の `status` / `error` / `details` を読みユーザーに伝える
 - マスタデータ未登録で triage が機能しない場合、manager コマンドの実行を提案する
 - triage で unclassified が多い場合、resolver の aliases を追加することを提案する
-- absorb は LLM の判断が本質なので、wiki スキル（[SKILL.md](SKILL.md)）の "writer, not filing clerk" 原則に従う
+- absorb は LLM の判断が本質なので、冒頭の "writer, not filing clerk" 原則に従う
 
 ---
 
