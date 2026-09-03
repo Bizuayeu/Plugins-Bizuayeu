@@ -27,7 +27,7 @@ description: 既存記事の品質改善（diary-driven 構造の修正、bloate
 
 ## 監査項目
 
-`[../skills/wiki/SKILL.md](../skills/wiki/SKILL.md)` の cleanup フェーズパターンを継承：
+既存記事を次の 5 点で監査します：
 
 1. **構造**: diary-driven か narrative-driven か
 2. **行数**: bloated (>120 lines) / stub (<15 lines)
