@@ -20,6 +20,7 @@ Clean Architecture × TDD で構築された Gmail バックアップツール�
 | `/gmail-auth` | OAuth 2.0 認証フロー | [commands/gmail-auth.md](../../commands/gmail-auth.md) |
 | `/gmail-backup` | 検索クエリでバックアップ実行 | [commands/gmail-backup.md](../../commands/gmail-backup.md) |
 | `/gmail-labels` | ラベル一覧取得 | [commands/gmail-labels.md](../../commands/gmail-labels.md) |
+| `/gmail-multi-backup` | Service Account + DWD で Workspace 複数ユーザーを一括取得 | [commands/gmail-multi-backup.md](../../commands/gmail-multi-backup.md) |
 
 ## セットアップ手順
 
