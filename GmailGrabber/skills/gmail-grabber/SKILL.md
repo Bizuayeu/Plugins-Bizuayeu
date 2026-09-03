@@ -81,7 +81,7 @@ PYTHONPATH=scripts python -m interfaces.backup_cli \
 ### 大量メール取得の中断・再開
 
 1000件以上のバックアップ時、ネットワーク切断等で中断された場合:
-- デフォルトで state ファイルが `~/.config/gmailgrabber/state/` に保存される
+- デフォルトで state ファイルが config ディレクトリ配下の `state/` に保存される（config ディレクトリは Windows が `%APPDATA%/GmailGrabber`、Unix が `~/.config/gmailgrabber`。`--config-dir` で上書き可）
 - 同じコマンドで再実行 → 既取得分はスキップして続きから取得
 - 完全にやり直したい場合は `--no-resume` フラグ
 
