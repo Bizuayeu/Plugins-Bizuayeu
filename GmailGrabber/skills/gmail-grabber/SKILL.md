@@ -11,7 +11,7 @@ Clean Architecture × TDD で構築された Gmail バックアップツール�
 - **Clean Architecture 4層**: domain / application / infrastructure / interfaces
 - **Protocol による依存関係逆転**: application層は infrastructureを直接importしない
 - **TypedDict ドメインモデル**: 実行時オーバーヘッドゼロ、JSON相互運用
-- **TDD 先行**: 172 tests (domain 117 + application 22 + infrastructure 33 = **RED→GREEN→REFACTOR**)
+- **TDD 先行**: domain / application / infrastructure の各層に RED→GREEN→REFACTOR で書かれたテストがある（件数は `python -m pytest scripts/test/` が SSoT）
 
 ## コマンド
 
