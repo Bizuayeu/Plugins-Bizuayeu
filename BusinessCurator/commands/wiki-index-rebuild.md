@@ -31,7 +31,7 @@ python -m interfaces.index_cli rebuild --plugin-root <plugin_root>
 
 - 一括登録後の最終整備
 - `_alias_resolver.md` を直接編集した後の再同期
-- 初期導入時（`batch_register.py` など `--skip-index-rebuild` でまとめて追加した後）
+- 初期導入時（`--skip-index-rebuild` を付けてまとめて追加した後）
 
 ## オプション
 
