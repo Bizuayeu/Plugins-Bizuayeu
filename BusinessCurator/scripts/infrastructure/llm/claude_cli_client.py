@@ -7,12 +7,13 @@ LLMTriageProtocol の `claude -p` subprocess 実装。
 
 設計意図:
 - メモリ「APIキーよりサブスク前提」: Anthropic API 直叩き禁止
-- subprocess.run(["claude", "-p", prompt]) で外部 CLI を呼び出し
-- レスポンスは 1 行の ShardKind 文字列を期待
+- subprocess.run(["claude", "-p", prompt, "--output-format", "json", "--json-schema", ...]) で外部 CLI を呼び出し
+- 書式は JSON Schema（category を ShardKind の enum に固定）が強制し、応答封筒の structured_output を読む
 - 不正レスポンス・タイムアウト・CLI 不在を TriageError に変換
 - テストでは subprocess.run を unittest.mock.patch でスタブ化（CI 互換）
 """
 
+import json
 import subprocess
 
 from domain.exceptions import TriageError
@@ -26,19 +27,27 @@ _DEFAULT_TIMEOUT_SECONDS = 60
 
 
 _PROMPT_TEMPLATE = """\
-Classify the following business email into ONE of these categories:
+Classify the following business email into one of these categories:
 - projects: project-related emails (specific construction sites, deliverables)
 - clients: client-related communications (customers, sales)
 - vendors: vendor/supplier communications (purchases, subcontractors)
 - knowledge: general knowledge, regulations, standards
-
-Return ONLY the category name (one word, lowercase). No explanation.
 
 Subject: {subject}
 From: {from_addr}
 Body:
 {body}
 """
+
+# 書式はスキーマが強制する（claude -p --json-schema）。散文で「1 語だけ返せ」と縛らない
+_OUTPUT_SCHEMA = json.dumps(
+    {
+        "type": "object",
+        "properties": {"category": {"type": "string", "enum": sorted(SHARD_KINDS)}},
+        "required": ["category"],
+        "additionalProperties": False,
+    }
+)
 
 
 class ClaudeCliTriageClient:
@@ -68,7 +77,15 @@ class ClaudeCliTriageClient:
 
         try:
             result = subprocess.run(
-                ["claude", "-p", prompt],
+                [
+                    "claude",
+                    "-p",
+                    prompt,
+                    "--output-format",
+                    "json",
+                    "--json-schema",
+                    _OUTPUT_SCHEMA,
+                ],
                 capture_output=True,
                 text=True,
                 timeout=self._timeout,
@@ -87,14 +104,17 @@ class ClaudeCliTriageClient:
                 f"claude -p failed (exit {result.returncode}): {result.stderr.strip()}"
             )
 
-        raw_response = result.stdout.strip()
-        if not raw_response:
+        if not result.stdout.strip():
             raise TriageError(f"empty response from claude for entry {entry['id']}")
 
-        normalized = raw_response.lower()
-        if normalized not in SHARD_KINDS:
+        try:
+            envelope = json.loads(result.stdout)
+            category = envelope["structured_output"]["category"]
+        except (ValueError, KeyError, TypeError) as e:
             raise TriageError(
-                f"invalid shard from claude: {raw_response!r} (expected one of {SHARD_KINDS})"
-            )
-
-        return normalized
+                f"unexpected claude envelope for entry {entry['id']}: {result.stdout[:200]!r}"
+            ) from e
+        # スキーマ違反は CLI 側で弾かれる想定の最終防衛線
+        if not isinstance(category, str) or category not in SHARD_KINDS:
+            raise TriageError(f"invalid shard from claude: {category!r}")
+        return category

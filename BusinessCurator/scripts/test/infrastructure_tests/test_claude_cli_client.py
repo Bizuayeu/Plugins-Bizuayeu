@@ -11,12 +11,20 @@ ClaudeCliTriageClient の subprocess 経由 LLM 呼び出し検証。
 - I/F 契約のみ検証: 正常系（4 シャードのいずれかを返す）, 異常系（タイムアウト/空応答/不正応答）
 """
 
+import json
 from unittest.mock import MagicMock, patch
 
 import pytest
 
+from domain.types.shard import SHARD_KINDS
 from infrastructure.llm.claude_cli_client import ClaudeCliTriageClient
 from test.test_helpers import build_raw_entry
+
+
+def _envelope(category: str) -> str:
+    """claude -p --output-format json --json-schema が返す封筒の最小形"""
+    return json.dumps({"structured_output": {"category": category}})
+
 
 # =============================================================================
 # 正常系
@@ -29,7 +37,7 @@ class TestClaudeCliTriageClientHappyPath:
         client = ClaudeCliTriageClient()
         with patch("subprocess.run") as mock_run:
             mock_run.return_value = MagicMock(
-                returncode=0, stdout="projects\n", stderr=""
+                returncode=0, stdout=_envelope("projects"), stderr=""
             )
             result = client.classify(build_raw_entry())
         assert result == "projects"
@@ -38,7 +46,9 @@ class TestClaudeCliTriageClientHappyPath:
     def test_returns_clients(self) -> None:
         client = ClaudeCliTriageClient()
         with patch("subprocess.run") as mock_run:
-            mock_run.return_value = MagicMock(returncode=0, stdout="clients", stderr="")
+            mock_run.return_value = MagicMock(
+                returncode=0, stdout=_envelope("clients"), stderr=""
+            )
             result = client.classify(build_raw_entry())
         assert result == "clients"
 
@@ -46,7 +56,9 @@ class TestClaudeCliTriageClientHappyPath:
     def test_returns_vendors(self) -> None:
         client = ClaudeCliTriageClient()
         with patch("subprocess.run") as mock_run:
-            mock_run.return_value = MagicMock(returncode=0, stdout="vendors", stderr="")
+            mock_run.return_value = MagicMock(
+                returncode=0, stdout=_envelope("vendors"), stderr=""
+            )
             result = client.classify(build_raw_entry())
         assert result == "vendors"
 
@@ -55,29 +67,24 @@ class TestClaudeCliTriageClientHappyPath:
         client = ClaudeCliTriageClient()
         with patch("subprocess.run") as mock_run:
             mock_run.return_value = MagicMock(
-                returncode=0, stdout="knowledge", stderr=""
+                returncode=0, stdout=_envelope("knowledge"), stderr=""
             )
             result = client.classify(build_raw_entry())
         assert result == "knowledge"
 
     @pytest.mark.unit
-    def test_uppercase_response_normalized(self) -> None:
-        """大文字小文字を区別しない"""
+    def test_ignores_extra_envelope_fields(self) -> None:
+        """封筒に他のフィールド（result, usage 等）があっても structured_output だけを読む"""
         client = ClaudeCliTriageClient()
+        envelope = json.dumps(
+            {
+                "result": "...",
+                "structured_output": {"category": "projects"},
+                "usage": {},
+            }
+        )
         with patch("subprocess.run") as mock_run:
-            mock_run.return_value = MagicMock(
-                returncode=0, stdout="PROJECTS", stderr=""
-            )
-            result = client.classify(build_raw_entry())
-        assert result == "projects"
-
-    @pytest.mark.unit
-    def test_response_with_extra_whitespace_trimmed(self) -> None:
-        client = ClaudeCliTriageClient()
-        with patch("subprocess.run") as mock_run:
-            mock_run.return_value = MagicMock(
-                returncode=0, stdout="  projects  \n\n", stderr=""
-            )
+            mock_run.return_value = MagicMock(returncode=0, stdout=envelope, stderr="")
             result = client.classify(build_raw_entry())
         assert result == "projects"
 
@@ -94,7 +101,7 @@ class TestClaudeCliInvocation:
         client = ClaudeCliTriageClient()
         with patch("subprocess.run") as mock_run:
             mock_run.return_value = MagicMock(
-                returncode=0, stdout="knowledge", stderr=""
+                returncode=0, stdout=_envelope("knowledge"), stderr=""
             )
             client.classify(build_raw_entry(subject="排煙設備"))
         assert mock_run.called
@@ -102,6 +109,9 @@ class TestClaudeCliInvocation:
         cmd = args[0]
         assert cmd[0] == "claude"
         assert "-p" in cmd
+        assert cmd[cmd.index("--output-format") + 1] == "json"
+        schema = json.loads(cmd[cmd.index("--json-schema") + 1])
+        assert set(schema["properties"]["category"]["enum"]) == set(SHARD_KINDS)
 
     @pytest.mark.unit
     def test_prompt_includes_entry_subject(self) -> None:
@@ -109,7 +119,7 @@ class TestClaudeCliInvocation:
         client = ClaudeCliTriageClient()
         with patch("subprocess.run") as mock_run:
             mock_run.return_value = MagicMock(
-                returncode=0, stdout="projects", stderr=""
+                returncode=0, stdout=_envelope("projects"), stderr=""
             )
             client.classify(build_raw_entry(subject="○○マンション排煙"))
         cmd = mock_run.call_args[0][0]
@@ -122,7 +132,7 @@ class TestClaudeCliInvocation:
         client = ClaudeCliTriageClient()
         with patch("subprocess.run") as mock_run:
             mock_run.return_value = MagicMock(
-                returncode=0, stdout="knowledge", stderr=""
+                returncode=0, stdout=_envelope("knowledge"), stderr=""
             )
             client.classify(build_raw_entry())
         kwargs = mock_run.call_args[1]
@@ -162,8 +172,23 @@ class TestClaudeCliErrors:
 
         client = ClaudeCliTriageClient()
         with patch("subprocess.run") as mock_run:
-            mock_run.return_value = MagicMock(returncode=0, stdout="garbage", stderr="")
+            mock_run.return_value = MagicMock(
+                returncode=0, stdout=_envelope("garbage"), stderr=""
+            )
             with pytest.raises(TriageError, match="invalid shard"):
+                client.classify(build_raw_entry())
+
+    @pytest.mark.unit
+    def test_non_json_stdout_raises(self) -> None:
+        """構造化出力の封筒でない stdout（素の文字列）は封筒不正"""
+        from domain.exceptions import TriageError
+
+        client = ClaudeCliTriageClient()
+        with patch("subprocess.run") as mock_run:
+            mock_run.return_value = MagicMock(
+                returncode=0, stdout="projects\n", stderr=""
+            )
+            with pytest.raises(TriageError, match="envelope"):
                 client.classify(build_raw_entry())
 
     @pytest.mark.unit
