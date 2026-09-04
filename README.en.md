@@ -41,7 +41,7 @@ into a structured wiki across 4 shards (projects / clients / vendors / knowledge
 - **Two-layer structure**: humans define masters (manager), AI operates them (curator)
 - **Rule-first triage**: 80% resolved by rules, 20% by LLM
 - **md / Python separation**: mechanical processing in Python, judgment and dialogue in md
-- **Clean Architecture × TDD**: 645 tests / mypy strict / ruff
+- **Clean Architecture × TDD**: pytest / mypy strict / ruff (test count: `scripts/test/` is the SSoT)
 
 #### Main Commands (23 total)
 
@@ -69,7 +69,7 @@ with RFC5322 Message-ID deduplication for multi-user environments.
 - **RFC5322 Message-ID dedup**: Prevents duplicate retrieval of CC'd emails
 - **Resume mechanism**: Per-user fetched IDs state persistence
 - **Output formats**: `.eml` (one file per email) / `.mbox` (bundled)
-- **Clean Architecture × TDD**: 274 tests / mypy strict / ruff
+- **Clean Architecture × TDD**: pytest / mypy strict / ruff (test count: `scripts/test/` is the SSoT)
 
 #### Commands (4 total)
 
@@ -96,7 +96,7 @@ Fetches Jooto board / task / list / category data via API-key authentication
 - **API key authentication**: Simple auth via the `X-Jooto-Api-Key` header
 - **board / task / list / category JSON export**: Format ready for BusinessCurator ingestion
 - **Incremental sync**: Tracks `updated_at` in `_sync_state.json`, skipping unchanged boards
-- **Clean Architecture × TDD**: 39 tests
+- **Clean Architecture × TDD**: pytest (test count: `scripts/test/` is the SSoT)
 
 #### Commands (3 total)
 

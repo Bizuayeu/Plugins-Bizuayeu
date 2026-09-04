@@ -42,7 +42,7 @@ Karpathy式パーソナルwikiのエンタープライズ拡張として、
 - **manager / curator 二層構造**: マスタは人間が定義、AIが運用
 - **triageはルールベース優先**: 80%をルールで決着、20%をLLMで
 - **md / Python 二層分離**: 機械的処理はPython、判断と対話はmd
-- **Clean Architecture × TDD**: 645 tests / mypy strict / ruff
+- **Clean Architecture × TDD**: pytest / mypy strict / ruff（件数は `scripts/test/` が SSoT）
 
 #### 主要コマンド（全23コマンド）
 
@@ -70,7 +70,7 @@ Karpathy式パーソナルwikiのエンタープライズ拡張として、
 - **RFC5322 Message-ID 重複排除**: CC 配信メールの二重取得を防止
 - **中断・再開機構**: ユーザー単位の fetched IDs state persistence
 - **出力形式**: `.eml` (1メール1ファイル) / `.mbox` (一括束ね)
-- **Clean Architecture × TDD**: 274 tests / mypy strict / ruff
+- **Clean Architecture × TDD**: pytest / mypy strict / ruff（件数は `scripts/test/` が SSoT）
 
 #### コマンド（全4コマンド）
 
@@ -97,7 +97,7 @@ BusinessCurator が吸収可能な JSON として `data/jooto/` 配下に保存�
 - **API Key 認証**: `X-Jooto-Api-Key` ヘッダによるシンプルな認証
 - **board / task / list / category を JSON 出力**: BusinessCurator 吸収用フォーマット
 - **差分同期**: `_sync_state.json` で `updated_at` を追跡し、未更新ボードの再取得をスキップ
-- **Clean Architecture × TDD**: 39 tests
+- **Clean Architecture × TDD**: pytest（件数は `scripts/test/` が SSoT）
 
 #### コマンド（全3コマンド）
 
