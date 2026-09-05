@@ -66,7 +66,7 @@ GmailGrabber/
     ├── application/             # UseCase
     ├── infrastructure/          # Gmail API 実装, ファイル書き出し
     ├── interfaces/              # CLI
-    └── test/                    # 274 tests (pytest + hypothesis)
+    └── test/                    # pytest + hypothesis（件数は pytest が SSoT）
         ├── domain_tests/
         ├── application_tests/
         ├── infrastructure_tests/
